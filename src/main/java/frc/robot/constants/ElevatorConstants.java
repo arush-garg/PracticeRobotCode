@@ -21,12 +21,12 @@ public final class ElevatorConstants {
 
     public final static double OFFSET = 0.0;
 
-    double L1_HEIGHT = 0;
-    double L2_HEIGHT = 0;
-    double L3_HEIGHT = 0;
-    double L4_HEIGHT = 0;
-    double STOWED_HEIGHT = 0;
+    public final static double L1_HEIGHT = 0;
+    public final static double L2_HEIGHT = 0;
+    public final static double L3_HEIGHT = 0;
+    public final static double L4_HEIGHT = 0;
+    public final static double STOWED_HEIGHT = 0;
     // elevator goes up then down when intaking
-    double INTAKE_UP_HEIGHT = 0;
-    double INTAKE_DOWN_HEIGHT = 0;
+    public final static double INTAKE_UP_HEIGHT = 0;
+    public final static double INTAKE_DOWN_HEIGHT = 0;
 }

@@ -22,23 +22,32 @@ public final class EndEffectorConstants {
         public final static double MOTION_JERK = 0.0;
 
         public final static double OFFSET = 0.0;
+    }
 
-        // angles for when preparing to score
-        double L1_PRE_ANGLE = 0.0;
-        double L2_PRE_ANGLE = 0.0;
-        double L3_PRE_ANGLE = 0.0;
-        double L4_PRE_ANGLE = 0.0;
-        // angles for when scoring
-        double L1_SCORE_ANGLE = 0.0;
-        double L2_SCORE_ANGLE = 0.0;
-        double L3_SCORE_ANGLE = 0.0;
-        double L4_SCORE_ANGLE = 0.0;
-        // other angles
-        double DEALGAE_HIGH_ANGLE = 0.0;
-        double DEALGAE_LOW_ANGLE = 0.0;
-        double STOW_WRIST_ANGLE = 0.0;
-        double INTAKE_CORAL_ANGLE = 0.0;
-        double SCORE_LARGE_ANGLE = 0.0;
+    public enum WristPosition {
+        L1_PRE_ANGLE(0.0),
+        L2_PRE_ANGLE(0.0),
+        L3_PRE_ANGLE(0.0),
+        L4_PRE_ANGLE(0.0),
+        L1_SCORE_ANGLE(0.0),
+        L2_SCORE_ANGLE(0.0),
+        L3_SCORE_ANGLE(0.0),
+        L4_SCORE_ANGLE(0.0),
+        DEALGAE_HIGH_ANGLE(0.0),
+        DEALGAE_LOW_ANGLE(0.0),
+        STOW_WRIST_ANGLE(0.0),
+        SCORE_BARGE_ANGLE(0.0),
+        SCORE_PROCESSOR_ANGLE(0.0);
+
+        private final double angle;
+
+        WristPosition(double angle) {
+            this.angle = angle;
+        }
+
+        public double getAngle() {
+            return angle;
+        }
     }
 
     public static class Rollers {

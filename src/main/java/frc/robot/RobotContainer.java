@@ -8,7 +8,11 @@ import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Elevator.Elevator;
+import frc.robot.subsystems.EndEffector.EndEffectorRollers;
 import frc.robot.subsystems.EndEffector.EndEffectorWrist;
+import frc.robot.subsystems.Intake.IntakeRollers;
+import frc.robot.subsystems.Intake.IntakeWrist;
+import frc.robot.subsystems.Superstructure.Superstructure;
 
 public class RobotContainer {
   private final CommandJoystick m_leftJoystick = new CommandJoystick(0);
@@ -17,7 +21,12 @@ public class RobotContainer {
   private final CommandXboxController m_buttonBoard = new CommandXboxController(3);
 
   private final Elevator m_elevator = new Elevator();
-  private final EndEffectorWrist m_wrist = new EndEffectorWrist(false);
+  private final EndEffectorWrist m_eeWrist = new EndEffectorWrist(false);
+  private final EndEffectorRollers m_eeRollers = new EndEffectorRollers();
+  private final IntakeWrist m_intakeWrist = new IntakeWrist();
+  private final IntakeRollers m_intakeRollers = new IntakeRollers();
+  private final Superstructure m_superstructure = new Superstructure(m_elevator, m_eeWrist, m_eeRollers, m_intakeWrist,
+      m_intakeRollers);
 
   public RobotContainer() {
     configureBindings();
@@ -36,7 +45,14 @@ public class RobotContainer {
         .and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.01))
         .whileTrue(m_elevator.setManualVoltage(m_operatorController.getLeftY()));
     // wrist zero
-    m_operatorController.leftTrigger().and(m_operatorController.x()).onTrue(m_wrist.zero());
+    m_operatorController.leftTrigger().and(m_operatorController.x()).onTrue(m_eeWrist.zero());
+
+    // gpMode switching
+    m_buttonBoard.button(5).onTrue(
+        m_superstructure.switchMode());
+
+    // scoring commands
+
   }
 
   // public Command getAutonomousCommand() {
