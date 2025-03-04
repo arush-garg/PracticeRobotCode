@@ -19,6 +19,23 @@ public final class EndEffectorConstants {
         public final static double kG = 0.0;
 
         public final static double OFFSET = 0.0;
+
+        // angles for when preparing to score
+        double L1_PRE_ANGLE = 0.0;
+        double L2_PRE_ANGLE = 0.0;
+        double L3_PRE_ANGLE = 0.0;
+        double L4_PRE_ANGLE = 0.0;
+        // angles for when scoring
+        double L1_SCORE_ANGLE = 0.0;
+        double L2_SCORE_ANGLE = 0.0;
+        double L3_SCORE_ANGLE = 0.0;
+        double L4_SCORE_ANGLE = 0.0;
+        // other angles
+        double DEALGAE_HIGH_ANGLE = 0.0;
+        double DEALGAE_LOW_ANGLE = 0.0;
+        double STOW_WRIST_ANGLE = 0.0;
+        double INTAKE_CORAL_ANGLE = 0.0;
+        double SCORE_LARGE_ANGLE = 0.0;
     }
 
     public static class Rollers {
