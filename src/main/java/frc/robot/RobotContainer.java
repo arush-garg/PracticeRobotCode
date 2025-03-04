@@ -12,6 +12,7 @@ import frc.robot.subsystems.EndEffector.EndEffectorRollers;
 import frc.robot.subsystems.EndEffector.EndEffectorWrist;
 import frc.robot.subsystems.Intake.IntakeRollers;
 import frc.robot.subsystems.Intake.IntakeWrist;
+import frc.robot.subsystems.Channel.Channel;
 import frc.robot.subsystems.Superstructure.Superstructure;
 
 public class RobotContainer {
@@ -25,8 +26,9 @@ public class RobotContainer {
   private final EndEffectorRollers m_eeRollers = new EndEffectorRollers();
   private final IntakeWrist m_intakeWrist = new IntakeWrist();
   private final IntakeRollers m_intakeRollers = new IntakeRollers();
+  private final Channel m_channel = new Channel();
   private final Superstructure m_superstructure = new Superstructure(m_elevator, m_eeWrist, m_eeRollers, m_intakeWrist,
-      m_intakeRollers);
+      m_intakeRollers, m_channel);
 
   public RobotContainer() {
     configureBindings();

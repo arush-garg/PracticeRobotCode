@@ -4,7 +4,6 @@ import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.EndEffectorConstants;
@@ -15,6 +14,7 @@ import frc.robot.subsystems.EndEffector.EndEffectorRollers;
 import frc.robot.subsystems.EndEffector.EndEffectorWrist;
 import frc.robot.subsystems.Intake.IntakeRollers;
 import frc.robot.subsystems.Intake.IntakeWrist;
+import frc.robot.subsystems.Channel.Channel;
 
 public class Superstructure {
     private GPMode gpMode = GPMode.Coral;
@@ -24,14 +24,16 @@ public class Superstructure {
     private final EndEffectorRollers m_eeRollers;
     private final IntakeWrist m_intakeWrist;
     private final IntakeRollers m_intakeRollers;
+    private final Channel m_channel;
 
-    public Superstructure(Elevator m_elevator, EndEffectorWrist m_eeWrist, EndEffectorRollers m_eeRollers,
-            IntakeWrist m_intakeWrist, IntakeRollers m_intakeRollers) {
-        this.m_elevator = m_elevator;
-        this.m_eeWrist = m_eeWrist;
-        this.m_eeRollers = m_eeRollers;
-        this.m_intakeWrist = m_intakeWrist;
-        this.m_intakeRollers = m_intakeRollers;
+    public Superstructure(Elevator elevator, EndEffectorWrist eeWrist, EndEffectorRollers eeRollers,
+            IntakeWrist intakeWrist, IntakeRollers intakeRollers, Channel channel) {
+        this.m_elevator = elevator;
+        this.m_eeWrist = eeWrist;
+        this.m_eeRollers = eeRollers;
+        this.m_intakeWrist = intakeWrist;
+        this.m_intakeRollers = intakeRollers;
+        this.m_channel = channel;
     }
 
     public Command switchMode() {
@@ -50,14 +52,11 @@ public class Superstructure {
 
     public Command intake() {
         return Commands.sequence(
-                m_elevator.moveTo(ElevatorConstants.INTAKE_UP_HEIGHT),
-                m_eeWrist.moveTo(EndEffectorWristPosition.INTAKE),
+                m_eeWrist.moveTo(EndEffectorWristPosition.INTAKE_ANGLE),
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.INTAKE_POSITION),
                 m_intakeRollers.run(IntakeConstants.Rollers.INTAKE_CORAL_VOLTS),
-                m_elevator.moveTo(0),
-                m_eeRollers.run(EndEffectorConstants.Rollers.INTAKE_CORAL_VOLTS),
-                m_intakeRollers.stop(),
-                m_eeRollers.stop());
+                Commands.waitUntil(m_channel.coralInEndEffectorSupplier),
+                Commands.parallel(m_intakeRollers.stop(), m_channel.stop(), m_eeRollers.stop()));
     }
 
     public Command moveL1() {
