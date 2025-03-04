@@ -17,6 +17,10 @@ public final class EndEffectorConstants {
         public final static double kS = 0.0;
         public final static double kG = 0.0;
 
+        public final static double MOTION_ACCELERATION = 0.0;
+        public final static double MOTION_CRUISE_VELOCITY = 0.0;
+        public final static double MOTION_JERK = 0.0;
+
         public final static double OFFSET = 0.0;
 
         // angles for when preparing to score
