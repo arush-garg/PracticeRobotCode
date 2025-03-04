@@ -1,18 +1,19 @@
 package frc.robot.vision;
 
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
-import frc.robot.constants.VisionConstants;
-
 import java.util.List;
 import java.util.Optional;
+
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonTrackedTarget;
+
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
+import frc.robot.constants.VisionConstants;
 
 public class VisionCamera {
     private final PhotonCamera camera;
@@ -115,5 +116,14 @@ public class VisionCamera {
      */
     public Matrix<N3, N1> getEstimationStdDevs() {
         return curStdDevs;
+    }
+
+    public int getCurrentlySeenTag() {
+        for (var change : camera.getAllUnreadResults()) {
+            for (var target : change.getTargets()) {
+                return target.getFiducialId();
+            }
+        }
+        return -1;
     }
 }

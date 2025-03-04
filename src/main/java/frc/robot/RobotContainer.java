@@ -4,11 +4,12 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -16,11 +17,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-// import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
+import frc.robot.commands.DriveToPoseCommand;
+import frc.robot.commands.DriveToPoseCommand.TargetPosition;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Drive.EagleSwerveDrivetrain;
 import frc.robot.subsystems.Drive.EagleSwerveTelemetry;
+import frc.robot.vision.Vision;
 
 public class RobotContainer {
   private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -33,6 +37,7 @@ public class RobotContainer {
 
   private final EagleSwerveTelemetry logger = new EagleSwerveTelemetry(MaxSpeed);
   public final EagleSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+  public final Vision vision = new Vision(drivetrain);
 
   // controllers
   private final CommandJoystick m_leftJoystick = new CommandJoystick(0);
@@ -56,14 +61,20 @@ public class RobotContainer {
             .withVelocityY(-m_leftJoystick.getX() * MaxSpeed)
             .withRotationalRate(-m_rightJoystick.getX() * MaxAngularRate)));
 
-    // todo: sysid routines for tuning
-    // joystick.back().and(joystick.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-    // joystick.back().and(joystick.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-    // joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-    // joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+    // sysid routines for tuning
+    m_operatorController.back().and(m_operatorController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+    m_operatorController.back().and(m_operatorController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+    m_operatorController.start().and(m_operatorController.y())
+        .whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+    m_operatorController.start().and(m_operatorController.x())
+        .whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
     // reset yaw
     m_operatorController.button(8).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+
+    m_buttonBoard.button(11).whileTrue(new DriveToPoseCommand(drivetrain, vision, TargetPosition.RIGHT));
+    m_buttonBoard.button(12).whileTrue(new DriveToPoseCommand(drivetrain, vision, TargetPosition.LEFT));
+    m_buttonBoard.button(13).whileTrue(new DriveToPoseCommand(drivetrain, vision, TargetPosition.ALGAE));
 
     drivetrain.registerTelemetry(logger::telemeterize);
   }

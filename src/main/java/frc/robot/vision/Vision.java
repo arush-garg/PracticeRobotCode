@@ -8,7 +8,7 @@ public class Vision extends SubsystemBase {
     VisionCamera cameraRight, cameraLeft;
     EagleSwerveDrivetrain drivetrain;
 
-    Vision(EagleSwerveDrivetrain drivetrain) {
+    public Vision(EagleSwerveDrivetrain drivetrain) {
         this.drivetrain = drivetrain;
         cameraRight = new VisionCamera(VisionConstants.CAMERA_RIGHT_CONFIG);
         cameraLeft = new VisionCamera(VisionConstants.CAMERA_LEFT_CONFIG);
@@ -29,5 +29,10 @@ public class Vision extends SubsystemBase {
                     drivetrain.addVisionMeasurement(
                             est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
                 });
+    }
+
+    public int getCurrentlySeenTag() {
+        return cameraRight.getCurrentlySeenTag() != 0 ? cameraRight.getCurrentlySeenTag()
+                : cameraLeft.getCurrentlySeenTag();
     }
 }
