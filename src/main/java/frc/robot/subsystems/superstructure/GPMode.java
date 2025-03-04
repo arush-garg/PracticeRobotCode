@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Superstructure;
+package frc.robot.subsystems.superstructure;
 
 public enum GPMode {
     Coral,

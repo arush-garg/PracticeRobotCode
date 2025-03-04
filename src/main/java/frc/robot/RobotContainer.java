@@ -7,13 +7,13 @@ package frc.robot;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.EndEffector.EndEffectorRollers;
-import frc.robot.subsystems.EndEffector.EndEffectorWrist;
-import frc.robot.subsystems.Intake.IntakeRollers;
-import frc.robot.subsystems.Intake.IntakeWrist;
-import frc.robot.subsystems.Channel.Channel;
-import frc.robot.subsystems.Superstructure.Superstructure;
+import frc.robot.subsystems.channel.Channel;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.endeffector.EndEffectorRollers;
+import frc.robot.subsystems.endeffector.EndEffectorWrist;
+import frc.robot.subsystems.intake.IntakeRollers;
+import frc.robot.subsystems.intake.IntakeWrist;
+import frc.robot.subsystems.superstructure.Superstructure;
 
 public class RobotContainer {
   private final CommandJoystick m_leftJoystick = new CommandJoystick(0);

@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Channel;
+package frc.robot.subsystems.channel;
 
 import java.util.function.BooleanSupplier;
 

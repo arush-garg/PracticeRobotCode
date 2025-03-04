@@ -1,20 +1,17 @@
-package frc.robot.subsystems.Superstructure;
+package frc.robot.subsystems.superstructure;
 
 import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
-import frc.robot.constants.ElevatorConstants;
-import frc.robot.constants.EndEffectorConstants;
-import frc.robot.constants.IntakeConstants;
-import frc.robot.constants.EndEffectorConstants.EndEffectorWristPosition;
-import frc.robot.subsystems.Elevator.Elevator;
-import frc.robot.subsystems.EndEffector.EndEffectorRollers;
-import frc.robot.subsystems.EndEffector.EndEffectorWrist;
-import frc.robot.subsystems.Intake.IntakeRollers;
-import frc.robot.subsystems.Intake.IntakeWrist;
-import frc.robot.subsystems.Channel.Channel;
+import frc.robot.constants.*;
+import frc.robot.subsystems.channel.Channel;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.endeffector.EndEffectorRollers;
+import frc.robot.subsystems.endeffector.EndEffectorWrist;
+import frc.robot.subsystems.intake.IntakeRollers;
+import frc.robot.subsystems.intake.IntakeWrist;
 
 public class Superstructure {
     private GPMode gpMode = GPMode.Coral;
