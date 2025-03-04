@@ -1,7 +1,11 @@
 package frc.robot.subsystems.Superstructure;
 
+import java.util.Map;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SelectCommand;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.EndEffectorConstants;
 import frc.robot.constants.IntakeConstants;
@@ -38,6 +42,10 @@ public class Superstructure {
                 gpMode = GPMode.Coral;
             }
         });
+    }
+
+    public GPMode getGPMode() {
+        return gpMode;
     }
 
     public Command intake() {
@@ -78,5 +86,13 @@ public class Superstructure {
                 m_elevator.moveTo(ElevatorConstants.L4_HEIGHT),
                 m_eeWrist
                         .moveTo(gpMode == GPMode.Coral ? WristPosition.L4_PRE_ANGLE : WristPosition.SCORE_BARGE_ANGLE));
+    }
+
+    public Command score() {
+        return new SelectCommand<>(
+                Map.ofEntries(
+                        Map.entry(GPMode.Coral, m_eeWrist.moveToNextPosition()),
+                        Map.entry(GPMode.Algae, m_eeRollers.run(4))),
+                this::getGPMode);
     }
 }
