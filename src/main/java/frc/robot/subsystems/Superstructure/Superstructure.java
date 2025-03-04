@@ -95,4 +95,10 @@ public class Superstructure {
                         Map.entry(GPMode.Algae, m_eeRollers.run(4))),
                 this::getGPMode);
     }
+
+    public Command stow() {
+        return Commands.parallel(
+                m_elevator.moveTo(ElevatorConstants.STOWED_HEIGHT),
+                m_eeWrist.moveTo(WristPosition.STOW_WRIST_ANGLE));
+    }
 }

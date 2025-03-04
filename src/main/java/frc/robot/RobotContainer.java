@@ -53,11 +53,15 @@ public class RobotContainer {
 
     // scoring commands
     m_rightJoystick.trigger().onTrue(m_superstructure.intake());
-    m_rightJoystick.trigger().onTrue(m_superstructure.score());
+    m_leftJoystick.trigger().onTrue(m_superstructure.score());
     m_buttonBoard.button(0).onTrue(m_superstructure.moveL1());
     m_buttonBoard.button(1).onTrue(m_superstructure.moveL2());
     m_buttonBoard.button(2).onTrue(m_superstructure.moveL3());
     m_buttonBoard.button(3).onTrue(m_superstructure.moveL4());
+
+    // stow commands
+    m_leftJoystick.button(2).onTrue(m_superstructure.stow());
+    // todo: oprator controller stow button
   }
 
   // public Command getAutonomousCommand() {
