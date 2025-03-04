@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.constants.ElevatorConstants;
-import frc.robot.utils.*;
 
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.*;
@@ -17,18 +16,13 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.wpilibj.XboxController;
-
 public class Elevator extends SubsystemBase {
 
   private final TalonFX m_master = new TalonFX(ElevatorConstants.MASTER_MOTOR_ID, "rio");
   private final TalonFX m_slave = new TalonFX(ElevatorConstants.SLAVE_MOTOR_ID, "rio");
   private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0);
-  public boolean inManual = false;
-  private XboxController xbox;
 
-  public Elevator(XboxController controller) {
-    this.xbox = controller;
+  public Elevator() {
     TalonFXConfiguration cfg = new TalonFXConfiguration();
 
     MotorOutputConfigs masterMotorConfigs = new MotorOutputConfigs();
@@ -72,31 +66,17 @@ public class Elevator extends SubsystemBase {
         });
   }
 
-  public Command zero(double position) {
+  public Command zero() {
     return runOnce(
         () -> {
           m_master.setPosition(ElevatorConstants.OFFSET);
         });
   }
 
-  @Override
-  public void periodic() {
-    if (xbox.getXButton() && !Utils.NearZero(xbox.getLeftY())) {
-      inManual = true;
-    }
-
-    if (xbox.getXButtonReleased() || Utils.NearZero(xbox.getLeftY())) {
-      inManual = false;
-    }
-
-    if (inManual) {
-      m_master.setVoltage(xbox.getLeftY() * ElevatorConstants.MAX_VOLTS / ElevatorConstants.MANUAL_RATIO);
-    } else if (m_master.getPosition().getValueAsDouble() < 0.01) {
-      m_master.disable();
-    }
-  }
-
-  @Override
-  public void simulationPeriodic() {
+  public Command setManualVoltage(double joystickPosition) {
+    return run(
+        () -> {
+          m_master.setVoltage(joystickPosition * ElevatorConstants.MAX_VOLTS / ElevatorConstants.MANUAL_RATIO);
+        });
   }
 }
