@@ -30,7 +30,7 @@ public class EndEffectorWrist extends SubsystemBase {
 		m_elastic = new ElasticSender("EE: Wrist", debug);
 
 		FeedbackConfigs fdb = cfg.Feedback;
-		fdb.FeedbackRemoteSensorID = EndEffectorConstants.Wrist.ENCODER_ID;
+		// fdb.FeedbackRemoteSensorID = EndEffectorConstants.Wrist.ENCODER_ID;
 		fdb.SensorToMechanismRatio = EndEffectorConstants.Wrist.GEAR_RATIO;
 		fdb.FeedbackRotorOffset = EndEffectorConstants.Wrist.OFFSET;
 
