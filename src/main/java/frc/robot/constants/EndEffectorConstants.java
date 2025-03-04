@@ -24,7 +24,7 @@ public final class EndEffectorConstants {
         public final static double OFFSET = 0.0;
     }
 
-    public enum WristPosition {
+    public enum EndEffectorWristPosition {
         L1_PRE_ANGLE(0.0),
         L2_PRE_ANGLE(0.0),
         L3_PRE_ANGLE(0.0),
@@ -42,7 +42,7 @@ public final class EndEffectorConstants {
 
         private final double angle;
 
-        WristPosition(double angle) {
+        EndEffectorWristPosition(double angle) {
             this.angle = angle;
         }
 

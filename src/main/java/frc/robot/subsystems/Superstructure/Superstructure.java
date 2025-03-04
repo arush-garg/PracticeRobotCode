@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.SelectCommand;
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.EndEffectorConstants;
 import frc.robot.constants.IntakeConstants;
-import frc.robot.constants.EndEffectorConstants.WristPosition;
+import frc.robot.constants.EndEffectorConstants.EndEffectorWristPosition;
 import frc.robot.subsystems.Elevator.Elevator;
 import frc.robot.subsystems.EndEffector.EndEffectorRollers;
 import frc.robot.subsystems.EndEffector.EndEffectorWrist;
@@ -51,7 +51,7 @@ public class Superstructure {
     public Command intake() {
         return Commands.sequence(
                 m_elevator.moveTo(ElevatorConstants.INTAKE_UP_HEIGHT),
-                m_eeWrist.moveTo(WristPosition.INTAKE),
+                m_eeWrist.moveTo(EndEffectorWristPosition.INTAKE),
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.INTAKE_POSITION),
                 m_intakeRollers.run(IntakeConstants.Rollers.INTAKE_CORAL_VOLTS),
                 m_elevator.moveTo(0),
@@ -64,28 +64,32 @@ public class Superstructure {
         return Commands.parallel(
                 m_elevator.moveTo(ElevatorConstants.L1_HEIGHT),
                 m_eeWrist.moveTo(
-                        gpMode == GPMode.Coral ? WristPosition.L1_PRE_ANGLE : WristPosition.SCORE_PROCESSOR_ANGLE));
+                        gpMode == GPMode.Coral ? EndEffectorWristPosition.L1_PRE_ANGLE
+                                : EndEffectorWristPosition.SCORE_PROCESSOR_ANGLE));
     }
 
     public Command moveL2() {
         return Commands.parallel(
                 m_elevator.moveTo(ElevatorConstants.L2_HEIGHT),
                 m_eeWrist
-                        .moveTo(gpMode == GPMode.Coral ? WristPosition.L2_PRE_ANGLE : WristPosition.DEALGAE_LOW_ANGLE));
+                        .moveTo(gpMode == GPMode.Coral ? EndEffectorWristPosition.L2_PRE_ANGLE
+                                : EndEffectorWristPosition.DEALGAE_LOW_ANGLE));
     }
 
     public Command moveL3() {
         return Commands.parallel(
                 m_elevator.moveTo(ElevatorConstants.L3_HEIGHT),
                 m_eeWrist.moveTo(
-                        gpMode == GPMode.Coral ? WristPosition.L3_PRE_ANGLE : WristPosition.DEALGAE_HIGH_ANGLE));
+                        gpMode == GPMode.Coral ? EndEffectorWristPosition.L3_PRE_ANGLE
+                                : EndEffectorWristPosition.DEALGAE_HIGH_ANGLE));
     }
 
     public Command moveL4() {
         return Commands.parallel(
                 m_elevator.moveTo(ElevatorConstants.L4_HEIGHT),
                 m_eeWrist
-                        .moveTo(gpMode == GPMode.Coral ? WristPosition.L4_PRE_ANGLE : WristPosition.SCORE_BARGE_ANGLE));
+                        .moveTo(gpMode == GPMode.Coral ? EndEffectorWristPosition.L4_PRE_ANGLE
+                                : EndEffectorWristPosition.SCORE_BARGE_ANGLE));
     }
 
     public Command score() {
@@ -99,6 +103,6 @@ public class Superstructure {
     public Command stow() {
         return Commands.parallel(
                 m_elevator.moveTo(ElevatorConstants.STOWED_HEIGHT),
-                m_eeWrist.moveTo(WristPosition.STOW_WRIST_ANGLE));
+                m_eeWrist.moveTo(EndEffectorWristPosition.STOW_WRIST_ANGLE));
     }
 }

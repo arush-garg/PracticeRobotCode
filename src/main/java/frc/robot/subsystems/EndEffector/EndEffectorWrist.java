@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.constants.EndEffectorConstants;
-import frc.robot.constants.EndEffectorConstants.WristPosition;
+import frc.robot.constants.EndEffectorConstants.EndEffectorWristPosition;
 import frc.robot.utils.*;
 
 import com.ctre.phoenix6.configs.*;
@@ -24,7 +24,7 @@ public class EndEffectorWrist extends SubsystemBase {
 	private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0);
 	private boolean debug;
 	private ElasticSender m_elastic;
-	private WristPosition m_position;
+	private EndEffectorWristPosition m_position;
 
 	public EndEffectorWrist(boolean debug) {
 		this.debug = debug;
@@ -62,7 +62,7 @@ public class EndEffectorWrist extends SubsystemBase {
 
 	}
 
-	public Command moveTo(WristPosition position) {
+	public Command moveTo(EndEffectorWristPosition position) {
 		return runOnce(
 				() -> {
 					m_position = position;
@@ -73,40 +73,40 @@ public class EndEffectorWrist extends SubsystemBase {
 	public Command moveToNextPosition() {
 		return runOnce(
 				() -> {
-					WristPosition nextPosition = null;
+					EndEffectorWristPosition nextPosition = null;
 					switch (m_position) {
 						case L1_PRE_ANGLE:
-							nextPosition = WristPosition.L1_SCORE_ANGLE;
+							nextPosition = EndEffectorWristPosition.L1_SCORE_ANGLE;
 							break;
 						case L2_PRE_ANGLE:
-							nextPosition = WristPosition.L2_SCORE_ANGLE;
+							nextPosition = EndEffectorWristPosition.L2_SCORE_ANGLE;
 							break;
 						case L3_PRE_ANGLE:
-							nextPosition = WristPosition.L3_SCORE_ANGLE;
+							nextPosition = EndEffectorWristPosition.L3_SCORE_ANGLE;
 							break;
 						case L4_PRE_ANGLE:
-							nextPosition = WristPosition.L4_SCORE_ANGLE;
+							nextPosition = EndEffectorWristPosition.L4_SCORE_ANGLE;
 							break;
 						case DEALGAE_HIGH_ANGLE:
-							nextPosition = WristPosition.STOW_WRIST_ANGLE;
+							nextPosition = EndEffectorWristPosition.STOW_WRIST_ANGLE;
 							break;
 						case DEALGAE_LOW_ANGLE:
-							nextPosition = WristPosition.STOW_WRIST_ANGLE;
+							nextPosition = EndEffectorWristPosition.STOW_WRIST_ANGLE;
 							break;
 						case L1_SCORE_ANGLE:
-							nextPosition = WristPosition.STOW_WRIST_ANGLE;
+							nextPosition = EndEffectorWristPosition.STOW_WRIST_ANGLE;
 							break;
 						case L2_SCORE_ANGLE:
-							nextPosition = WristPosition.STOW_WRIST_ANGLE;
+							nextPosition = EndEffectorWristPosition.STOW_WRIST_ANGLE;
 							break;
 						case L3_SCORE_ANGLE:
-							nextPosition = WristPosition.STOW_WRIST_ANGLE;
+							nextPosition = EndEffectorWristPosition.STOW_WRIST_ANGLE;
 							break;
 						case L4_SCORE_ANGLE:
-							nextPosition = WristPosition.STOW_WRIST_ANGLE;
+							nextPosition = EndEffectorWristPosition.STOW_WRIST_ANGLE;
 							break;
 						case SCORE_BARGE_ANGLE:
-							nextPosition = WristPosition.STOW_WRIST_ANGLE;
+							nextPosition = EndEffectorWristPosition.STOW_WRIST_ANGLE;
 							break;
 						default:
 							nextPosition = m_position;
