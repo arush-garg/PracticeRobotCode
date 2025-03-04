@@ -7,8 +7,6 @@ package frc.robot.subsystems.Elevator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import static edu.wpi.first.units.Units.*;
-
 import frc.robot.constants.ElevatorConstants;
 import frc.robot.utils.*;
 
@@ -16,11 +14,15 @@ import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.*;
 import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.wpilibj.XboxController;
 
 public class Elevator extends SubsystemBase {
 
-  private final TalonFX m_fx = new TalonFX(ElevatorConstants.MOTOR_ID, "rio");
+  private final TalonFX m_master = new TalonFX(ElevatorConstants.MASTER_MOTOR_ID, "rio");
+  private final TalonFX m_slave = new TalonFX(ElevatorConstants.SLAVE_MOTOR_ID, "rio");
   private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0);
   public boolean inManual = false;
   private XboxController xbox;
@@ -29,14 +31,21 @@ public class Elevator extends SubsystemBase {
     this.xbox = controller;
     TalonFXConfiguration cfg = new TalonFXConfiguration();
 
+    MotorOutputConfigs masterMotorConfigs = new MotorOutputConfigs();
+    masterMotorConfigs.Inverted = InvertedValue.CounterClockwise_Positive;
+    masterMotorConfigs.NeutralMode = NeutralModeValue.Brake;
+
+    MotorOutputConfigs slaveMotorConfigs = new MotorOutputConfigs();
+    slaveMotorConfigs.NeutralMode = NeutralModeValue.Brake;
+
     FeedbackConfigs fdb = cfg.Feedback;
     fdb.SensorToMechanismRatio = ElevatorConstants.GEAR_RATIO;
     fdb.FeedbackRotorOffset = ElevatorConstants.OFFSET;
 
     MotionMagicConfigs mm = cfg.MotionMagic;
-    mm.withMotionMagicCruiseVelocity(RotationsPerSecond.of(5))
-        .withMotionMagicAcceleration(RotationsPerSecondPerSecond.of(10))
-        .withMotionMagicJerk(RotationsPerSecondPerSecond.per(Second).of(100));
+    mm.MotionMagicCruiseVelocity = ElevatorConstants.MOTION_CRUISE_VELOCITY;
+    mm.MotionMagicAcceleration = ElevatorConstants.MOTION_ACCELERATION;
+    mm.MotionMagicJerk = ElevatorConstants.MOTION_JERK;
 
     Slot0Configs slot0 = cfg.Slot0;
     slot0.GravityType = GravityTypeValue.Elevator_Static;
@@ -48,20 +57,25 @@ public class Elevator extends SubsystemBase {
     slot0.kI = ElevatorConstants.kI;
     slot0.kD = ElevatorConstants.kD;
 
-    m_fx.getConfigurator().apply(cfg);
+    m_master.getConfigurator().apply(cfg);
+    m_master.getConfigurator().apply(masterMotorConfigs);
+    m_slave.getConfigurator().apply(cfg);
+    m_slave.getConfigurator().apply(slaveMotorConfigs);
+
+    m_slave.setControl(new Follower(ElevatorConstants.MASTER_MOTOR_ID, false));
   }
 
   public Command moveTo(double position) {
     return runOnce(
         () -> {
-          m_fx.setControl(m_mmReq.withPosition(position).withSlot(0));
+          m_master.setControl(m_mmReq.withPosition(position).withSlot(0));
         });
   }
 
   public Command zero(double position) {
     return runOnce(
         () -> {
-          m_fx.setPosition(ElevatorConstants.OFFSET);
+          m_master.setPosition(ElevatorConstants.OFFSET);
         });
   }
 
@@ -76,9 +90,9 @@ public class Elevator extends SubsystemBase {
     }
 
     if (inManual) {
-      m_fx.setVoltage(xbox.getLeftY() * ElevatorConstants.MAX_VOLTS / ElevatorConstants.MANUAL_RATIO);
-    } else if (m_fx.getPosition().getValueAsDouble() < 0.01) {
-      m_fx.disable();
+      m_master.setVoltage(xbox.getLeftY() * ElevatorConstants.MAX_VOLTS / ElevatorConstants.MANUAL_RATIO);
+    } else if (m_master.getPosition().getValueAsDouble() < 0.01) {
+      m_master.disable();
     }
   }
 
