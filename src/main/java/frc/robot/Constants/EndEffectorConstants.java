@@ -1,4 +1,4 @@
-package frc.robot.Constants;
+package frc.robot.constants;
 
 public final class EndEffectorConstants {
 
@@ -24,7 +24,7 @@ public final class EndEffectorConstants {
     public static class Rollers {
         public final static int MOTOR_ID = 0;
 
-        public final static double MAX_VOLTS = 0.0; 
+        public final static double MAX_VOLTS = 0.0;
         public final static double INTAKE_CORAL_VOLTS = 0.0;
         public final static double INTAKE_ALGAE_VOLTS = 0.0;
         public final static double OUTTAKE_L2_L3_CORAL_VOLTS = 0.0;

@@ -1,4 +1,4 @@
-package frc.robot.Constants;
+package frc.robot.constants;
 
 public final class ElevatorConstants {
     public final static int MOTOR_ID = 0;
@@ -13,7 +13,6 @@ public final class ElevatorConstants {
     public final static double kA = 0.0;
     public final static double kS = 0.0;
     public final static double kG = 0.0;
-
 
     public final static double OFFSET = 0.0;
 }
