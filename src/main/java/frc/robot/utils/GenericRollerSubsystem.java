@@ -5,6 +5,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class GenericRollerSubsystem extends SubsystemBase {
@@ -19,11 +20,15 @@ public class GenericRollerSubsystem extends SubsystemBase {
         m_motor.getConfigurator().apply(config);
     }
 
-    private void run(double speed) {
-        m_motor.setVoltage(speed);
+    public Command run(double speed) {
+        return runOnce(() -> {
+            m_motor.set(speed);
+        });
     }
 
-    private void stop() {
-        m_motor.setVoltage(0);
+    public Command stop() {
+        return runOnce(() -> {
+            m_motor.set(0);
+        });
     }
 }

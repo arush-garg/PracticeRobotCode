@@ -37,7 +37,8 @@ public final class EndEffectorConstants {
         DEALGAE_LOW_ANGLE(0.0),
         STOW_WRIST_ANGLE(0.0),
         SCORE_BARGE_ANGLE(0.0),
-        SCORE_PROCESSOR_ANGLE(0.0);
+        SCORE_PROCESSOR_ANGLE(0.0),
+        INTAKE(0.0);
 
         private final double angle;
 

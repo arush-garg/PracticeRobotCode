@@ -52,7 +52,11 @@ public class RobotContainer {
         m_superstructure.switchMode());
 
     // scoring commands
-
+    m_leftJoystick.trigger().onTrue(m_superstructure.intake());
+    m_buttonBoard.button(0).onTrue(m_superstructure.moveL1());
+    m_buttonBoard.button(1).onTrue(m_superstructure.moveL2());
+    m_buttonBoard.button(2).onTrue(m_superstructure.moveL3());
+    m_buttonBoard.button(3).onTrue(m_superstructure.moveL4());
   }
 
   // public Command getAutonomousCommand() {
