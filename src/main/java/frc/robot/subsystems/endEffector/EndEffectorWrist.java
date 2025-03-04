@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static edu.wpi.first.units.Units.*;
 
-import frc.robot.constants.ElevatorConstants;
 import frc.robot.constants.EndEffectorConstants;
 import frc.robot.utils.*;
 
@@ -17,22 +16,18 @@ import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.*;
 import com.ctre.phoenix6.signals.GravityTypeValue;
-import edu.wpi.first.wpilibj.XboxController;
 
 public class EndEffectorWrist extends SubsystemBase {
 
 	private final TalonFX m_fx = new TalonFX(EndEffectorConstants.Wrist.MOTOR_ID, "rio");
 	private final TalonFXConfiguration cfg = new TalonFXConfiguration();
 	private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0);
-	private boolean inManual = false;
-	private boolean elasticOn;
-	private XboxController xbox;
+	private boolean debug;
 	private ElasticSender m_elastic;
 
-	public EndEffectorWrist(XboxController controller, boolean debug) {
-		this.xbox = controller;
-		this.elasticOn = debug;
-		m_elastic = new ElasticSender("EE: Wrist", elasticOn);
+	public EndEffectorWrist(boolean debug) {
+		this.debug = debug;
+		m_elastic = new ElasticSender("EE: Wrist", debug);
 
 		FeedbackConfigs fdb = cfg.Feedback;
 		fdb.FeedbackRemoteSensorID = EndEffectorConstants.Wrist.ENCODER_ID;
@@ -68,33 +63,32 @@ public class EndEffectorWrist extends SubsystemBase {
 				});
 	}
 
-	public Command kill(double position) {
+	public Command zero() {
+		return runOnce(
+				() -> {
+					m_fx.setPosition(EndEffectorConstants.Wrist.OFFSET);
+				});
+	}
+
+	public Command kill() {
 		return runOnce(
 				() -> {
 					m_fx.disable();
 				});
 	}
 
-	@Override
-	public void periodic() {
-		if (elasticOn) {
-			m_elastic.update();
-		}
-
-		if (xbox.getYButton() && !Utils.NearZero(xbox.getLeftY())) {
-			inManual = true;
-		}
-
-		if (xbox.getYButtonReleased() || Utils.NearZero(xbox.getLeftY())) {
-			inManual = false;
-		}
-
-		if (inManual) {
-			m_fx.setVoltage(xbox.getLeftY() * ElevatorConstants.MAX_VOLTS / ElevatorConstants.MANUAL_RATIO);
-		}
+	public Command setManualVoltage(double joystickPosition) {
+		return run(
+				() -> {
+					m_fx.setVoltage(joystickPosition * EndEffectorConstants.Wrist.MAX_VOLTS
+							/ EndEffectorConstants.Wrist.MANUAL_RATIO);
+				});
 	}
 
 	@Override
-	public void simulationPeriodic() {
+	public void periodic() {
+		if (debug) {
+			m_elastic.update();
+		}
 	}
 }

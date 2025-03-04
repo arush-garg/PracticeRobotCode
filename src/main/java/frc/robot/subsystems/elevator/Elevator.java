@@ -73,6 +73,14 @@ public class Elevator extends SubsystemBase {
         });
   }
 
+  public Command kill() {
+    return runOnce(
+        () -> {
+          m_master.disable();
+          m_slave.disable();
+        });
+  }
+
   public Command setManualVoltage(double joystickPosition) {
     return run(
         () -> {
