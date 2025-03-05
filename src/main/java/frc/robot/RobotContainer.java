@@ -40,14 +40,14 @@ public class RobotContainer {
         .and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.01))
         .whileTrue(m_elevator.setManualVoltage(m_operatorController.getLeftY()));
     // elevator zero
-    m_operatorController.leftTrigger().and(m_operatorController.x()).onTrue(m_elevator.zero());
+    m_operatorController.button(7).and(m_operatorController.x()).onTrue(m_elevator.zero());
 
     // wrist manual
     m_operatorController.y()
         .and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.01))
         .whileTrue(m_elevator.setManualVoltage(m_operatorController.getLeftY()));
     // wrist zero
-    m_operatorController.leftTrigger().and(m_operatorController.x()).onTrue(m_eeWrist.zero());
+    m_operatorController.button(7).and(m_operatorController.x()).onTrue(m_eeWrist.zero());
 
     // gpMode switching
     m_buttonBoard.button(5).onTrue(
