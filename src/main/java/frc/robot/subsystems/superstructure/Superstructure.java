@@ -53,7 +53,8 @@ public class Superstructure {
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.INTAKE_POSITION),
                 m_intakeRollers.run(IntakeConstants.Rollers.INTAKE_CORAL_VOLTS),
                 Commands.waitUntil(m_channel.coralInEndEffectorSupplier),
-                Commands.parallel(m_intakeRollers.stop(), m_channel.stop(), m_eeRollers.stop()));
+                Commands.parallel(m_intakeRollers.stop(), m_channel.stop(), m_eeRollers.stop()),
+                m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION));
     }
 
     public Command moveL1() {

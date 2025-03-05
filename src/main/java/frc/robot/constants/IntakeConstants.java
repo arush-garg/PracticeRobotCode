@@ -24,6 +24,7 @@ public final class IntakeConstants {
         public final static double OFFSET = 0.0;
 
         public final static double INTAKE_POSITION = 0.0;
+        public final static double STOW_POSITION = 0.0;
     }
 
     public static class Rollers {
