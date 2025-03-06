@@ -129,10 +129,12 @@ public class ElasticSender {
     /**
      * This function should be called periodically. It will run once every 3 cycles (roughtly every 0.06 seconds)
      */
-    public void periodic() {
+    public boolean periodic() {
         if(!enabled) {
-            return;
+            return false;
         }
+
+        boolean updated = false;
 
         if(cycles == 0) {
             for (ElasticItem button : m_buttons) {
@@ -143,7 +145,9 @@ public class ElasticSender {
             }
 
             for(TalonFXConfigItem item : m_configItems) {
-                item.update();
+                if(item.update()) {
+                    updated = true;
+                }
             }
         }
         cycles++;
@@ -151,5 +155,7 @@ public class ElasticSender {
         if(cycles == 3) { //Makes the function run every 0.06 seconds
             cycles = 0;
         }
+
+        return updated;
     }
 }

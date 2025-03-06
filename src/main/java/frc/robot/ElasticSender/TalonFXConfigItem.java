@@ -44,10 +44,14 @@ public class TalonFXConfigItem extends ElasticItem {
     }
 
 
-    public void update() {
+    /**
+     * Updates the value of the item if it has changed
+     * Returns true if the value has changed
+     */
+    public boolean update() {
         double val = entry.getDouble((double) value);
         if(val == (double) value) {
-            return;
+            return false;
         }
         value = val;
 
@@ -128,6 +132,8 @@ public class TalonFXConfigItem extends ElasticItem {
                 }
                 break;
         }
+
+        return true;
     }
 
 }
