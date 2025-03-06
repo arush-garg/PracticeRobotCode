@@ -25,4 +25,8 @@ public enum EndEffectorWristPosition {
     public double getAngle() {
         return angle;
     }
+
+    public double getBackAngle() {
+        return -angle;
+    }
 }
