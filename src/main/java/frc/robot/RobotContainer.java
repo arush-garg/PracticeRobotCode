@@ -12,6 +12,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -46,11 +47,11 @@ public class RobotContainer {
   private final CommandXboxController m_buttonBoard = new CommandXboxController(3);
 
   // auto
-  private final SendableChooser<Command> autoChooser;
+  //private final SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
-    autoChooser = AutoBuilder.buildAutoChooser("Tests");
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+    //autoChooser = AutoBuilder.buildAutoChooser("Tests");
+    //SmartDashboard.putData("Auto Chooser", autoChooser);
 
     configureBindings();
   }
@@ -62,15 +63,15 @@ public class RobotContainer {
             .withRotationalRate(-m_rightJoystick.getX() * MaxAngularRate)));
 
     // sysid routines for tuning
-    m_operatorController.back().and(m_operatorController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-    m_operatorController.back().and(m_operatorController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-    m_operatorController.start().and(m_operatorController.y())
-        .whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-    m_operatorController.start().and(m_operatorController.x())
-        .whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+
+    
+    m_operatorController.button(7).and(m_operatorController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+    m_operatorController.button(7).and(m_operatorController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+    m_operatorController.button(8).and(m_operatorController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+    m_operatorController.button(8).and(m_operatorController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
     // reset yaw
-    m_operatorController.button(8).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+    //m_operatorController.button(8).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
     m_buttonBoard.button(11).whileTrue(new DriveToPoseCommand(drivetrain, vision, TargetPosition.RIGHT));
     m_buttonBoard.button(12).whileTrue(new DriveToPoseCommand(drivetrain, vision, TargetPosition.LEFT));
@@ -80,6 +81,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    //return autoChooser.getSelected();
+    return null;
   }
 }

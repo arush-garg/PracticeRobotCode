@@ -77,7 +77,7 @@ public class EagleSwerveDrivetrain extends TunerSwerveDrivetrain implements Subs
     private final SysIdRoutine m_sysIdRoutineSteer = new SysIdRoutine(
             new SysIdRoutine.Config(
                     null, // Use default ramp rate (1 V/s)
-                    Volts.of(7), // Use dynamic voltage of 7 V
+                    Volts.of(4), // Use dynamic voltage of 7 V
                     null, // Use default timeout (10 s)
                     // Log state with SignalLogger class
                     state -> SignalLogger.writeString("SysIdSteer_State", state.toString())),
