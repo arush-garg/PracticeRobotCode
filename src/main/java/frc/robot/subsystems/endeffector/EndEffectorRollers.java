@@ -7,4 +7,8 @@ public class EndEffectorRollers extends GenericRollerSubsystem {
     public EndEffectorRollers() {
         super(EndEffectorConstants.Rollers.MOTOR_ID, "rio", true);
     }
+
+    public boolean isStalled() {
+        return m_motor.getStatorCurrent().getValueAsDouble() > EndEffectorConstants.Rollers.STALL_CURRENT;
+    }
 }

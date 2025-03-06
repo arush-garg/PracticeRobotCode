@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class GenericRollerSubsystem extends SubsystemBase {
-    private final TalonFX m_motor;
+    protected final TalonFX m_motor;
 
     public GenericRollerSubsystem(int motorId, String canbus, boolean inverted) {
         m_motor = new TalonFX(motorId, canbus);
