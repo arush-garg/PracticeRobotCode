@@ -23,12 +23,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "IntakeCoral"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "StationSweep"
@@ -50,12 +44,6 @@
           "type": "path",
           "data": {
             "pathName": "FL_RPToStation"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakeCoral"
           }
         },
         {
