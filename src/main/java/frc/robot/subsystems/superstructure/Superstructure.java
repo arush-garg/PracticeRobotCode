@@ -52,6 +52,7 @@ public class Superstructure {
                 m_eeWrist.moveTo(EndEffectorWristPosition.INTAKE_CORAL_ANGLE),
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.INTAKE_POSITION),
                 m_intakeRollers.run(IntakeConstants.Rollers.INTAKE_CORAL_VOLTS),
+                m_channel.run(ChannelConstants.CHANNEL_VOLTS),
                 Commands.waitUntil(m_channel.coralInEndEffectorSupplier),
                 Commands.parallel(m_intakeRollers.stop(), m_channel.stop(), m_eeRollers.stop()),
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION));
@@ -158,6 +159,10 @@ public class Superstructure {
     public Command stow() {
         return Commands.parallel(
                 m_elevator.moveTo(ElevatorConstants.STOWED_HEIGHT),
-                m_eeWrist.moveTo(EndEffectorWristPosition.STOW_ANGLE));
+                m_eeWrist.moveTo(EndEffectorWristPosition.STOW_ANGLE),
+                m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION),
+                m_intakeRollers.stop(),
+                m_eeRollers.stop(),
+                m_channel.stop());
     }
 }
