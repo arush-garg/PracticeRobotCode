@@ -35,19 +35,20 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    // elevator manual
+    // manual commands
     m_operatorController.x()
         .and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.01))
         .whileTrue(m_elevator.setManualVoltage(m_operatorController.getLeftY()));
-    // elevator zero
-    m_operatorController.button(7).and(m_operatorController.x()).onTrue(m_elevator.zero());
-
-    // wrist manual
-    m_operatorController.y()
+    m_operatorController.b()
         .and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.01))
-        .whileTrue(m_elevator.setManualVoltage(m_operatorController.getLeftY()));
-    // wrist zero
-    m_operatorController.button(7).and(m_operatorController.x()).onTrue(m_eeWrist.zero());
+        .whileTrue(m_intakeWrist.setManualVoltage(m_operatorController.getLeftY()));
+    m_operatorController.y().and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.01))
+        .whileTrue(m_eeWrist.setManualVoltage(m_operatorController.getLeftY()));
+
+    // zero commands
+    m_operatorController.button(7).and(m_operatorController.x()).onTrue(m_elevator.zero());
+    m_operatorController.button(7).and(m_operatorController.y()).onTrue(m_eeWrist.zero());
+    m_operatorController.button(7).and(m_operatorController.b()).onTrue(m_intakeWrist.zero());
 
     // gpMode switching
     m_buttonBoard.button(5).onTrue(
@@ -63,7 +64,7 @@ public class RobotContainer {
 
     // stow commands
     m_leftJoystick.button(2).onTrue(m_superstructure.stow());
-    // todo: oprator controller stow button
+    m_operatorController.povUp().onTrue(m_superstructure.stow());
   }
 
   // public Command getAutonomousCommand() {
