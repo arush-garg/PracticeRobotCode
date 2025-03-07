@@ -23,7 +23,8 @@ public class EndEffectorWrist extends SubsystemBase {
 	private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0);
 	private boolean debug;
 	private ElasticSender m_elastic;
-	private EndEffectorWristPosition m_position;
+	private EndEffectorWristPosition m_currPosition = EndEffectorWristPosition.STOW_WRIST_ANGLE;
+	private EndEffectorWristSide m_currSide = EndEffectorWristSide.FRONT;
 
 	public EndEffectorWrist(boolean debug) {
 		this.debug = debug;
@@ -62,18 +63,31 @@ public class EndEffectorWrist extends SubsystemBase {
 	}
 
 	public Command moveTo(EndEffectorWristPosition position) {
+		return moveTo(position, EndEffectorWristSide.FRONT);
+	}
+
+	public Command moveTo(EndEffectorWristPosition position, EndEffectorWristSide side) {
 		return runOnce(
 				() -> {
-					m_position = position;
-					m_motor.setControl(m_mmReq.withPosition(position.getAngle()).withSlot(0));
+					m_currPosition = position;
+					m_currSide = side;
+					double angle = position.getAngle();
+					if (side == EndEffectorWristSide.BACK) {
+						angle = position.getBackAngle();
+					}
+					m_motor.setControl(m_mmReq.withPosition(angle).withSlot(0));
 				});
 	}
 
 	public Command moveToNextPosition() {
+		return moveToNextPosition(m_currSide);
+	}
+
+	public Command moveToNextPosition(EndEffectorWristSide side) {
 		return runOnce(
 				() -> {
 					EndEffectorWristPosition nextPosition = null;
-					switch (m_position) {
+					switch (m_currPosition) {
 						case L1_PRE_ANGLE:
 							nextPosition = EndEffectorWristPosition.L1_SCORE_ANGLE;
 							break;
@@ -108,10 +122,10 @@ public class EndEffectorWrist extends SubsystemBase {
 							nextPosition = EndEffectorWristPosition.STOW_WRIST_ANGLE;
 							break;
 						default:
-							nextPosition = m_position;
+							nextPosition = m_currPosition;
 							break;
 					}
-					moveTo(nextPosition);
+					moveTo(nextPosition, side).schedule();
 				});
 	}
 
