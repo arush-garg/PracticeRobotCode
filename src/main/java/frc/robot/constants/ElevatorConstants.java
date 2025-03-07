@@ -21,10 +21,14 @@ public final class ElevatorConstants {
 
     public final static double OFFSET = 0.0;
 
-    public final static double L1_HEIGHT = 0;
-    public final static double L2_HEIGHT = 0;
-    public final static double L3_HEIGHT = 0;
-    public final static double L4_HEIGHT = 0;
+    public final static double L1_CORAL_HEIGHT = 0;
+    public final static double L2_CORAL_HEIGHT = 0;
+    public final static double L3_CORAL_HEIGHT = 0;
+    public final static double L4_CORAL_HEIGHT = 0;
+    public final static double PROCESSOR_ALGAE_HEIGHT = 0;
+    public final static double L2_ALGAE_HEIGHT = 0;
+    public final static double L3_ALGAE_HEIGHT = 0;
+    public final static double BARGE_ALGAE_HEIGHT = 0;
     public final static double STOWED_HEIGHT = 0;
     public final static double INTAKE_HEIGHT = 0;
 }
