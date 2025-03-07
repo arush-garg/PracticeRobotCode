@@ -2,7 +2,6 @@ package frc.robot.constants;
 
 public enum EndEffectorWristPosition {
     // coral
-    L1_PRE_ANGLE(0.0),
     L2_PRE_ANGLE(0.0),
     L3_PRE_ANGLE(0.0),
     L4_PRE_ANGLE(0.0),

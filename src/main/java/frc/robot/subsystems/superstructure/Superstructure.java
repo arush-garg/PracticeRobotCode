@@ -61,7 +61,8 @@ public class Superstructure {
         return Commands.sequence(
                 m_eeWrist.moveTo(EndEffectorWristPosition.INTAKE_ALGAE_ANGLE),
                 Commands.waitUntil(() -> m_eeRollers.isStalled()),
-                m_eeRollers.stop());
+                m_eeRollers.stop(),
+                m_eeRollers.holdAlgae());
     }
 
     public Command intake() {
@@ -75,7 +76,7 @@ public class Superstructure {
     public Command moveL1() {
         return Commands.parallel(
                 m_elevator.moveTo(ElevatorConstants.L1_HEIGHT),
-                gpMode == GPMode.Coral ? m_eeWrist.moveTo(EndEffectorWristPosition.L1_PRE_ANGLE)
+                gpMode == GPMode.Coral ? m_eeWrist.moveTo(EndEffectorWristPosition.L1_SCORE_ANGLE)
                         : m_eeWrist.moveTo(EndEffectorWristPosition.SCORE_PROCESSOR_ANGLE));
     }
 
@@ -96,15 +97,38 @@ public class Superstructure {
     public Command moveL4() {
         return Commands.parallel(
                 m_elevator.moveTo(ElevatorConstants.L1_HEIGHT),
-                gpMode == GPMode.Coral ? m_eeWrist.moveTo(EndEffectorWristPosition.L1_PRE_ANGLE)
+                gpMode == GPMode.Coral ? m_eeWrist.moveTo(EndEffectorWristPosition.L4_PRE_ANGLE)
                         : m_eeWrist.moveTo(EndEffectorWristPosition.SCORE_BARGE_ANGLE));
+    }
+
+    public Command scoreCoral() {
+        return Commands.runOnce(() -> {
+            switch (m_eeWrist.getPosition()) {
+                case L1_SCORE_ANGLE -> m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L1_CORAL_VOLTS);
+                case L2_PRE_ANGLE, L3_PRE_ANGLE ->
+                    m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L2_L3_CORAL_VOLTS);
+                case L4_PRE_ANGLE -> m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L4_CORAL_VOLTS);
+                default -> m_eeRollers.run(0);
+            }
+            m_eeWrist.moveToNextPosition();
+        });
+    }
+
+    public Command scoreAlgae() {
+        return Commands.sequence(
+                m_eeRollers.run(switch (m_eeWrist.getPosition()) {
+                    case SCORE_PROCESSOR_ANGLE -> EndEffectorConstants.Rollers.OUTTAKE_PROCCESOR_VOLTS;
+                    case SCORE_BARGE_ANGLE -> EndEffectorConstants.Rollers.OUTTAKE_BARGE_VOLTS;
+                    default -> 0;
+                }),
+                m_eeRollers.stopHoldingAlgae());
     }
 
     public Command score() {
         return new SelectCommand<>(
                 Map.ofEntries(
-                        Map.entry(GPMode.Coral, m_eeWrist.moveToNextPosition()),
-                        Map.entry(GPMode.Algae, m_eeRollers.run(4))),
+                        Map.entry(GPMode.Coral, scoreCoral()),
+                        Map.entry(GPMode.Algae, scoreAlgae())),
                 this::getGPMode);
     }
 

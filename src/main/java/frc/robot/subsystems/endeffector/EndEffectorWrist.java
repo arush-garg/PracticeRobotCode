@@ -88,8 +88,8 @@ public class EndEffectorWrist extends SubsystemBase {
 				() -> {
 					EndEffectorWristPosition nextPosition = null;
 					switch (m_currPosition) {
-						case L1_PRE_ANGLE:
-							nextPosition = EndEffectorWristPosition.L1_SCORE_ANGLE;
+						case L1_SCORE_ANGLE:
+							nextPosition = EndEffectorWristPosition.STOW_ANGLE;
 							break;
 						case L2_PRE_ANGLE:
 							nextPosition = EndEffectorWristPosition.L2_SCORE_ANGLE;
@@ -103,7 +103,6 @@ public class EndEffectorWrist extends SubsystemBase {
 						case SCORE_PROCESSOR_ANGLE:
 						case SCORE_BARGE_ANGLE:
 						case INTAKE_ALGAE_ANGLE:
-						case L1_SCORE_ANGLE:
 						case L2_SCORE_ANGLE:
 						case L3_SCORE_ANGLE:
 						case L4_SCORE_ANGLE:
@@ -137,6 +136,10 @@ public class EndEffectorWrist extends SubsystemBase {
 					m_motor.setVoltage(joystickPosition * EndEffectorConstants.Wrist.MAX_VOLTS
 							/ EndEffectorConstants.Wrist.MANUAL_RATIO);
 				});
+	}
+
+	public EndEffectorWristPosition getPosition() {
+		return m_currPosition;
 	}
 
 	@Override
