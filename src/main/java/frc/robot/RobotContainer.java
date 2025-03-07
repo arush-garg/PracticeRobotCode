@@ -12,16 +12,17 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.commands.DriveToPoseCommand;
 import frc.robot.commands.DriveToPoseCommand.TargetPosition;
+import frc.robot.constants.DriveConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Drive.EagleSwerveDrivetrain;
 import frc.robot.subsystems.Drive.EagleSwerveTelemetry;
@@ -40,6 +41,8 @@ public class RobotContainer {
   public final EagleSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
   public final Vision vision = new Vision(drivetrain);
 
+  private boolean slowModeOn = false;
+
   // controllers
   private final CommandJoystick m_leftJoystick = new CommandJoystick(0);
   private final CommandJoystick m_rightJoystick = new CommandJoystick(1);
@@ -47,31 +50,38 @@ public class RobotContainer {
   private final CommandXboxController m_buttonBoard = new CommandXboxController(3);
 
   // auto
-  //private final SendableChooser<Command> autoChooser;
+  private final SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
-    //autoChooser = AutoBuilder.buildAutoChooser("Tests");
-    //SmartDashboard.putData("Auto Chooser", autoChooser);
+    autoChooser = AutoBuilder.buildAutoChooser("Tests");
+    SmartDashboard.putData("Auto Chooser", autoChooser);
 
     configureBindings();
   }
 
   private void configureBindings() {
     drivetrain.setDefaultCommand(
-        drivetrain.applyRequest(() -> drive.withVelocityX(-m_leftJoystick.getY() * MaxSpeed)
-            .withVelocityY(-m_leftJoystick.getX() * MaxSpeed)
-            .withRotationalRate(-m_rightJoystick.getX() * MaxAngularRate)));
+        drivetrain.applyRequest(() -> drive
+            .withVelocityX(-m_leftJoystick.getY() * MaxSpeed * (slowModeOn ? DriveConstants.SLOW_MODE_MULT : 0))
+            .withVelocityY(-m_leftJoystick.getX() * MaxSpeed * (slowModeOn ? DriveConstants.SLOW_MODE_MULT : 0))
+            .withRotationalRate(
+                -m_rightJoystick.getX() * MaxAngularRate * (slowModeOn ? DriveConstants.SLOW_MODE_MULT : 0))));
+
+    m_rightJoystick.button(2)
+        .onTrue(Commands.runOnce(() -> slowModeOn = true))
+        .onFalse(Commands.runOnce(() -> slowModeOn = false));
 
     // sysid routines for tuning
 
-    
     m_operatorController.button(7).and(m_operatorController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
     m_operatorController.button(7).and(m_operatorController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-    m_operatorController.button(8).and(m_operatorController.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-    m_operatorController.button(8).and(m_operatorController.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+    m_operatorController.button(8).and(m_operatorController.y())
+        .whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+    m_operatorController.button(8).and(m_operatorController.x())
+        .whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
     // reset yaw
-    //m_operatorController.button(8).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+    m_operatorController.button(8).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
     m_buttonBoard.button(11).whileTrue(new DriveToPoseCommand(drivetrain, vision, TargetPosition.RIGHT));
     m_buttonBoard.button(12).whileTrue(new DriveToPoseCommand(drivetrain, vision, TargetPosition.LEFT));
@@ -81,7 +91,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    //return autoChooser.getSelected();
-    return null;
+    return autoChooser.getSelected();
   }
 }
