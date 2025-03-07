@@ -23,7 +23,7 @@ public class EndEffectorWrist extends SubsystemBase {
 	private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0);
 	private boolean debug;
 	private ElasticSender m_elastic;
-	private EndEffectorWristPosition m_currPosition = EndEffectorWristPosition.STOW_WRIST_ANGLE;
+	private EndEffectorWristPosition m_currPosition = EndEffectorWristPosition.STOW_ANGLE;
 	private EndEffectorWristSide m_currSide = EndEffectorWristSide.FRONT;
 
 	public EndEffectorWrist(boolean debug) {
@@ -100,26 +100,14 @@ public class EndEffectorWrist extends SubsystemBase {
 						case L4_PRE_ANGLE:
 							nextPosition = EndEffectorWristPosition.L4_SCORE_ANGLE;
 							break;
-						case DEALGAE_HIGH_ANGLE:
-							nextPosition = EndEffectorWristPosition.STOW_WRIST_ANGLE;
-							break;
-						case DEALGAE_LOW_ANGLE:
-							nextPosition = EndEffectorWristPosition.STOW_WRIST_ANGLE;
-							break;
-						case L1_SCORE_ANGLE:
-							nextPosition = EndEffectorWristPosition.STOW_WRIST_ANGLE;
-							break;
-						case L2_SCORE_ANGLE:
-							nextPosition = EndEffectorWristPosition.STOW_WRIST_ANGLE;
-							break;
-						case L3_SCORE_ANGLE:
-							nextPosition = EndEffectorWristPosition.STOW_WRIST_ANGLE;
-							break;
-						case L4_SCORE_ANGLE:
-							nextPosition = EndEffectorWristPosition.STOW_WRIST_ANGLE;
-							break;
+						case SCORE_PROCESSOR_ANGLE:
 						case SCORE_BARGE_ANGLE:
-							nextPosition = EndEffectorWristPosition.STOW_WRIST_ANGLE;
+						case INTAKE_ALGAE_ANGLE:
+						case L1_SCORE_ANGLE:
+						case L2_SCORE_ANGLE:
+						case L3_SCORE_ANGLE:
+						case L4_SCORE_ANGLE:
+							nextPosition = EndEffectorWristPosition.STOW_ANGLE;
 							break;
 						default:
 							nextPosition = m_currPosition;
