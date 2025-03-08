@@ -5,6 +5,7 @@ import java.util.Map;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
+import frc.robot.ElasticSender.ElasticSender;
 import frc.robot.constants.*;
 import frc.robot.subsystems.channel.Channel;
 import frc.robot.subsystems.elevator.Elevator;
@@ -22,15 +23,26 @@ public class Superstructure {
     private final IntakeWrist m_intakeWrist;
     private final IntakeRollers m_intakeRollers;
     private final Channel m_channel;
+    private final ElasticSender m_elastic;
 
     public Superstructure(Elevator elevator, EndEffectorWrist eeWrist, EndEffectorRollers eeRollers,
-            IntakeWrist intakeWrist, IntakeRollers intakeRollers, Channel channel) {
+            IntakeWrist intakeWrist, IntakeRollers intakeRollers, Channel channel, boolean debug) {
         this.m_elevator = elevator;
         this.m_eeWrist = eeWrist;
         this.m_eeRollers = eeRollers;
         this.m_intakeWrist = intakeWrist;
         this.m_intakeRollers = intakeRollers;
         this.m_channel = channel;
+        
+        m_elastic = new ElasticSender("Superstructure", debug);
+        m_elastic.addButton("Switch Mode", switchMode());
+        m_elastic.addButton("Intake", intake());
+        m_elastic.addButton("Score", score());
+        m_elastic.addButton("Move L1", moveL1());
+        m_elastic.addButton("Move L2", moveL2());
+        m_elastic.addButton("Move L3", moveL3());
+        m_elastic.addButton("Move L4", moveL4());
+        m_elastic.addButton("Stow", stow());
     }
 
     public Command switchMode() {

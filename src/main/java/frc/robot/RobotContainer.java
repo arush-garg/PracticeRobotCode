@@ -21,14 +21,14 @@ public class RobotContainer {
   private final CommandXboxController m_operatorController = new CommandXboxController(2);
   private final CommandXboxController m_buttonBoard = new CommandXboxController(3);
 
-  private final Elevator m_elevator = new Elevator();
-  private final EndEffectorWrist m_eeWrist = new EndEffectorWrist(false);
+  private final Elevator m_elevator = new Elevator(true);
+  private final EndEffectorWrist m_eeWrist = new EndEffectorWrist(true);
   private final EndEffectorRollers m_eeRollers = new EndEffectorRollers();
   private final IntakeWrist m_intakeWrist = new IntakeWrist();
   private final IntakeRollers m_intakeRollers = new IntakeRollers();
   private final Channel m_channel = new Channel();
   private final Superstructure m_superstructure = new Superstructure(m_elevator, m_eeWrist, m_eeRollers, m_intakeWrist,
-      m_intakeRollers, m_channel);
+      m_intakeRollers, m_channel, true);
 
   public RobotContainer() {
     configureBindings();

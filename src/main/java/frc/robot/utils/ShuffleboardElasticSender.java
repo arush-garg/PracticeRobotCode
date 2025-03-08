@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
-public class ElasticSender {
+public class ShuffleboardElasticSender {
     private ShuffleboardTab tab;
     private boolean update;
     private ArrayList<ElasticItem> entries = new ArrayList<ElasticItem>();
@@ -26,7 +26,7 @@ public class ElasticSender {
         }
     }
 
-    public ElasticSender(String tabName, boolean update) {
+    public ShuffleboardElasticSender(String tabName, boolean update) {
         tab = Shuffleboard.getTab(tabName);
         this.update = update;
     }

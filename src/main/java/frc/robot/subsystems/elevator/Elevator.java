@@ -6,7 +6,7 @@ package frc.robot.subsystems.elevator;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.ElasticSender.ElasticSender;
 import frc.robot.constants.*;
 
 import com.ctre.phoenix6.configs.*;
@@ -21,8 +21,13 @@ public class Elevator extends SubsystemBase {
   private final TalonFX m_master = new TalonFX(ElevatorConstants.MASTER_MOTOR_ID, "rio");
   private final TalonFX m_slave = new TalonFX(ElevatorConstants.SLAVE_MOTOR_ID, "rio");
   private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0);
+  private final ElasticSender m_elastic;
 
-  public Elevator() {
+  public Elevator(boolean debug) {
+	m_elastic = new ElasticSender("Elevator", debug);
+	m_elastic.addButton("Zero", zero());
+	m_elastic.addButton("Kill", kill());
+
     TalonFXConfiguration cfg = new TalonFXConfiguration();
 
     MotorOutputConfigs masterMotorConfigs = new MotorOutputConfigs();
@@ -87,4 +92,9 @@ public class Elevator extends SubsystemBase {
           m_master.setVoltage(joystickPosition * ElevatorConstants.MAX_VOLTS / ElevatorConstants.MANUAL_RATIO);
         });
   }
+
+  @Override
+	public void periodic() {
+		m_elastic.periodic();
+	}
 }

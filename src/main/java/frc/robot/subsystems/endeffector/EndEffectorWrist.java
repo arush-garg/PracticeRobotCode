@@ -6,17 +6,14 @@ package frc.robot.subsystems.endeffector;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.ElasticSender.ElasticSender;
 import frc.robot.constants.*;
 import frc.robot.utils.*;
-
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.*;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-import com.ctre.phoenix6.signals.GravityTypeValue;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.*;
+
 
 public class EndEffectorWrist extends SubsystemBase {
 
@@ -32,6 +29,8 @@ public class EndEffectorWrist extends SubsystemBase {
 	public EndEffectorWrist(boolean debug) {
 		this.debug = debug;
 		m_elastic = new ElasticSender("EE: Wrist", debug);
+		m_elastic.addButton("Zero", zero());
+		m_elastic.addButton("Kill", kill());
 
 		TalonFXConfiguration cfg = new TalonFXConfiguration();
 		cfg.Feedback.FeedbackRemoteSensorID = m_encoder.getDeviceID();
@@ -149,8 +148,6 @@ public class EndEffectorWrist extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		if (debug) {
-			m_elastic.update();
-		}
+		m_elastic.periodic();
 	}
 }
