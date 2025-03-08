@@ -10,7 +10,7 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.pathplanner.lib.auto.AutoBuilder;
+// import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -50,11 +50,11 @@ public class RobotContainer {
   private final CommandXboxController m_buttonBoard = new CommandXboxController(3);
 
   // auto
-  private final SendableChooser<Command> autoChooser;
+  // private final SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
-    autoChooser = AutoBuilder.buildAutoChooser("Tests");
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+    // autoChooser = AutoBuilder.buildAutoChooser("Tests");
+    // SmartDashboard.putData("Auto Chooser", autoChooser);
 
     configureBindings();
   }
@@ -62,10 +62,10 @@ public class RobotContainer {
   private void configureBindings() {
     drivetrain.setDefaultCommand(
         drivetrain.applyRequest(() -> drive
-            .withVelocityX(-m_leftJoystick.getY() * MaxSpeed * (slowModeOn ? DriveConstants.SLOW_MODE_MULT : 0))
-            .withVelocityY(-m_leftJoystick.getX() * MaxSpeed * (slowModeOn ? DriveConstants.SLOW_MODE_MULT : 0))
+            .withVelocityX(-m_leftJoystick.getY() * MaxSpeed * (slowModeOn ? DriveConstants.SLOW_MODE_MULT : 1))
+            .withVelocityY(-m_leftJoystick.getX() * MaxSpeed * (slowModeOn ? DriveConstants.SLOW_MODE_MULT : 1))
             .withRotationalRate(
-                -m_rightJoystick.getX() * MaxAngularRate * (slowModeOn ? DriveConstants.SLOW_MODE_MULT : 0))));
+                -m_rightJoystick.getX() * MaxAngularRate * (slowModeOn ? DriveConstants.SLOW_MODE_MULT : 1))));
 
     m_rightJoystick.button(2)
         .onTrue(Commands.runOnce(() -> slowModeOn = true))
@@ -91,6 +91,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    // return autoChooser.getSelected();
+    return null;
   }
 }
