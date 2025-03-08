@@ -1,5 +1,8 @@
 package frc.robot.constants;
 
+/**
+ * In terms of the number of rotations using the encoder
+ */
 public enum EndEffectorWristPosition {
     // coral
     L2_PRE_ANGLE(0.0),

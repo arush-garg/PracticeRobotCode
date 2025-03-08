@@ -4,7 +4,8 @@ public final class EndEffectorConstants {
 
     public static class Wrist {
         public final static int MOTOR_ID = 0;
-
+        public final static int ENCODER_ID = 0;
+        
         public final static double MAX_VOLTS = 0.0;
         public final static double MANUAL_RATIO = 0.0;
         public final static double GEAR_RATIO = 0.0;

@@ -13,6 +13,7 @@ import frc.robot.utils.*;
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.*;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -20,6 +21,8 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 public class EndEffectorWrist extends SubsystemBase {
 
 	private final TalonFX m_motor = new TalonFX(EndEffectorConstants.Wrist.MOTOR_ID, "rio");
+	private final CANcoder m_encoder = new CANcoder(EndEffectorConstants.Wrist.ENCODER_ID, "rio");
+
 	private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0);
 	private boolean debug;
 	private ElasticSender m_elastic;
@@ -31,7 +34,9 @@ public class EndEffectorWrist extends SubsystemBase {
 		m_elastic = new ElasticSender("EE: Wrist", debug);
 
 		TalonFXConfiguration cfg = new TalonFXConfiguration();
-
+		cfg.Feedback.FeedbackRemoteSensorID = m_encoder.getDeviceID();
+		cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+		
 		MotorOutputConfigs motorConfigs = new MotorOutputConfigs();
 		motorConfigs.Inverted = InvertedValue.Clockwise_Positive;
 		motorConfigs.NeutralMode = NeutralModeValue.Brake;
