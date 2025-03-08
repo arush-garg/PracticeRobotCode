@@ -1,15 +1,10 @@
 package frc.robot.ElasticSender;
 
 import java.util.ArrayList;
-
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.ElasticSender.TalonFXConfigItem.ConfigParameter;
-import frc.robot.ElasticSender.TalonFXConfigItem.TalonFXConfigSlot;
+import frc.robot.ElasticSender.TalonFXConfigItem.*;
 
 
 public class ElasticSender {
@@ -30,7 +25,7 @@ public class ElasticSender {
         m_configItems = new ArrayList<TalonFXConfigItem>();
     }
 
-    public void put(String name, Object value) { //Add an object
+    public void put(String name, Object value, boolean edit) { //Add an object
         if(!enabled) {
             return;
         }
@@ -47,9 +42,29 @@ public class ElasticSender {
             }
         }
         if (!found) {
-            ElasticItem item = new ElasticItem(name, value, m_tab.getEntry(name));
+            ElasticItem item = new ElasticItem(name, value, m_tab.getEntry(name), edit);
             m_items.add(item);
         }
+    }
+
+    public double getNumber(String name) {
+        for (ElasticItem item : m_items) {
+            if (item.key.equals(name)) {
+                return item.entry.getDouble(0.0);
+            }
+        }
+
+        return 0.0;
+    }
+
+    public boolean getBoolean(String name) {
+        for (ElasticItem item : m_items) {
+            if (item.key.equals(name)) {
+                return (boolean)(item.entry.getBoolean(false));
+            }
+        }
+
+        return false;
     }
 
     public void addConfig(String name, TalonFXConfiguration config, TalonFXConfigSlot slot, TalonFXConfigItem.TalonFXConfigType type) {
@@ -123,11 +138,12 @@ public class ElasticSender {
         }
         NetworkTableEntry entry = m_tab.getEntry(name);
         entry.setBoolean(false);
-        m_buttons.add(new ElasticItem(name, action, entry));
+        m_buttons.add(new ElasticItem(name, action, entry, true));
     }
 
     /**
      * This function should be called periodically. It will run once every 3 cycles (roughtly every 0.06 seconds)
+     * Returns <code>true</code> if <code>TalonFXConfig</code> has been changed
      */
     public boolean periodic() {
         if(!enabled) {
@@ -149,7 +165,18 @@ public class ElasticSender {
                     updated = true;
                 }
             }
+
+            for(ElasticItem item : m_items) {
+                if(item.value.equals(item.entry.getValue())) {
+                    continue;
+                }
+
+                if(item.editable) {
+                    item.value = item.entry.getValue();
+                }
+            }
         }
+
         cycles++;
 
         if(cycles == 3) { //Makes the function run every 0.06 seconds

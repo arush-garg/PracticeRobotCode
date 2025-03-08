@@ -33,7 +33,7 @@ public class TalonFXConfigItem extends ElasticItem {
 
 
     public TalonFXConfigItem(String key, Object value, NetworkTableEntry entry, TalonFXConfiguration parent, TalonFXConfigSlot slot, ConfigParameter param) {
-        super(key, value, entry);
+        super(key, value, entry, true);
         this.parent = parent;
         this.slot = slot;
         this.param = param;
