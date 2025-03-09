@@ -17,14 +17,14 @@ public class VisionConstants {
 
     public static final CameraConfiguration CAMERA_RIGHT_CONFIG = new CameraConfiguration()
             .withCameraName("CAMERA_RIGHT")
-            .withRobotToCam(new Transform3d(new Translation3d(0.13953, 0.35356, 0.13106),
+            .withRobotToCam(new Transform3d(new Translation3d(0.35999, 0, 0.13106),
                     new Rotation3d(0.0, Units.degreesToRadians(20), Units.degreesToRadians(20))))
             .withSingleTagStdDevs(VecBuilder.fill(0.0, 0.0, 0.0))
             .withMultiTagStdDevs(VecBuilder.fill(0.0, 0.0, 0.0));
 
     public static final CameraConfiguration CAMERA_LEFT_CONFIG = new CameraConfiguration()
             .withCameraName("CAMERA_LEFT")
-            .withRobotToCam(new Transform3d(new Translation3d(-0.13953, 0.35356, 0.13106),
+            .withRobotToCam(new Transform3d(new Translation3d(-0.35999, 0, 0.13106),
                     new Rotation3d(0.0, Units.degreesToRadians(20), Units.degreesToRadians(-20))))
             .withSingleTagStdDevs(VecBuilder.fill(0.0, 0.0, 0.0))
             .withMultiTagStdDevs(VecBuilder.fill(0.0, 0.0, 0.0));
