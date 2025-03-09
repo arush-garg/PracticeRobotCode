@@ -10,8 +10,9 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-// import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -50,11 +51,11 @@ public class RobotContainer {
   private final CommandXboxController m_buttonBoard = new CommandXboxController(3);
 
   // auto
-  // private final SendableChooser<Command> autoChooser;
+  private final SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
-    // autoChooser = AutoBuilder.buildAutoChooser("Tests");
-    // SmartDashboard.putData("Auto Chooser", autoChooser);
+    autoChooser = AutoBuilder.buildAutoChooser("Tests");
+    SmartDashboard.putData("Auto Chooser", autoChooser);
 
     configureBindings();
   }
@@ -81,7 +82,11 @@ public class RobotContainer {
         .whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
     // reset yaw
-    m_operatorController.button(8).onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+    m_operatorController.button(8).onTrue(drivetrain.runOnce(() -> {
+      System.out.println("Zeroing");
+      drivetrain.seedFieldCentric();
+      drivetrain.resetTranslation(new Translation2d(0, 0));
+    }));
 
     m_buttonBoard.button(11).whileTrue(new DriveToPoseCommand(drivetrain, vision, TargetPosition.RIGHT));
     m_buttonBoard.button(12).whileTrue(new DriveToPoseCommand(drivetrain, vision, TargetPosition.LEFT));
@@ -91,7 +96,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    // return autoChooser.getSelected();
-    return null;
+    return autoChooser.getSelected();
   }
 }

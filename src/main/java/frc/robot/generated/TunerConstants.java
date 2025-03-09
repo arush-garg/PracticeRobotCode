@@ -25,8 +25,8 @@ public class TunerConstants {
     // the
     // output type specified by SwerveModuleConstants.SteerMotorClosedLoopOutput
     private static final Slot0Configs steerGains = new Slot0Configs()
-            .withKP(100).withKI(0).withKD(0.5)
-            .withKS(0.1).withKV(2.66).withKA(0)
+            .withKP(41.425).withKI(0).withKD(0.05)
+            .withKS(0.053).withKV(2.4085).withKA(0.20219)
             .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
     // When using closed-loop control, the drive motor uses the control
     // output type specified by SwerveModuleConstants.DriveMotorClosedLoopOutput
@@ -62,9 +62,10 @@ public class TunerConstants {
     private static final TalonFXConfiguration steerInitialConfigs = new TalonFXConfiguration()
             .withCurrentLimits(
                     new CurrentLimitsConfigs()
-                            // Swerve azimuth does not require much torque output, so we can set a
-                            // relatively low
-                            // stator current limit to help avoid brownouts without impacting performance.
+                            // Swerve azimuth does not require much torque output, so we can
+                            // set a relatively low
+                            // stator current limit to help avoid brownouts without
+                            // impacting performance.
                             .withStatorCurrentLimit(Amps.of(60))
                             .withStatorCurrentLimitEnable(true));
     private static final CANcoderConfiguration encoderInitialConfigs = new CANcoderConfiguration();
@@ -130,7 +131,7 @@ public class TunerConstants {
     private static final int kFrontLeftDriveMotorId = 31;
     private static final int kFrontLeftSteerMotorId = 22;
     private static final int kFrontLeftEncoderId = 2;
-    private static final Angle kFrontLeftEncoderOffset = Rotations.of(0.26318359375);
+    private static final Angle kFrontLeftEncoderOffset = Rotations.of(0.264404296875);
     private static final boolean kFrontLeftSteerMotorInverted = true;
     private static final boolean kFrontLeftEncoderInverted = false;
 
@@ -141,7 +142,7 @@ public class TunerConstants {
     private static final int kFrontRightDriveMotorId = 32;
     private static final int kFrontRightSteerMotorId = 13;
     private static final int kFrontRightEncoderId = 3;
-    private static final Angle kFrontRightEncoderOffset = Rotations.of(-0.0400390625);
+    private static final Angle kFrontRightEncoderOffset = Rotations.of(-0.039306640625);
     private static final boolean kFrontRightSteerMotorInverted = true;
     private static final boolean kFrontRightEncoderInverted = false;
 
@@ -152,7 +153,7 @@ public class TunerConstants {
     private static final int kBackLeftDriveMotorId = 1;
     private static final int kBackLeftSteerMotorId = 15;
     private static final int kBackLeftEncoderId = 8;
-    private static final Angle kBackLeftEncoderOffset = Rotations.of(-0.02783203125);
+    private static final Angle kBackLeftEncoderOffset = Rotations.of(-0.027099609375);
     private static final boolean kBackLeftSteerMotorInverted = true;
     private static final boolean kBackLeftEncoderInverted = false;
 
@@ -163,7 +164,7 @@ public class TunerConstants {
     private static final int kBackRightDriveMotorId = 0;
     private static final int kBackRightSteerMotorId = 18;
     private static final int kBackRightEncoderId = 6;
-    private static final Angle kBackRightEncoderOffset = Rotations.of(0.463623046875);
+    private static final Angle kBackRightEncoderOffset = Rotations.of(0.46142578125);
     private static final boolean kBackRightSteerMotorInverted = true;
     private static final boolean kBackRightEncoderInverted = false;
 
@@ -172,22 +173,26 @@ public class TunerConstants {
 
     public static final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> FrontLeft = ConstantCreator
             .createModuleConstants(
-                    kFrontLeftSteerMotorId, kFrontLeftDriveMotorId, kFrontLeftEncoderId, kFrontLeftEncoderOffset,
+                    kFrontLeftSteerMotorId, kFrontLeftDriveMotorId, kFrontLeftEncoderId,
+                    kFrontLeftEncoderOffset,
                     kFrontLeftXPos, kFrontLeftYPos, kInvertLeftSide, kFrontLeftSteerMotorInverted,
                     kFrontLeftEncoderInverted);
     public static final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> FrontRight = ConstantCreator
             .createModuleConstants(
-                    kFrontRightSteerMotorId, kFrontRightDriveMotorId, kFrontRightEncoderId, kFrontRightEncoderOffset,
-                    kFrontRightXPos, kFrontRightYPos, kInvertRightSide, kFrontRightSteerMotorInverted,
-                    kFrontRightEncoderInverted);
+                    kFrontRightSteerMotorId, kFrontRightDriveMotorId, kFrontRightEncoderId,
+                    kFrontRightEncoderOffset,
+                    kFrontRightXPos, kFrontRightYPos, kInvertRightSide,
+                    kFrontRightSteerMotorInverted, kFrontRightEncoderInverted);
     public static final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> BackLeft = ConstantCreator
             .createModuleConstants(
-                    kBackLeftSteerMotorId, kBackLeftDriveMotorId, kBackLeftEncoderId, kBackLeftEncoderOffset,
+                    kBackLeftSteerMotorId, kBackLeftDriveMotorId, kBackLeftEncoderId,
+                    kBackLeftEncoderOffset,
                     kBackLeftXPos, kBackLeftYPos, kInvertLeftSide, kBackLeftSteerMotorInverted,
                     kBackLeftEncoderInverted);
     public static final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> BackRight = ConstantCreator
             .createModuleConstants(
-                    kBackRightSteerMotorId, kBackRightDriveMotorId, kBackRightEncoderId, kBackRightEncoderOffset,
+                    kBackRightSteerMotorId, kBackRightDriveMotorId, kBackRightEncoderId,
+                    kBackRightEncoderOffset,
                     kBackRightXPos, kBackRightYPos, kInvertRightSide, kBackRightSteerMotorInverted,
                     kBackRightEncoderInverted);
 
