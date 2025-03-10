@@ -5,19 +5,19 @@ import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.Drive.EagleSwerveDrivetrain;
 
 public class Vision extends SubsystemBase {
-    VisionCamera cameraRight, cameraLeft;
+    VisionCamera cameraFront, cameraBack;
     EagleSwerveDrivetrain drivetrain;
 
     public Vision(EagleSwerveDrivetrain drivetrain) {
         this.drivetrain = drivetrain;
-        cameraRight = new VisionCamera(VisionConstants.CAMERA_RIGHT_CONFIG);
-        cameraLeft = new VisionCamera(VisionConstants.CAMERA_LEFT_CONFIG);
+        cameraFront = new VisionCamera(VisionConstants.CAMERA_FRONT_CONFIG);
+        cameraBack = new VisionCamera(VisionConstants.CAMERA_BACK_CONFIG);
     }
 
     @Override
     public void periodic() {
-        updateDrivetrainVision(cameraRight);
-        updateDrivetrainVision(cameraLeft);
+        updateDrivetrainVision(cameraFront);
+        updateDrivetrainVision(cameraBack);
     }
 
     private void updateDrivetrainVision(VisionCamera camera) {
@@ -32,7 +32,7 @@ public class Vision extends SubsystemBase {
     }
 
     public int getCurrentlySeenTag() {
-        return cameraRight.getCurrentlySeenTag() != 0 ? cameraRight.getCurrentlySeenTag()
-                : cameraLeft.getCurrentlySeenTag();
+        return cameraFront.getCurrentlySeenTag() != -1 ? cameraFront.getCurrentlySeenTag()
+                : cameraBack.getCurrentlySeenTag();
     }
 }

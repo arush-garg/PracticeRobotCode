@@ -15,19 +15,19 @@ public class VisionConstants {
     public static final AprilTagFieldLayout FIELD_TAG_LAYOUT = AprilTagFieldLayout
             .loadField(AprilTagFields.k2025ReefscapeWelded);
 
-    public static final CameraConfiguration CAMERA_RIGHT_CONFIG = new CameraConfiguration()
-            .withCameraName("CAMERA_RIGHT")
+    public static final CameraConfiguration CAMERA_FRONT_CONFIG = new CameraConfiguration()
+            .withCameraName("CAMERA_FRONT")
             .withRobotToCam(new Transform3d(new Translation3d(0.35999, 0, 0.13106),
-                    new Rotation3d(0.0, Units.degreesToRadians(20), Units.degreesToRadians(20))))
-            .withSingleTagStdDevs(VecBuilder.fill(0.0, 0.0, 0.0))
-            .withMultiTagStdDevs(VecBuilder.fill(0.0, 0.0, 0.0));
+                    new Rotation3d(0.0, Units.degreesToRadians(20), 0.0)))
+            .withSingleTagStdDevs(VecBuilder.fill(0.1, 0.1, 0.5))
+            .withMultiTagStdDevs(VecBuilder.fill(0.05, 0.05, 0.1));
 
-    public static final CameraConfiguration CAMERA_LEFT_CONFIG = new CameraConfiguration()
-            .withCameraName("CAMERA_LEFT")
-            .withRobotToCam(new Transform3d(new Translation3d(-0.35999, 0, 0.13106),
-                    new Rotation3d(0.0, Units.degreesToRadians(20), Units.degreesToRadians(-20))))
-            .withSingleTagStdDevs(VecBuilder.fill(0.0, 0.0, 0.0))
-            .withMultiTagStdDevs(VecBuilder.fill(0.0, 0.0, 0.0));
+    public static final CameraConfiguration CAMERA_BACK_CONFIG = new CameraConfiguration()
+            .withCameraName("CAMERA_BACK")
+            .withRobotToCam(new Transform3d(new Translation3d(0.35999, 0, -0.13106),
+                    new Rotation3d(0.0, Units.degreesToRadians(20), Units.degreesToRadians(180))))
+            .withSingleTagStdDevs(VecBuilder.fill(0.1, 0.1, 0.5))
+            .withMultiTagStdDevs(VecBuilder.fill(0.05, 0.05, 0.1));
 
     public static class CameraConfiguration {
         public String cameraName;
