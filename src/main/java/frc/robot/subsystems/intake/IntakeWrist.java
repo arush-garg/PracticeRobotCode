@@ -6,7 +6,7 @@ package frc.robot.subsystems.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.robot.ElasticSender.ElasticSender;
 import frc.robot.constants.IntakeConstants;
 
 import com.ctre.phoenix6.configs.*;
@@ -20,8 +20,17 @@ public class IntakeWrist extends SubsystemBase {
 
     private final TalonFX m_motor = new TalonFX(IntakeConstants.Wrist.MOTOR_ID, "rio");
     private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0);
+    private final ElasticSender m_sender;
+    //For tuning
+    private double m_targetPos;
 
-    public IntakeWrist() {
+    public IntakeWrist(boolean debug) {
+        m_sender = new ElasticSender("Intake Wrist", debug);
+        m_sender.put("Pos Target", m_targetPos, true);
+        m_sender.addButton("Move to target", moveTo(m_targetPos));
+        m_sender.addButton("Zero", zero());
+        m_sender.addButton("Kill", kill());
+
         TalonFXConfiguration cfg = new TalonFXConfiguration();
 
         MotorOutputConfigs motorConfigs = new MotorOutputConfigs();
@@ -77,5 +86,10 @@ public class IntakeWrist extends SubsystemBase {
                     m_motor.setVoltage(joystickPosition * IntakeConstants.Wrist.MAX_VOLTS
                             / IntakeConstants.Wrist.MANUAL_RATIO);
                 });
+    }
+
+    @Override
+    public void periodic() {
+        m_targetPos = m_sender.getNumber("Pos Target");
     }
 }
