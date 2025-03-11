@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 import frc.robot.commands.DriveToPoseCommand;
+import frc.robot.commands.DriveUntilStall;
 import frc.robot.commands.DriveToPoseCommand.TargetPosition;
 import frc.robot.constants.DriveConstants;
 import frc.robot.generated.TunerConstants;
@@ -91,6 +92,9 @@ public class RobotContainer {
     m_buttonBoard.button(11).whileTrue(new DriveToPoseCommand(drivetrain, vision, TargetPosition.RIGHT));
     m_buttonBoard.button(12).whileTrue(new DriveToPoseCommand(drivetrain, vision, TargetPosition.LEFT));
     m_buttonBoard.button(13).whileTrue(new DriveToPoseCommand(drivetrain, vision, TargetPosition.ALGAE));
+
+    // testing drive until stall
+    m_buttonBoard.button(14).whileTrue(new DriveUntilStall(drivetrain));
 
     drivetrain.registerTelemetry(logger::telemeterize);
   }

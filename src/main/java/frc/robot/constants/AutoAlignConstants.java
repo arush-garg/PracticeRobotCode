@@ -11,6 +11,10 @@ public class AutoAlignConstants {
             2.0, 2.0,
             Units.degreesToRadians(360), Units.degreesToRadians(540));
 
+    public static final double FORWARDS_SPEED = 0.5; // speed until stall
+    public static final double VEL_THRESHOLD = 0.1; // velocity of stall threshold
+    public static final double CURRENT_THRESHOLD = 10; // current of stall threshold
+
     private static final Rotation2d AB = new Rotation2d(Math.toRadians(0));
     private static final Rotation2d CD = new Rotation2d(Math.toRadians(60));
     private static final Rotation2d EF = new Rotation2d(Math.toRadians(120));
@@ -24,9 +28,9 @@ public class AutoAlignConstants {
     public static final Pose2d REEF_D = new Pose2d(4.005, 2.862, CD);
     public static final Pose2d REEF_E = new Pose2d(4.970, 2.839, EF);
     public static final Pose2d REEF_F = new Pose2d(5.265, 3.037, EF);
-    //public static final Pose2d REEF_G = new Pose2d(5.762, 3.851, GH);
+    // public static final Pose2d REEF_G = new Pose2d(5.762, 3.851, GH);
     public static final Pose2d REEF_G = new Pose2d(5.96, 3.83, GH);
-    //public static final Pose2d REEF_H = new Pose2d(5.73, 4.21, GH);
+    // public static final Pose2d REEF_H = new Pose2d(5.73, 4.21, GH);
     public static final Pose2d REEF_H = new Pose2d(5.96, 4.22, GH);
     public static final Pose2d REEF_I = new Pose2d(5.274, 5.037, IJ);
     public static final Pose2d REEF_J = new Pose2d(4.939, 5.198, IJ);
