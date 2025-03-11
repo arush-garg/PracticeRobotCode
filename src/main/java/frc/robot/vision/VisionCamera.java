@@ -21,6 +21,8 @@ public class VisionCamera {
     private Matrix<N3, N1> curStdDevs;
     private VisionConstants.CameraConfiguration config;
 
+    private int lastSeenTag = -1;
+
     public VisionCamera(VisionConstants.CameraConfiguration config) {
         this.config = config;
         camera = new PhotonCamera(config.cameraName);
@@ -49,6 +51,9 @@ public class VisionCamera {
         for (var change : camera.getAllUnreadResults()) {
             visionEst = photonEstimator.update(change);
             updateEstimationStdDevs(visionEst, change.getTargets());
+            if (change.hasTargets()) {
+                lastSeenTag = change.getBestTarget().fiducialId;
+            }
         }
         return visionEst;
     }
@@ -119,11 +124,6 @@ public class VisionCamera {
     }
 
     public int getCurrentlySeenTag() {
-        for (var change : camera.getAllUnreadResults()) {
-            for (var target : change.getTargets()) {
-                return target.getFiducialId();
-            }
-        }
-        return -1;
+        return lastSeenTag;
     }
 }

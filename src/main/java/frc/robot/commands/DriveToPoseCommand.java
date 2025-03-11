@@ -76,6 +76,8 @@ public class DriveToPoseCommand extends Command {
             aprilTagId = currentAprilTagId;
         }
 
+        System.out.println("April tag ID: " + currentAprilTagId);
+
         targetPose = getTargetPose(aprilTagId);
 
         if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
@@ -104,6 +106,10 @@ public class DriveToPoseCommand extends Command {
                 pathCommand = null;
                 return;
             }
+
+            System.out.println("Waypoints: " + waypoints.size());
+
+            System.out.println("Waypoints first: " + waypoints.get(0).toString());
 
             PathPlannerPath generatedPath = new PathPlannerPath(waypoints, AutoAlignConstants.PATH_PLANNER_CONSTRAINTS,
                     null,
