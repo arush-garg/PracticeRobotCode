@@ -57,14 +57,21 @@ public class RobotContainer {
     // scoring commands
     m_rightJoystick.trigger().onTrue(m_superstructure.intake());
     m_leftJoystick.trigger().onTrue(m_superstructure.score());
-    m_buttonBoard.button(0).onTrue(m_superstructure.moveL1());
-    m_buttonBoard.button(1).onTrue(m_superstructure.moveL2());
-    m_buttonBoard.button(2).onTrue(m_superstructure.moveL3());
-    m_buttonBoard.button(3).onTrue(m_superstructure.moveL4());
+    // m_buttonBoard.button(0).onTrue(m_superstructure.moveL1());
+    // m_buttonBoard.button(1).onTrue(m_superstructure.moveL2());
+    // m_buttonBoard.button(2).onTrue(m_superstructure.moveL3());
+    // m_buttonBoard.button(3).onTrue(m_superstructure.moveL4());
 
     // stow commands
     m_leftJoystick.button(2).onTrue(m_superstructure.stow());
     m_operatorController.povUp().onTrue(m_superstructure.stow());
+  }
+
+  public void zeroingButtons() {
+    //m_operatorController.button(7).and(m_operatorController.b()).onTrue(m_intakeWrist.zero());
+    if (m_operatorController.button(7).and(m_operatorController.b()).getAsBoolean()) {
+      m_intakeWrist.zeroing();
+    }
   }
 
   // public Command getAutonomousCommand() {

@@ -3,8 +3,8 @@ package frc.robot.constants;
 public final class EndEffectorConstants {
 
     public static class Wrist {
-        public final static int MOTOR_ID = 0;
-        public final static int ENCODER_ID = 0;
+        public final static int MOTOR_ID = 39;
+        public final static int ENCODER_ID = 39;
         
         public final static double MAX_VOLTS = 0.0;
         public final static double MANUAL_RATIO = 0.0;
@@ -26,7 +26,7 @@ public final class EndEffectorConstants {
     }
 
     public static class Rollers {
-        public final static int MOTOR_ID = 0;
+        public final static int MOTOR_ID = 39;
 
         public final static double MAX_VOLTS = 0.0;
         public final static double INTAKE_CORAL_VOLTS = 0.0;

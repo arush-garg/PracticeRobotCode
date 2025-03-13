@@ -57,6 +57,7 @@ public class IntakeWrist extends SubsystemBase {
         slot0.kD = IntakeConstants.Wrist.kD;
 
         m_motor.getConfigurator().apply(cfg);
+        m_motor.getConfigurator().apply(motorConfigs);
     }
 
     public Command moveTo(double position) {
@@ -69,8 +70,14 @@ public class IntakeWrist extends SubsystemBase {
     public Command zero() {
         return runOnce(
                 () -> {
+                    System.out.println("zeroing intake");
                     m_motor.setPosition(IntakeConstants.Wrist.OFFSET);
                 });
+    }
+
+    public void zeroing() {
+        System.out.println("zeroing intake");
+        m_motor.setPosition(IntakeConstants.Wrist.OFFSET);
     }
 
     public Command kill() {

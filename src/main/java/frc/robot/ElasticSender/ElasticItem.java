@@ -1,6 +1,7 @@
 package frc.robot.ElasticSender;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj2.command.Command;
 
 public class ElasticItem {
     String key;
@@ -13,6 +14,10 @@ public class ElasticItem {
         this.value = value;
         this.entry = entry;
         this.editable = edit;
-        entry.setValue(value);
+        if (!(value instanceof Command)) {
+            entry.setValue(value);
+        } else {
+            entry.setValue(false);
+        }
     }
 }

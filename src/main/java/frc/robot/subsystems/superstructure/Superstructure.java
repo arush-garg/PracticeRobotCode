@@ -38,10 +38,10 @@ public class Superstructure {
         m_elastic.addButton("Switch Mode", switchMode());
         m_elastic.addButton("Intake", intake());
         m_elastic.addButton("Score", score());
-        m_elastic.addButton("Move L1", moveL1());
-        m_elastic.addButton("Move L2", moveL2());
-        m_elastic.addButton("Move L3", moveL3());
-        m_elastic.addButton("Move L4", moveL4());
+        // m_elastic.addButton("Move L1", moveL1());
+        // m_elastic.addButton("Move L2", moveL2());
+        // m_elastic.addButton("Move L3", moveL3());
+        // m_elastic.addButton("Move L4", moveL4());
         m_elastic.addButton("Stow", stow());
     }
 
@@ -56,12 +56,14 @@ public class Superstructure {
     }
 
     public GPMode getGPMode() {
+        System.out.println(gpMode);
+        if (gpMode == null) return GPMode.Coral;
         return gpMode;
     }
 
     public Command intakeCoral() {
         return Commands.sequence(
-                m_eeWrist.moveTo(EndEffectorWristPosition.INTAKE_CORAL_ANGLE),
+                //m_eeWrist.moveTo(EndEffectorWristPosition.INTAKE_CORAL_ANGLE),
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.INTAKE_POSITION),
                 m_intakeRollers.run(IntakeConstants.Rollers.INTAKE_CORAL_VOLTS),
                 m_channel.run(ChannelConstants.CHANNEL_VOLTS),
@@ -92,49 +94,61 @@ public class Superstructure {
     }
 
     public Command moveL1() {
-        return new SelectCommand<>(
-                Map.ofEntries(
-                        Map.entry(GPMode.Coral, Commands.parallel(
-                                m_elevator.moveTo(ElevatorConstants.L1_CORAL_HEIGHT),
-                                m_eeWrist.moveTo(EndEffectorWristPosition.L1_SCORE_ANGLE))),
-                        Map.entry(GPMode.Algae, Commands.parallel(
-                                m_elevator.moveTo(ElevatorConstants.PROCESSOR_ALGAE_HEIGHT),
-                                m_eeWrist.moveTo(EndEffectorWristPosition.SCORE_PROCESSOR_ANGLE)))),
-                this::getGPMode);
+        return Commands.runOnce(() -> {
+            System.out.println("hi");
+        });
+        // return new SelectCommand<>(
+        //         Map.ofEntries(
+        //                 Map.entry(GPMode.Coral, Commands.parallel(
+        //                         m_elevator.moveTo(ElevatorConstants.L1_CORAL_HEIGHT),
+        //                         m_eeWrist.moveTo(EndEffectorWristPosition.L1_SCORE_ANGLE))),
+        //                 Map.entry(GPMode.Algae, Commands.parallel(
+        //                         m_elevator.moveTo(ElevatorConstants.PROCESSOR_ALGAE_HEIGHT),
+        //                         m_eeWrist.moveTo(EndEffectorWristPosition.SCORE_PROCESSOR_ANGLE)))),
+        //         this::getGPMode);
     }
 
     public Command moveL2() {
-        return new SelectCommand<>(
-                Map.ofEntries(
-                        Map.entry(GPMode.Coral, Commands.parallel(
-                                m_elevator.moveTo(ElevatorConstants.L2_CORAL_HEIGHT),
-                                m_eeWrist.moveTo(EndEffectorWristPosition.L2_PRE_ANGLE))),
-                        Map.entry(GPMode.Algae, Commands.parallel(
-                                m_elevator.moveTo(ElevatorConstants.L2_ALGAE_HEIGHT),
-                                intakeAlgae()))),
-                this::getGPMode);
+        return Commands.runOnce(() -> {
+            System.out.println("hi");
+        });
+        // return new SelectCommand<>(
+        //         Map.ofEntries(
+        //                 Map.entry(GPMode.Coral, Commands.parallel(
+        //                         m_elevator.moveTo(ElevatorConstants.L2_CORAL_HEIGHT),
+        //                         m_eeWrist.moveTo(EndEffectorWristPosition.L2_PRE_ANGLE))),
+        //                 Map.entry(GPMode.Algae, Commands.parallel(
+        //                         m_elevator.moveTo(ElevatorConstants.L2_ALGAE_HEIGHT),
+        //                         intakeAlgae()))),
+        //         this::getGPMode);
     }
 
     public Command moveL3() {
-        return new SelectCommand<>(
-                Map.ofEntries(
-                        Map.entry(GPMode.Coral, Commands.parallel(
-                                m_elevator.moveTo(ElevatorConstants.L3_CORAL_HEIGHT),
-                                m_eeWrist.moveTo(EndEffectorWristPosition.L3_PRE_ANGLE))),
-                        Map.entry(GPMode.Algae, Commands.parallel(
-                                m_elevator.moveTo(ElevatorConstants.L3_ALGAE_HEIGHT),
-                                intakeAlgae()))),
-                this::getGPMode);
+        return Commands.runOnce(() -> {
+            System.out.println("hi");
+        });
+        // return new SelectCommand<>(
+        //         Map.ofEntries(
+        //                 Map.entry(GPMode.Coral, Commands.parallel(
+        //                         m_elevator.moveTo(ElevatorConstants.L3_CORAL_HEIGHT),
+        //                         m_eeWrist.moveTo(EndEffectorWristPosition.L3_PRE_ANGLE))),
+        //                 Map.entry(GPMode.Algae, Commands.parallel(
+        //                         m_elevator.moveTo(ElevatorConstants.L3_ALGAE_HEIGHT),
+        //                         intakeAlgae()))),
+        //         this::getGPMode);
     }
 
     public Command moveL4() {
-        return new SelectCommand<>(
-                Map.ofEntries(
-                        Map.entry(GPMode.Coral, Commands.parallel(
-                                m_elevator.moveTo(ElevatorConstants.L4_CORAL_HEIGHT),
-                                m_eeWrist.moveTo(EndEffectorWristPosition.L4_PRE_ANGLE))),
-                        Map.entry(GPMode.Algae, scoreBargeSequence())),
-                this::getGPMode);
+        return Commands.runOnce(() -> {
+            System.out.println("hi");
+        });
+        // return new SelectCommand<>(
+        //         Map.ofEntries(
+        //                 Map.entry(GPMode.Coral, Commands.parallel(
+        //                         m_elevator.moveTo(ElevatorConstants.L4_CORAL_HEIGHT),
+        //                         m_eeWrist.moveTo(EndEffectorWristPosition.L4_PRE_ANGLE))),
+        //                 Map.entry(GPMode.Algae, scoreBargeSequence())),
+        //         this::getGPMode);
     }
 
     public Command scoreCoral() {
@@ -170,11 +184,11 @@ public class Superstructure {
 
     public Command stow() {
         return Commands.parallel(
-                m_elevator.moveTo(ElevatorConstants.STOWED_HEIGHT),
-                m_eeWrist.moveTo(EndEffectorWristPosition.STOW_ANGLE),
+                //m_elevator.moveTo(ElevatorConstants.STOWED_HEIGHT),
+                //m_eeWrist.moveTo(EndEffectorWristPosition.STOW_ANGLE),
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION),
                 m_intakeRollers.stop(),
-                m_eeRollers.stop(),
+                //m_eeRollers.stop(),
                 m_channel.stop());
     }
 }
