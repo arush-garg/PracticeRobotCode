@@ -1,0 +1,55 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "StartToBL_RP"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "BL_RPToStation"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "StationSweep"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "StationToFL_RP"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "FL_RPToStation"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "StationSweep"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "StationToFL_LP"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
