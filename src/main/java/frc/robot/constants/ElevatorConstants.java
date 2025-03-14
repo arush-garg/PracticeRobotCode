@@ -1,22 +1,22 @@
 package frc.robot.constants;
 
 public final class ElevatorConstants {
-    public final static int MASTER_MOTOR_ID = 39;
-    public final static int SLAVE_MOTOR_ID = 39;
+    public final static int MASTER_MOTOR_ID = 2;
+    public final static int SLAVE_MOTOR_ID = 3;
     public final static double MAX_VOLTS = 0.0;
     public final static double MANUAL_RATIO = 0.0;
     public final static double GEAR_RATIO = 0.0;
 
-    public final static double kP = 0.0;
+    public final static double kP = 7;
     public final static double kI = 0.0;
-    public final static double kD = 0.0;
-    public final static double kV = 0.0;
-    public final static double kA = 0.0;
-    public final static double kS = 0.0;
-    public final static double kG = 0.0;
+    public final static double kD = 0.3;
+    public final static double kV = 0.65;
+    public final static double kA = 0.05;
+    public final static double kS = 0.06;
+    public final static double kG = 0.41;
 
-    public final static double MOTION_ACCELERATION = 0.0;
-    public final static double MOTION_CRUISE_VELOCITY = 0.0;
+    public final static double MOTION_ACCELERATION = 40;
+    public final static double MOTION_CRUISE_VELOCITY = 30;
     public final static double MOTION_JERK = 0.0;
 
     public final static double OFFSET = 0.0;
