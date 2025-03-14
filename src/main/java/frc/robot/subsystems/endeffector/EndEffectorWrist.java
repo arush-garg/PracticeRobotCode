@@ -32,7 +32,7 @@ public class EndEffectorWrist extends SubsystemBase {
 		m_elastic.addButton("Kill", kill());
 
 		TalonFXConfiguration cfg = new TalonFXConfiguration();
-		cfg.Feedback.FeedbackRemoteSensorID = m_encoder.getDeviceID();
+		cfg.Feedback.FeedbackRemoteSensorID = EndEffectorConstants.Wrist.ENCODER_ID;
 		cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
 
 		MotorOutputConfigs motorConfigs = new MotorOutputConfigs();
@@ -91,6 +91,7 @@ public class EndEffectorWrist extends SubsystemBase {
 	public Command moveToNextPosition(EndEffectorWristSide side) {
 		return runOnce(
 				() -> {
+					System.out.println("finding pos ");
 					EndEffectorWristPosition nextPosition = null;
 					switch (m_currPosition) {
 						case L1_SCORE_ANGLE:
@@ -117,14 +118,14 @@ public class EndEffectorWrist extends SubsystemBase {
 							nextPosition = m_currPosition;
 							break;
 					}
-					moveTo(nextPosition, side).schedule();
+					moveTo(nextPosition, side);
 				});
 	}
 
 	public Command zero() {
 		return runOnce(
 				() -> {
-					m_motor.setPosition(EndEffectorConstants.Wrist.OFFSET);
+					m_encoder.setPosition(EndEffectorConstants.Wrist.OFFSET);
 				});
 	}
 

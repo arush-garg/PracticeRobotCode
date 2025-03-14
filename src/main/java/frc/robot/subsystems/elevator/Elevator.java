@@ -61,7 +61,7 @@ public class Elevator extends SubsystemBase {
     m_slave.getConfigurator().apply(cfg);
     m_slave.getConfigurator().apply(slaveMotorConfigs);
 
-    m_slave.setControl(new Follower(ElevatorConstants.MASTER_MOTOR_ID, false));
+    m_slave.setControl(new Follower(ElevatorConstants.MASTER_MOTOR_ID, true));
   }
 
   public Command moveTo(double position) {

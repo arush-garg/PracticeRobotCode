@@ -34,6 +34,7 @@ import frc.robot.subsystems.endeffector.EndEffectorRollers;
 import frc.robot.subsystems.endeffector.EndEffectorWrist;
 import frc.robot.subsystems.intake.IntakeRollers;
 import frc.robot.subsystems.intake.IntakeWrist;
+import frc.robot.subsystems.superstructure.GPMode;
 import frc.robot.subsystems.superstructure.Superstructure;
 import frc.robot.vision.Vision;
 
@@ -132,12 +133,12 @@ public class RobotContainer {
 
                 // manual commands
                 m_operatorController.x()
-                                .and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.01))
+                                .and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.05))
                                 .whileTrue(m_elevator.setManualVoltage(m_operatorController.getLeftY()));
                 m_operatorController.b()
-                                .and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.01))
+                                .and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.05))
                                 .whileTrue(m_intakeWrist.setManualVoltage(m_operatorController.getLeftY()));
-                m_operatorController.y().and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.01))
+                m_operatorController.y().and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.05))
                                 .whileTrue(m_eeWrist.setManualVoltage(m_operatorController.getLeftY()));
 
                 // zero commands
@@ -167,6 +168,18 @@ public class RobotContainer {
 
         public Command getAutonomousCommand() {
                 return autoChooser.getSelected();
+        }
+
+        public void resetMechs() {
+          m_intakeRollers.stop();
+          m_intakeWrist.kill();
+          m_channel.stop();
+          m_elevator.kill();
+          m_eeWrist.kill();
+          m_eeRollers.stop();
+          if (m_superstructure.getGPMode() == GPMode.Algae) {
+            m_superstructure.switchMode();
+          }
         }
 
 }

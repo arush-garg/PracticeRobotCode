@@ -23,7 +23,7 @@ public final class EndEffectorConstants {
         public final static double MOTION_CRUISE_VELOCITY = 20;
         public final static double MOTION_JERK = 0.0;
 
-        public final static double OFFSET = 0.0;
+        public final static double OFFSET = 0;
     }
 
     public static class Rollers {
@@ -38,6 +38,7 @@ public final class EndEffectorConstants {
         public final static double OUTTAKE_BARGE_VOLTS = 0.0;
         public final static double OUTTAKE_PROCCESOR_VOLTS = 0.0;
         public final static double RETAIN_ALGAE = 0.0;
+        public final static double RETAIN_CORAL = 0.2;
 
         public final static double STALL_CURRENT = 0.0;
 

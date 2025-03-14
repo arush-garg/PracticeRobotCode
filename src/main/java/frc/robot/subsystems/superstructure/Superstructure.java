@@ -68,8 +68,9 @@ public class Superstructure {
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.INTAKE_POSITION),
                 m_intakeRollers.run(IntakeConstants.Rollers.INTAKE_CORAL_VOLTS),
                 m_channel.run(ChannelConstants.CHANNEL_VOLTS),
+                m_eeRollers.run(EndEffectorConstants.Rollers.INTAKE_CORAL_VOLTS),
                 Commands.waitUntil(m_channel.coralInEndEffectorSupplier),
-                Commands.parallel(m_intakeRollers.stop(), m_channel.stop(), m_eeRollers.stop()),
+                Commands.parallel(m_intakeRollers.stop(), m_channel.stop(), m_eeRollers.run(EndEffectorConstants.Rollers.RETAIN_CORAL)),
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION));
     }
 
@@ -146,6 +147,7 @@ public class Superstructure {
 
     public Command scoreCoral() {
         return Commands.runOnce(() -> {
+            System.out.println("scoring coral");
             switch (m_eeWrist.getPosition()) {
                 case L1_SCORE_ANGLE -> m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L1_CORAL_VOLTS);
                 case L2_PRE_ANGLE, L3_PRE_ANGLE ->
@@ -177,11 +179,11 @@ public class Superstructure {
 
     public Command stow() {
         return Commands.parallel(
-                // m_elevator.moveTo(ElevatorConstants.STOWED_HEIGHT),
-                // m_eeWrist.moveTo(EndEffectorWristPosition.STOW_ANGLE),
+                m_elevator.moveTo(ElevatorConstants.STOWED_HEIGHT),
+                m_eeWrist.moveTo(EndEffectorWristPosition.STOW_ANGLE),
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION),
                 m_intakeRollers.stop(),
-                // m_eeRollers.stop(),
+                m_eeRollers.stop(),
                 m_channel.stop());
     }
 }

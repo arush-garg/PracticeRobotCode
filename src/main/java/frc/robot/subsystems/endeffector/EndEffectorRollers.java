@@ -9,7 +9,7 @@ public class EndEffectorRollers extends GenericRollerSubsystem {
     private boolean holdingAlgaeVoltage = false;
 
     public EndEffectorRollers() {
-        super(EndEffectorConstants.Rollers.MOTOR_ID, "rio", true);
+        super(EndEffectorConstants.Rollers.MOTOR_ID, "rio", false);
     }
 
     public boolean isStalled() {
