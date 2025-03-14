@@ -24,9 +24,9 @@ public class Elevator extends SubsystemBase {
   private final ElasticSender m_elastic;
 
   public Elevator(boolean debug) {
-	m_elastic = new ElasticSender("Elevator", debug);
-	m_elastic.addButton("Zero", zero());
-	m_elastic.addButton("Kill", kill());
+    m_elastic = new ElasticSender("Elevator", debug);
+    m_elastic.addButton("Zero", zero());
+    m_elastic.addButton("Kill", kill());
 
     TalonFXConfiguration cfg = new TalonFXConfiguration();
 
@@ -74,6 +74,7 @@ public class Elevator extends SubsystemBase {
   public Command zero() {
     return runOnce(
         () -> {
+          System.out.println("Zeroing elevator");
           m_master.setPosition(ElevatorConstants.OFFSET);
         });
   }
@@ -94,7 +95,7 @@ public class Elevator extends SubsystemBase {
   }
 
   @Override
-	public void periodic() {
-		m_elastic.periodic();
-	}
+  public void periodic() {
+    m_elastic.periodic();
+  }
 }
