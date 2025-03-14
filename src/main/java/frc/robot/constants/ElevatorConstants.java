@@ -5,7 +5,7 @@ public final class ElevatorConstants {
     public final static int SLAVE_MOTOR_ID = 3;
     public final static double MAX_VOLTS = 0.0;
     public final static double MANUAL_RATIO = 0.0;
-    public final static double GEAR_RATIO = 0.0;
+    public final static double GEAR_RATIO = 4.0;
 
     public final static double kP = 7;
     public final static double kI = 0.0;
@@ -23,8 +23,8 @@ public final class ElevatorConstants {
 
     public final static double L1_CORAL_HEIGHT = 0;
     public final static double L2_CORAL_HEIGHT = 0;
-    public final static double L3_CORAL_HEIGHT = 0;
-    public final static double L4_CORAL_HEIGHT = 0;
+    public final static double L3_CORAL_HEIGHT = 0.5;
+    public final static double L4_CORAL_HEIGHT = 3.25;
     public final static double PROCESSOR_ALGAE_HEIGHT = 0;
     public final static double L2_ALGAE_HEIGHT = 0;
     public final static double L3_ALGAE_HEIGHT = 0;

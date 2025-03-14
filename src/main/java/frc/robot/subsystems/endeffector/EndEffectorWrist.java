@@ -14,7 +14,6 @@ import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.*;
 import com.ctre.phoenix6.signals.*;
 
-
 public class EndEffectorWrist extends SubsystemBase {
 
 	private final TalonFX m_motor = new TalonFX(EndEffectorConstants.Wrist.MOTOR_ID, "rio");
@@ -35,13 +34,14 @@ public class EndEffectorWrist extends SubsystemBase {
 		TalonFXConfiguration cfg = new TalonFXConfiguration();
 		cfg.Feedback.FeedbackRemoteSensorID = m_encoder.getDeviceID();
 		cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-		
+
 		MotorOutputConfigs motorConfigs = new MotorOutputConfigs();
 		motorConfigs.Inverted = InvertedValue.Clockwise_Positive;
 		motorConfigs.NeutralMode = NeutralModeValue.Brake;
 
 		FeedbackConfigs fdb = cfg.Feedback;
-		fdb.SensorToMechanismRatio = EndEffectorConstants.Wrist.GEAR_RATIO;
+		fdb.SensorToMechanismRatio = EndEffectorConstants.Wrist.SENSOR_TO_MECHANISM_RATIO;
+		fdb.RotorToSensorRatio = EndEffectorConstants.Wrist.ROTOR_TO_SENSOR_RATIO;
 		fdb.FeedbackRotorOffset = EndEffectorConstants.Wrist.OFFSET;
 
 		MotionMagicConfigs mm = cfg.MotionMagic;
@@ -73,12 +73,13 @@ public class EndEffectorWrist extends SubsystemBase {
 	public Command moveTo(EndEffectorWristPosition position, EndEffectorWristSide side) {
 		return runOnce(
 				() -> {
+					System.out.println("moving to " + position.getAngle());
 					m_currPosition = position;
 					m_currSide = side;
 					double angle = position.getAngle();
-					if (side == EndEffectorWristSide.BACK) {
-						angle = position.getBackAngle();
-					}
+					// if (side == EndEffectorWristSide.BACK) {
+					// angle = position.getBackAngle();
+					// }
 					m_motor.setControl(m_mmReq.withPosition(angle).withSlot(0));
 				});
 	}
