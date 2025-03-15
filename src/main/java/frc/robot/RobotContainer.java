@@ -141,6 +141,14 @@ public class RobotContainer {
                 m_operatorController.y().and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.05))
                                 .whileTrue(m_eeWrist.setManualVoltage(m_operatorController.getLeftY()));
 
+                m_operatorController.b()
+                                .and(m_operatorController.leftBumper())
+                                .onTrue(m_superstructure.ejectIntake());
+                
+                m_operatorController.y()
+                                .and(m_operatorController.leftBumper())
+                                .onTrue(m_superstructure.ejectEE());
+
                 // zero commands
                 m_operatorController.button(7).and(m_operatorController.x())
                                 .onTrue(m_elevator.zero().ignoringDisable(true));
@@ -150,8 +158,7 @@ public class RobotContainer {
                                 .onTrue(m_intakeWrist.zero().ignoringDisable(true));
 
                 // gpMode switching
-                m_buttonBoard.button(5).onTrue(
-                                m_superstructure.switchMode());
+                m_buttonBoard.button(5).onTrue(m_superstructure.switchMode());
 
                 // scoring commands
                 m_rightJoystick.trigger().onTrue(m_superstructure.intake());
@@ -167,19 +174,20 @@ public class RobotContainer {
         }
 
         public Command getAutonomousCommand() {
-                return autoChooser.getSelected();
+            return autoChooser.getSelected();
         }
 
         public void resetMechs() {
-          m_intakeRollers.stop();
-          m_intakeWrist.kill();
-          m_channel.stop();
-          m_elevator.kill();
-          m_eeWrist.kill();
-          m_eeRollers.stop();
-          if (m_superstructure.getGPMode() == GPMode.Algae) {
-            m_superstructure.switchMode();
-          }
+			System.out.println("reseting mechs") ; 
+			m_intakeRollers.stop();
+			m_intakeWrist.kill();
+			m_channel.stop();
+			m_elevator.kill();
+			m_eeWrist.kill();
+			m_eeRollers.stop();
+			/*if (m_superstructure.getGPMode() == GPMode.Algae) {
+				m_superstructure.switchMode();
+            }*/
         }
 
 }

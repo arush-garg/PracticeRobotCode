@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.endeffector;
 
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.ElasticSender.ElasticSender;
@@ -24,6 +25,7 @@ public class EndEffectorWrist extends SubsystemBase {
 	private ElasticSender m_elastic;
 	private EndEffectorWristPosition m_currPosition = EndEffectorWristPosition.STOW_ANGLE;
 	private EndEffectorWristSide m_currSide = EndEffectorWristSide.FRONT;
+	TalonFXConfiguration cfg;
 
 	public EndEffectorWrist(boolean debug) {
 		this.debug = debug;
@@ -31,9 +33,10 @@ public class EndEffectorWrist extends SubsystemBase {
 		m_elastic.addButton("Zero", zero());
 		m_elastic.addButton("Kill", kill());
 
-		TalonFXConfiguration cfg = new TalonFXConfiguration();
+		cfg = new TalonFXConfiguration();
 		cfg.Feedback.FeedbackRemoteSensorID = EndEffectorConstants.Wrist.ENCODER_ID;
 		cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+		//cfg.ClosedLoopGeneral.ContinuousWrap = true;
 
 		MotorOutputConfigs motorConfigs = new MotorOutputConfigs();
 		motorConfigs.Inverted = InvertedValue.Clockwise_Positive;
@@ -70,6 +73,19 @@ public class EndEffectorWrist extends SubsystemBase {
 		return moveTo(position, EndEffectorWristSide.FRONT);
 	}
 
+	public void SetBargeSpeed(boolean on) {
+		if (on) {
+			cfg.MotionMagic.MotionMagicAcceleration = 40;
+			cfg.MotionMagic.MotionMagicCruiseVelocity = 40;
+			m_motor.getConfigurator().apply(cfg);
+		}
+		else {
+			cfg.MotionMagic.MotionMagicAcceleration = 20;
+			cfg.MotionMagic.MotionMagicCruiseVelocity = 20;
+			m_motor.getConfigurator().apply(cfg);
+		}
+	}
+
 	public Command moveTo(EndEffectorWristPosition position, EndEffectorWristSide side) {
 		return runOnce(
 				() -> {
@@ -84,42 +100,55 @@ public class EndEffectorWrist extends SubsystemBase {
 				});
 	}
 
-	public Command moveToNextPosition() {
-		return moveToNextPosition(m_currSide);
+	public void moveToFunc(EndEffectorWristPosition position, EndEffectorWristSide side) {
+		
+		System.out.println("moving to " + position.getAngle());
+		m_currPosition = position;
+		m_currSide = side;
+		double angle = position.getAngle();
+		// if (side == EndEffectorWristSide.BACK) {
+		// angle = position.getBackAngle();
+		// }
+		m_motor.setControl(m_mmReq.withPosition(angle).withSlot(0));
+				
 	}
 
-	public Command moveToNextPosition(EndEffectorWristSide side) {
-		return runOnce(
-				() -> {
-					System.out.println("finding pos ");
-					EndEffectorWristPosition nextPosition = null;
-					switch (m_currPosition) {
-						case L1_SCORE_ANGLE:
-							nextPosition = EndEffectorWristPosition.STOW_ANGLE;
-							break;
-						case L2_PRE_ANGLE:
-							nextPosition = EndEffectorWristPosition.L2_SCORE_ANGLE;
-							break;
-						case L3_PRE_ANGLE:
-							nextPosition = EndEffectorWristPosition.L3_SCORE_ANGLE;
-							break;
-						case L4_PRE_ANGLE:
-							nextPosition = EndEffectorWristPosition.L4_SCORE_ANGLE;
-							break;
-						case SCORE_PROCESSOR_ANGLE:
-						case SCORE_BARGE_ANGLE:
-						case INTAKE_ALGAE_ANGLE:
-						case L2_SCORE_ANGLE:
-						case L3_SCORE_ANGLE:
-						case L4_SCORE_ANGLE:
-							nextPosition = EndEffectorWristPosition.STOW_ANGLE;
-							break;
-						default:
-							nextPosition = m_currPosition;
-							break;
-					}
-					moveTo(nextPosition, side);
-				});
+	public void moveToNextPosition() {
+		System.out.println("calling next func ");
+		moveToNextPosition(m_currSide);
+	}
+
+	public void moveToNextPosition(EndEffectorWristSide side) {
+		System.out.println("finding pos ");
+		EndEffectorWristPosition nextPosition = EndEffectorWristPosition.STOW_ANGLE;
+		switch (m_currPosition) {
+			case L1_SCORE_ANGLE:
+				nextPosition = EndEffectorWristPosition.STOW_ANGLE;
+				break;
+			case L2_PRE_ANGLE:
+				nextPosition = EndEffectorWristPosition.L2_SCORE_ANGLE;
+				break;
+			case L3_PRE_ANGLE:
+				nextPosition = EndEffectorWristPosition.L3_SCORE_ANGLE;
+				break;
+			case L4_PRE_ANGLE:
+				nextPosition = EndEffectorWristPosition.L4_SCORE_ANGLE;
+				break;
+			case SCORE_PROCESSOR_ANGLE:
+			case SCORE_BARGE_ANGLE:
+			case INTAKE_ALGAE_ANGLE:
+				nextPosition = EndEffectorWristPosition.STOW_ANGLE;
+				break;
+			case L2_SCORE_ANGLE:
+			case L3_SCORE_ANGLE:
+			case L4_SCORE_ANGLE:
+				nextPosition = m_currPosition;
+				break;
+			default:
+				nextPosition = EndEffectorWristPosition.STOW_ANGLE;
+				break;
+		}
+		moveToFunc(nextPosition, side);
 	}
 
 	public Command zero() {

@@ -50,6 +50,7 @@ public class Channel extends SubsystemBase {
     public void periodic() {
         m_sender.put("in channel", coralInEndEffector, false);
         LaserCan.Measurement measurement = distanceSensor.getMeasurement();
+        m_sender.put("Distance", measurement.distance_mm, false);
         if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
             coralInEndEffector = measurement.distance_mm < ChannelConstants.DISTANCE_SENSOR_THRESH;
         } else {

@@ -20,15 +20,16 @@ public class GenericRollerSubsystem extends SubsystemBase {
         m_motor.getConfigurator().apply(config);
     }
 
-    public Command run(double speed) {
+    public Command run(double voltage) {
+        System.out.println("" + voltage); 
         return runOnce(() -> {
-            m_motor.set(speed);
+            m_motor.setVoltage(voltage);
         });
     }
 
     public Command stop() {
         return runOnce(() -> {
-            m_motor.set(0);
+            m_motor.setVoltage(0);
         });
     }
 }

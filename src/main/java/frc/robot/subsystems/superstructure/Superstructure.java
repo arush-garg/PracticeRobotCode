@@ -1,9 +1,11 @@
 package frc.robot.subsystems.superstructure;
 
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import frc.robot.ElasticSender.ElasticSender;
 import frc.robot.constants.*;
@@ -24,6 +26,7 @@ public class Superstructure {
     private final IntakeRollers m_intakeRollers;
     private final Channel m_channel;
     private final ElasticSender m_elastic;
+    private long lastTime = 0;
 
     public Superstructure(Elevator elevator, EndEffectorWrist eeWrist, EndEffectorRollers eeRollers,
             IntakeWrist intakeWrist, IntakeRollers intakeRollers, Channel channel, boolean debug) {
@@ -35,9 +38,11 @@ public class Superstructure {
         this.m_channel = channel;
 
         m_elastic = new ElasticSender("Superstructure", debug);
-        m_elastic.addButton("Switch Mode", switchMode());
+        //m_elastic.addButton("Switch Mode", switchMode());
         m_elastic.addButton("Intake", intake());
         m_elastic.addButton("Score", score());
+        m_elastic.addButton("Eject Intake", ejectIntake());
+        m_elastic.addButton("Eject EE", ejectEE());
         // m_elastic.addButton("Move L1", moveL1());
         // m_elastic.addButton("Move L2", moveL2());
         // m_elastic.addButton("Move L3", moveL3());
@@ -47,11 +52,18 @@ public class Superstructure {
 
     public Command switchMode() {
         return Commands.runOnce(() -> {
+            if (lastTime > System.currentTimeMillis() - 500) {
+                return;
+            }
+            lastTime = System.currentTimeMillis();
             if (gpMode == GPMode.Coral) {
                 gpMode = GPMode.Algae;
+                System.out.println("switching mode to algae");
             } else {
                 gpMode = GPMode.Coral;
+                System.out.println("switching mode to coral");
             }
+
         });
     }
 
@@ -64,6 +76,7 @@ public class Superstructure {
 
     public Command intakeCoral() {
         return Commands.sequence(
+                m_elevator.moveTo(ElevatorConstants.INTAKE_HEIGHT),
                 m_eeWrist.moveTo(EndEffectorWristPosition.INTAKE_CORAL_ANGLE),
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.INTAKE_POSITION),
                 m_intakeRollers.run(IntakeConstants.Rollers.INTAKE_CORAL_VOLTS),
@@ -77,9 +90,11 @@ public class Superstructure {
     public Command intakeAlgae() {
         return Commands.sequence(
                 m_eeWrist.moveTo(EndEffectorWristPosition.INTAKE_ALGAE_ANGLE),
+                m_eeRollers.run(EndEffectorConstants.Rollers.INTAKE_ALGAE_VOLTS),
                 Commands.waitUntil(() -> m_eeRollers.isStalled()),
+                new PrintCommand("" + EndEffectorConstants.Rollers.INTAKE_ALGAE_VOLTS),
                 m_eeRollers.stop(),
-                m_eeRollers.holdAlgae());
+                m_eeRollers.run(EndEffectorConstants.Rollers.RETAIN_ALGAE));
     }
 
     public Command intake() {
@@ -88,12 +103,6 @@ public class Superstructure {
                         Map.entry(GPMode.Coral, intakeCoral()),
                         Map.entry(GPMode.Algae, intakeAlgae())),
                 this::getGPMode);
-    }
-
-    public Command scoreBargeSequence() {
-        return Commands.runOnce(() -> {
-            System.out.println("hi");
-        });
     }
 
     public Command moveL1() {
@@ -141,7 +150,9 @@ public class Superstructure {
                         Map.entry(GPMode.Coral, Commands.parallel(
                                 m_elevator.moveTo(ElevatorConstants.L4_CORAL_HEIGHT),
                                 m_eeWrist.moveTo(EndEffectorWristPosition.L4_PRE_ANGLE))),
-                        Map.entry(GPMode.Algae, scoreBargeSequence())),
+                        Map.entry(GPMode.Algae, Commands.parallel(
+                                m_elevator.moveTo(ElevatorConstants.BARGE_ALGAE_HEIGHT),
+                                m_eeWrist.moveTo(EndEffectorWristPosition.SCORE_BARGE_PRE_ANGLE)))),
                 this::getGPMode);
     }
 
@@ -149,24 +160,67 @@ public class Superstructure {
         return Commands.runOnce(() -> {
             System.out.println("scoring coral");
             switch (m_eeWrist.getPosition()) {
-                case L1_SCORE_ANGLE -> m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L1_CORAL_VOLTS);
-                case L2_PRE_ANGLE, L3_PRE_ANGLE ->
+                case L1_SCORE_ANGLE: 
+                    m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L1_CORAL_VOLTS);
+                    break;
+                case L2_PRE_ANGLE:
+                case L3_PRE_ANGLE:
                     m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L2_L3_CORAL_VOLTS);
-                case L4_PRE_ANGLE -> m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L4_CORAL_VOLTS);
-                default -> m_eeRollers.run(0);
+                    break;
+                case L4_PRE_ANGLE: 
+                    m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L4_CORAL_VOLTS);
+                    break;
+                default: 
+                    m_eeRollers.run(0);
+                    break;
             }
+            System.out.println("before moving wrist");
             m_eeWrist.moveToNextPosition();
         });
     }
 
+    public Command scoreBarge() {
+        return new Command() {
+            
+        };
+    }
+
     public Command scoreAlgae() {
+
+        return Commands.runOnce( () -> {
+
+            switch (m_eeWrist.getPosition()) {
+                case SCORE_PROCESSOR_ANGLE: 
+                    System.out.println("outtake proccesor");
+                    m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_PROCCESOR_VOLTS);
+                case SCORE_BARGE_PRE_ANGLE: 
+                    System.out.println("outtake barge");
+                    m_eeWrist.SetBargeSpeed(true);
+                    m_eeWrist.moveToFunc(EndEffectorWristPosition.SCORE_BARGE_ANGLE, EndEffectorWristSide.BACK);
+                    Commands.waitSeconds(1);
+                    m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_BARGE_VOLTS);
+                    Commands.waitSeconds(1);
+                    m_eeWrist.SetBargeSpeed(false);
+                default:
+                    return;
+            }
+        });
+    }
+
+    public Command ejectIntake() {
         return Commands.sequence(
-                m_eeRollers.run(switch (m_eeWrist.getPosition()) {
-                    case SCORE_PROCESSOR_ANGLE -> EndEffectorConstants.Rollers.OUTTAKE_PROCCESOR_VOLTS;
-                    case SCORE_BARGE_ANGLE -> EndEffectorConstants.Rollers.OUTTAKE_BARGE_VOLTS;
-                    default -> 0;
-                }),
-                m_eeRollers.stopHoldingAlgae());
+            m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION),
+            m_intakeRollers.run(IntakeConstants.Rollers.INTAKE_CORAL_VOLTS),
+            m_channel.run(ChannelConstants.EJECT_VOLTS)
+        );
+    }
+
+    public Command ejectEE() {
+        return Commands.sequence(
+            m_eeWrist.moveTo(EndEffectorWristPosition.L2_PRE_ANGLE),
+            m_eeRollers.run(EndEffectorConstants.Rollers.EJECT_VOLTS),
+            m_elevator.moveTo(ElevatorConstants.STOWED_HEIGHT)
+        );
     }
 
     public Command score() {
