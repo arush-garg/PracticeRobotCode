@@ -22,8 +22,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveToPoseCommand;
-import frc.robot.commands.DriveToPoseCommand.TargetPosition;
 import frc.robot.commands.DriveUntilStall;
+import frc.robot.constants.AutoAlignConstants;
 import frc.robot.constants.DriveConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Drive.EagleSwerveDrivetrain;
@@ -122,9 +122,18 @@ public class RobotContainer {
             drivetrain.resetTranslation(new Translation2d(0, 0));
         }));
 
-        m_buttonBoard.button(11).whileTrue(new DriveToPoseCommand(drivetrain, vision, TargetPosition.RIGHT));
-        m_buttonBoard.button(12).whileTrue(new DriveToPoseCommand(drivetrain, vision, TargetPosition.LEFT));
-        m_buttonBoard.button(13).whileTrue(new DriveToPoseCommand(drivetrain, vision, TargetPosition.ALGAE));
+        m_buttonBoard.button(6).whileTrue(new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_K));
+        m_buttonBoard.button(7).whileTrue(new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_J));
+        m_buttonBoard.button(8).whileTrue(new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_I));
+        m_buttonBoard.button(9).whileTrue(new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_H));
+        m_buttonBoard.button(10).whileTrue(new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_G));
+        m_buttonBoard.button(11).whileTrue(new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_F));
+        m_buttonBoard.button(12).whileTrue(new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_E));
+        m_buttonBoard.button(13).whileTrue(new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_D));
+        m_buttonBoard.button(14).whileTrue(new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_C));
+        m_buttonBoard.button(15).whileTrue(new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_B));
+        m_buttonBoard.button(16).whileTrue(new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_A));
+        m_buttonBoard.button(17).whileTrue(new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_L));
 
         // testing drive until stall
         m_buttonBoard.button(14).whileTrue(new DriveUntilStall(drivetrain));
