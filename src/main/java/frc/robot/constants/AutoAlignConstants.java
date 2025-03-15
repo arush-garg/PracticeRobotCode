@@ -24,10 +24,10 @@ public class AutoAlignConstants {
 
     public static final Pose2d REEF_A = new Pose2d(3.213, 4.204, AB);
     public static final Pose2d REEF_B = new Pose2d(3.245, 3.821, AB);
-    public static final Pose2d REEF_C = new Pose2d(3.695, 3.008, CD);
-    public static final Pose2d REEF_D = new Pose2d(4.005, 2.862, CD);
-    public static final Pose2d REEF_E = new Pose2d(4.970, 2.839, EF);
-    public static final Pose2d REEF_F = new Pose2d(5.265, 3.037, EF);
+    public static final Pose2d REEF_C = new Pose2d(3.65, 2.97, CD);
+    public static final Pose2d REEF_D = new Pose2d(4.04, 2.76, CD);
+    public static final Pose2d REEF_E = new Pose2d(5.39, 2.51, EF);
+    public static final Pose2d REEF_F = new Pose2d(5.77, 2.70, EF);
     // public static final Pose2d REEF_G = new Pose2d(5.762, 3.851, GH);
     public static final Pose2d REEF_G = new Pose2d(5.96, 3.83, GH);
     // public static final Pose2d REEF_H = new Pose2d(5.73, 4.21, GH);
