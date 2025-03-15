@@ -24,7 +24,7 @@ public class DriveUntilStall extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        drivetrain.applyRequest(() -> drive.withSpeeds(new ChassisSpeeds(0.0, 0.0, 0.0)));
+        drivetrain.applyRequest(() -> drive.withSpeeds(new ChassisSpeeds(0.0, 0.0, 0.0))).schedule();
     }
 
     @Override
