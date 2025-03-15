@@ -1,5 +1,7 @@
 package frc.robot.constants;
 
+import java.util.ArrayList;
+
 import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -43,4 +45,21 @@ public class AutoAlignConstants {
     public static final Pose2d ALGAE_GH = new Pose2d(5.7909, 4.0258, GH);
     public static final Pose2d ALGAE_IJ = new Pose2d(5.1396, 5.15242, IJ);
     public static final Pose2d ALGAE_KL = new Pose2d(3.8389, 5.1524, KL);
+
+    public static final ArrayList<Pose2d> ALL_REEF_POSES = new ArrayList<Pose2d>() {
+        {
+            add(REEF_A);
+            add(REEF_B);
+            add(REEF_C);
+            add(REEF_D);
+            add(REEF_E);
+            add(REEF_F);
+            add(REEF_G);
+            add(REEF_H);
+            add(REEF_I);
+            add(REEF_J);
+            add(REEF_K);
+            add(REEF_L);
+        }
+    };
 }

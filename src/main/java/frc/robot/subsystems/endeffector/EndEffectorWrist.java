@@ -4,10 +4,13 @@
 
 package frc.robot.subsystems.endeffector;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.ElasticSender.ElasticSender;
 import frc.robot.constants.*;
+import frc.robot.subsystems.Drive.EagleSwerveDrivetrain;
 import frc.robot.utils.*;
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.*;
@@ -26,8 +29,11 @@ public class EndEffectorWrist extends SubsystemBase {
 	private EndEffectorWristSide m_currSide = EndEffectorWristSide.FRONT;
 	TalonFXConfiguration cfg;
 
-	public EndEffectorWrist(boolean debug) {
+	private EagleSwerveDrivetrain m_drive;
+
+	public EndEffectorWrist(boolean debug, EagleSwerveDrivetrain drive) {
 		this.debug = debug;
+		this.m_drive = drive;
 		m_elastic = new ElasticSender("EE: Wrist", debug);
 		m_elastic.addButton("Zero", zero());
 		m_elastic.addButton("Kill", kill());
@@ -69,7 +75,23 @@ public class EndEffectorWrist extends SubsystemBase {
 	}
 
 	public Command moveTo(EndEffectorWristPosition position) {
-		return moveTo(position, EndEffectorWristSide.FRONT);
+		return Commands.runOnce(() -> {
+			Pose2d closestPose = new Pose2d();
+			double minDistance = Double.MAX_VALUE;
+			for (Pose2d pose : AutoAlignConstants.ALL_REEF_POSES) {
+				double distance = pose.getTranslation().getDistance(m_drive.getState().Pose.getTranslation());
+				if (distance < minDistance) {
+					minDistance = distance;
+					closestPose = pose;
+				}
+			}
+			double rot = closestPose.getRotation().getDegrees();
+			EndEffectorWristSide side = EndEffectorWristSide.FRONT;
+			if (rot > 90 && rot < 270) {
+				side = EndEffectorWristSide.BACK;
+			}
+			moveTo(position, side).schedule();
+		});
 	}
 
 	public void setBargeSpeed(boolean on) {
@@ -91,9 +113,9 @@ public class EndEffectorWrist extends SubsystemBase {
 					m_currPosition = position;
 					m_currSide = side;
 					double angle = position.getAngle();
-					// if (side == EndEffectorWristSide.BACK) {
-					// angle = position.getBackAngle();
-					// }
+					if (side == EndEffectorWristSide.BACK) {
+						angle = position.getBackAngle();
+					}
 					m_motor.setControl(m_mmReq.withPosition(angle).withSlot(0));
 				});
 	}
@@ -104,9 +126,9 @@ public class EndEffectorWrist extends SubsystemBase {
 		m_currPosition = position;
 		m_currSide = side;
 		double angle = position.getAngle();
-		// if (side == EndEffectorWristSide.BACK) {
-		// angle = position.getBackAngle();
-		// }
+		if (side == EndEffectorWristSide.BACK) {
+			angle = position.getBackAngle();
+		}
 		m_motor.setControl(m_mmReq.withPosition(angle).withSlot(0));
 
 	}

@@ -69,7 +69,7 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
 
     private final Elevator m_elevator = new Elevator(true);
-    private final EndEffectorWrist m_eeWrist = new EndEffectorWrist(true);
+    private final EndEffectorWrist m_eeWrist = new EndEffectorWrist(true, drivetrain);
     private final EndEffectorRollers m_eeRollers = new EndEffectorRollers();
     private final IntakeWrist m_intakeWrist = new IntakeWrist(true);
     private final IntakeRollers m_intakeRollers = new IntakeRollers();
@@ -193,7 +193,8 @@ public class RobotContainer {
     }
 
     public void configureAutoAlignBindings() {
-        // K (6), J (7), I (8), H (9), G (10), F (11), E (12), D (13), C (14), B (15), A (16), L (17)
+        // K (6), J (7), I (8), H (9), G (10), F (11), E (12), D (13), C (14), B (15), A
+        // (16), L (17)
         m_buttonBoard.button(6).whileTrue(
                 Commands.select(
                         Map.ofEntries(
