@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems.endeffector;
 
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.ElasticSender.ElasticSender;
@@ -36,7 +35,7 @@ public class EndEffectorWrist extends SubsystemBase {
 		cfg = new TalonFXConfiguration();
 		cfg.Feedback.FeedbackRemoteSensorID = EndEffectorConstants.Wrist.ENCODER_ID;
 		cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-		//cfg.ClosedLoopGeneral.ContinuousWrap = true;
+		// cfg.ClosedLoopGeneral.ContinuousWrap = true;
 
 		MotorOutputConfigs motorConfigs = new MotorOutputConfigs();
 		motorConfigs.Inverted = InvertedValue.Clockwise_Positive;
@@ -73,13 +72,12 @@ public class EndEffectorWrist extends SubsystemBase {
 		return moveTo(position, EndEffectorWristSide.FRONT);
 	}
 
-	public void SetBargeSpeed(boolean on) {
+	public void setBargeSpeed(boolean on) {
 		if (on) {
 			cfg.MotionMagic.MotionMagicAcceleration = 40;
 			cfg.MotionMagic.MotionMagicCruiseVelocity = 40;
 			m_motor.getConfigurator().apply(cfg);
-		}
-		else {
+		} else {
 			cfg.MotionMagic.MotionMagicAcceleration = 20;
 			cfg.MotionMagic.MotionMagicCruiseVelocity = 20;
 			m_motor.getConfigurator().apply(cfg);
@@ -101,7 +99,7 @@ public class EndEffectorWrist extends SubsystemBase {
 	}
 
 	public void moveToFunc(EndEffectorWristPosition position, EndEffectorWristSide side) {
-		
+
 		System.out.println("moving to " + position.getAngle());
 		m_currPosition = position;
 		m_currSide = side;
@@ -110,7 +108,7 @@ public class EndEffectorWrist extends SubsystemBase {
 		// angle = position.getBackAngle();
 		// }
 		m_motor.setControl(m_mmReq.withPosition(angle).withSlot(0));
-				
+
 	}
 
 	public void moveToNextPosition() {

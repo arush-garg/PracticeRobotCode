@@ -38,7 +38,7 @@ public class Superstructure {
         this.m_channel = channel;
 
         m_elastic = new ElasticSender("Superstructure", debug);
-        //m_elastic.addButton("Switch Mode", switchMode());
+        // m_elastic.addButton("Switch Mode", switchMode());
         m_elastic.addButton("Intake", intake());
         m_elastic.addButton("Score", score());
         m_elastic.addButton("Eject Intake", ejectIntake());
@@ -83,7 +83,8 @@ public class Superstructure {
                 m_channel.run(ChannelConstants.CHANNEL_VOLTS),
                 m_eeRollers.run(EndEffectorConstants.Rollers.INTAKE_CORAL_VOLTS),
                 Commands.waitUntil(m_channel.coralInEndEffectorSupplier),
-                Commands.parallel(m_intakeRollers.stop(), m_channel.stop(), m_eeRollers.run(EndEffectorConstants.Rollers.RETAIN_CORAL)),
+                Commands.parallel(m_intakeRollers.stop(), m_channel.stop(),
+                        m_eeRollers.run(EndEffectorConstants.Rollers.RETAIN_CORAL)),
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION));
     }
 
@@ -106,9 +107,6 @@ public class Superstructure {
     }
 
     public Command moveL1() {
-        // return Commands.runOnce(() -> {
-        // System.out.println("hi");
-        // });
         return new SelectCommand<>(
                 Map.ofEntries(
                         Map.entry(GPMode.Coral, Commands.parallel(
@@ -160,17 +158,17 @@ public class Superstructure {
         return Commands.runOnce(() -> {
             System.out.println("scoring coral");
             switch (m_eeWrist.getPosition()) {
-                case L1_SCORE_ANGLE: 
+                case L1_SCORE_ANGLE:
                     m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L1_CORAL_VOLTS);
                     break;
                 case L2_PRE_ANGLE:
                 case L3_PRE_ANGLE:
                     m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L2_L3_CORAL_VOLTS);
                     break;
-                case L4_PRE_ANGLE: 
+                case L4_PRE_ANGLE:
                     m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L4_CORAL_VOLTS);
                     break;
-                default: 
+                default:
                     m_eeRollers.run(0);
                     break;
             }
@@ -179,28 +177,20 @@ public class Superstructure {
         });
     }
 
-    public Command scoreBarge() {
-        return new Command() {
-            
-        };
-    }
-
     public Command scoreAlgae() {
-
-        return Commands.runOnce( () -> {
-
+        return Commands.runOnce(() -> {
             switch (m_eeWrist.getPosition()) {
-                case SCORE_PROCESSOR_ANGLE: 
+                case SCORE_PROCESSOR_ANGLE:
                     System.out.println("outtake proccesor");
                     m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_PROCCESOR_VOLTS);
-                case SCORE_BARGE_PRE_ANGLE: 
+                case SCORE_BARGE_PRE_ANGLE:
                     System.out.println("outtake barge");
-                    m_eeWrist.SetBargeSpeed(true);
+                    m_eeWrist.setBargeSpeed(true);
                     m_eeWrist.moveToFunc(EndEffectorWristPosition.SCORE_BARGE_ANGLE, EndEffectorWristSide.BACK);
                     Commands.waitSeconds(1);
                     m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_BARGE_VOLTS);
                     Commands.waitSeconds(1);
-                    m_eeWrist.SetBargeSpeed(false);
+                    m_eeWrist.setBargeSpeed(false);
                 default:
                     return;
             }
@@ -209,18 +199,16 @@ public class Superstructure {
 
     public Command ejectIntake() {
         return Commands.sequence(
-            m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION),
-            m_intakeRollers.run(IntakeConstants.Rollers.INTAKE_CORAL_VOLTS),
-            m_channel.run(ChannelConstants.EJECT_VOLTS)
-        );
+                m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION),
+                m_intakeRollers.run(IntakeConstants.Rollers.INTAKE_CORAL_VOLTS),
+                m_channel.run(ChannelConstants.EJECT_VOLTS));
     }
 
     public Command ejectEE() {
         return Commands.sequence(
-            m_eeWrist.moveTo(EndEffectorWristPosition.L2_PRE_ANGLE),
-            m_eeRollers.run(EndEffectorConstants.Rollers.EJECT_VOLTS),
-            m_elevator.moveTo(ElevatorConstants.STOWED_HEIGHT)
-        );
+                m_eeWrist.moveTo(EndEffectorWristPosition.L2_PRE_ANGLE),
+                m_eeRollers.run(EndEffectorConstants.Rollers.EJECT_VOLTS),
+                m_elevator.moveTo(ElevatorConstants.STOWED_HEIGHT));
     }
 
     public Command score() {

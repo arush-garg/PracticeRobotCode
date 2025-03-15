@@ -6,8 +6,6 @@ import frc.robot.constants.*;
 import frc.robot.utils.GenericRollerSubsystem;
 
 public class EndEffectorRollers extends GenericRollerSubsystem {
-    private boolean holdingAlgaeVoltage = false;
-
     public EndEffectorRollers() {
         super(EndEffectorConstants.Rollers.MOTOR_ID, "rio", false);
     }
@@ -17,14 +15,12 @@ public class EndEffectorRollers extends GenericRollerSubsystem {
     }
 
     public boolean isStalled() {
-        //System.out.println(m_motor.getStatorCurrent().getValueAsDouble());
+        // System.out.println(m_motor.getStatorCurrent().getValueAsDouble());
         return Math.abs(m_motor.getStatorCurrent().getValueAsDouble()) > EndEffectorConstants.Rollers.STALL_CURRENT;
     }
 
     public Command holdAlgae() {
-        return Commands.runOnce(() -> 
-            run(EndEffectorConstants.Rollers.RETAIN_ALGAE)
-        );
+        return Commands.runOnce(() -> run(EndEffectorConstants.Rollers.RETAIN_ALGAE));
     }
 
     public Command stopHoldingAlgae() {

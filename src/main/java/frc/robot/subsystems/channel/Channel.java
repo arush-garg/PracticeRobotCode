@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.ElasticSender.ElasticSender;
 import frc.robot.constants.ChannelConstants;
 
-
 public class Channel extends SubsystemBase {
     private final TalonFX m_motor = new TalonFX(ChannelConstants.CHANNEL_MOTOR_ID, "rio");
     private LaserCan distanceSensor;
