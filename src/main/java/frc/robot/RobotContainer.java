@@ -14,6 +14,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -86,25 +87,25 @@ public class RobotContainer {
         configureAutoAlignBindings();
     }
 
-	private void setDriveCmd() {
-		drivetrain.setDefaultCommand(
-			drivetrain.applyRequest(() -> drive
-					.withVelocityX(
-							-m_leftJoystick.getY() * MaxSpeed * (slowModeOn
-									? DriveConstants.SLOW_MODE_MULT
-									: 1))
-					.withVelocityY(
-							-m_leftJoystick.getX() * MaxSpeed * (slowModeOn
-									? DriveConstants.SLOW_MODE_MULT
-									: 1))
-					.withRotationalRate(
-							-m_rightJoystick.getX() * MaxAngularRate
-									* (slowModeOn ? DriveConstants.SLOW_MODE_MULT
-											: 1))));
-	}
+    private void setDriveCmd() {
+        drivetrain.setDefaultCommand(
+                drivetrain.applyRequest(() -> drive
+                        .withVelocityX(
+                                -m_leftJoystick.getY() * MaxSpeed * (slowModeOn
+                                        ? DriveConstants.SLOW_MODE_MULT
+                                        : 1))
+                        .withVelocityY(
+                                -m_leftJoystick.getX() * MaxSpeed * (slowModeOn
+                                        ? DriveConstants.SLOW_MODE_MULT
+                                        : 1))
+                        .withRotationalRate(
+                                -m_rightJoystick.getX() * MaxAngularRate
+                                        * (slowModeOn ? DriveConstants.SLOW_MODE_MULT
+                                                : 1))));
+    }
 
     private void configureBindings() {
-		setDriveCmd();
+        setDriveCmd();
         m_rightJoystick.button(2)
                 .onTrue(Commands.runOnce(() -> slowModeOn = true))
                 .onFalse(Commands.runOnce(() -> slowModeOn = false));
@@ -128,12 +129,6 @@ public class RobotContainer {
         }));
 
         configureAutoAlignBindings();
-
-        // testing drive until stalls
-         m_buttonBoard.button(6).onTrue(new DriveUntilStall(drivetrain).finallyDo(() -> {
-			System.out.println("Setting drive commad");
-			setDriveCmd();
-		 }));
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -198,92 +193,97 @@ public class RobotContainer {
          */
     }
 
+    public Command driveUntilPoseAndStall(Pose2d pose) {
+        return Commands.sequence(
+                new DriveToPoseCommand(drivetrain, pose),
+                new DriveUntilStall(drivetrain));
+    }
+
     public void configureAutoAlignBindings() {
-        // K (6), J (7), I (8), H (9), G (10), F (11), E (12), D (13), C (14), B (15), A (16), L (17)
-        /*m_buttonBoard.button(6).whileTrue(
+        // K (6), J (7), I (8), H (9), G (10), F (11), E (12), D (13), C (14), B (15), A
+        // (16), L (17)
+        m_buttonBoard.button(6).whileTrue(
                 Commands.select(
                         Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_K)),
-                                Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_KL))),
-                        m_superstructure::getGPMode));*/
+                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_K)),
+                                Map.entry(GPMode.Algae, driveUntilPoseAndStall(AutoAlignConstants.ALGAE_KL))),
+                        m_superstructure::getGPMode));
         m_buttonBoard.button(7).whileTrue(
                 Commands.select(
                         Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_J)),
+                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_J)),
                                 Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_IJ))),
+                                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_IJ))),
                         m_superstructure::getGPMode));
         m_buttonBoard.button(8).whileTrue(
                 Commands.select(
                         Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_I)),
+                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_I)),
                                 Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_IJ))),
+                                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_IJ))),
                         m_superstructure::getGPMode));
         m_buttonBoard.button(9).whileTrue(
                 Commands.select(
                         Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_H)),
+                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_H)),
                                 Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_GH))),
+                                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_GH))),
                         m_superstructure::getGPMode));
         m_buttonBoard.button(10).whileTrue(
                 Commands.select(
                         Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_G)),
+                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_G)),
                                 Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_GH))),
+                                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_GH))),
                         m_superstructure::getGPMode));
         m_buttonBoard.button(11).whileTrue(
                 Commands.select(
                         Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_F)),
+                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_F)),
                                 Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_EF))),
+                                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_EF))),
                         m_superstructure::getGPMode));
         m_buttonBoard.button(12).whileTrue(
                 Commands.select(
                         Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_E)),
+                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_E)),
                                 Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_EF))),
+                                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_EF))),
                         m_superstructure::getGPMode));
         m_buttonBoard.button(13).whileTrue(
                 Commands.select(
                         Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_D)),
+                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_D)),
                                 Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_CD))),
+                                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_CD))),
                         m_superstructure::getGPMode));
         m_buttonBoard.button(14).whileTrue(
                 Commands.select(
                         Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_C)),
+                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_C)),
                                 Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_CD))),
+                                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_CD))),
                         m_superstructure::getGPMode));
         m_buttonBoard.button(15).whileTrue(
                 Commands.select(
                         Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_B)),
+                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_B)),
                                 Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_AB))),
+                                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_AB))),
                         m_superstructure::getGPMode));
         m_buttonBoard.button(16).whileTrue(
                 Commands.select(
                         Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_A)),
+                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_A)),
                                 Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_AB))),
+                                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_AB))),
                         m_superstructure::getGPMode));
         m_buttonBoard.button(17).whileTrue(
                 Commands.select(
                         Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_L)),
+                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_L)),
                                 Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_KL))),
+                                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_KL))),
                         m_superstructure::getGPMode));
     }
-
 }

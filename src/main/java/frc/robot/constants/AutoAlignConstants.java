@@ -22,7 +22,7 @@ public class AutoAlignConstants {
     private static final Rotation2d IJ = new Rotation2d(Math.toRadians(240));
     private static final Rotation2d KL = new Rotation2d(Math.toRadians(300));
 
-    //public static final Pose2d REEF_A = new Pose2d(3.213, 4.204, AB);
+    // public static final Pose2d REEF_A = new Pose2d(3.213, 4.204, AB);
     public static final Pose2d REEF_A = new Pose2d(3.213, 4.204, AB);
     public static final Pose2d REEF_B = new Pose2d(3.245, 3.821, AB);
     public static final Pose2d REEF_C = new Pose2d(3.65, 2.97, CD);
