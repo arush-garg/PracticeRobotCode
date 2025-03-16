@@ -113,7 +113,7 @@ public class RobotContainer {
 
         // reset yaw
         m_operatorController.button(8).onTrue(drivetrain.runOnce(() -> {
-            System.out.println("Zeroing");
+            System.out.println("Zeroing drive");
             drivetrain.seedFieldCentric();
             drivetrain.resetTranslation(new Translation2d(0, 0));
         }));
@@ -169,7 +169,7 @@ public class RobotContainer {
     }
 
     public void resetMechs() {
-        System.out.println("reseting mechs");
+        System.out.println("Reseting mechs");
         m_intakeRollers.stop();
         m_intakeWrist.kill();
         m_channel.stop();

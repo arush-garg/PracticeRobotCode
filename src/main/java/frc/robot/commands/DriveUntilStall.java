@@ -30,7 +30,6 @@ public class DriveUntilStall extends Command {
                         0.0,
                         0.0)));
         var motor = drivetrain.getModule(0).getDriveMotor();
-        System.out.println(motor.getStatorCurrent().getValueAsDouble());
         if (motor.getStatorCurrent().getValueAsDouble() >= AutoAlignConstants.CURRENT_THRESHOLD) {
             isStalled = true;
         }

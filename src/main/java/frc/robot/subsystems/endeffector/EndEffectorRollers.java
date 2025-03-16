@@ -15,7 +15,6 @@ public class EndEffectorRollers extends GenericRollerSubsystem {
     }
 
     public boolean isStalled() {
-        // System.out.println(m_motor.getStatorCurrent().getValueAsDouble());
         return Math.abs(m_motor.getStatorCurrent().getValueAsDouble()) > EndEffectorConstants.Rollers.STALL_CURRENT;
     }
 

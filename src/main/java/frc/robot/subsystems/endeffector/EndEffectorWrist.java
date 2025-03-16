@@ -87,7 +87,6 @@ public class EndEffectorWrist extends SubsystemBase {
 	public Command moveTo(EndEffectorWristPosition position, EndEffectorWristSide side) {
 		return runOnce(
 				() -> {
-					System.out.println("moving to " + position.getAngle());
 					m_currPosition = position;
 					m_currSide = side;
 					double angle = position.getAngle();
@@ -100,7 +99,6 @@ public class EndEffectorWrist extends SubsystemBase {
 
 	public void moveToFunc(EndEffectorWristPosition position, EndEffectorWristSide side) {
 
-		System.out.println("moving to " + position.getAngle());
 		m_currPosition = position;
 		m_currSide = side;
 		double angle = position.getAngle();
@@ -112,12 +110,10 @@ public class EndEffectorWrist extends SubsystemBase {
 	}
 
 	public void moveToNextPosition() {
-		System.out.println("calling next func ");
 		moveToNextPosition(m_currSide);
 	}
 
 	public void moveToNextPosition(EndEffectorWristSide side) {
-		System.out.println("finding pos ");
 		EndEffectorWristPosition nextPosition = EndEffectorWristPosition.STOW_ANGLE;
 		switch (m_currPosition) {
 			case L1_SCORE_ANGLE:

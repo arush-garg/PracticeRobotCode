@@ -44,8 +44,6 @@ public class Vision extends SubsystemBase {
     }
 
     public int getCurrentlySeenTag() {
-        System.out.println("Front tag: " + cameraFront.getCurrentlySeenTag());
-        System.out.println("Back tag: " + cameraBack.getCurrentlySeenTag());
         return cameraFront.getCurrentlySeenTag() != -1 ? cameraFront.getCurrentlySeenTag()
                 : cameraBack.getCurrentlySeenTag();
     }

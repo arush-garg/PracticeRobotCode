@@ -68,7 +68,6 @@ public class Superstructure {
     }
 
     public GPMode getGPMode() {
-        System.out.println(gpMode);
         if (gpMode == null)
             return GPMode.Coral;
         return gpMode;
@@ -156,7 +155,6 @@ public class Superstructure {
 
     public Command scoreCoral() {
         return Commands.runOnce(() -> {
-            System.out.println("scoring coral");
             switch (m_eeWrist.getPosition()) {
                 case L1_SCORE_ANGLE:
                     m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L1_CORAL_VOLTS);
@@ -172,7 +170,6 @@ public class Superstructure {
                     m_eeRollers.run(0);
                     break;
             }
-            System.out.println("before moving wrist");
             m_eeWrist.moveToNextPosition();
         });
     }
