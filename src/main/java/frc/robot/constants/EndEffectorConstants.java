@@ -35,8 +35,8 @@ public final class EndEffectorConstants {
         public final static double OUTTAKE_L2_L3_CORAL_VOLTS = 0.0;
         public final static double OUTTAKE_L1_CORAL_VOLTS = 2;
         public final static double OUTTAKE_L4_CORAL_VOLTS = 0.0;
-        public final static double OUTTAKE_BARGE_VOLTS = -8.0;
-        public final static double OUTTAKE_PROCCESOR_VOLTS = -8.0;
+        public final static double OUTTAKE_BARGE_VOLTS = -12.0;
+        public final static double OUTTAKE_PROCCESOR_VOLTS = -5.0;
         public final static double RETAIN_ALGAE = 2.0;
         public final static double RETAIN_CORAL = 0.7;
         public final static double EJECT_VOLTS = -5;

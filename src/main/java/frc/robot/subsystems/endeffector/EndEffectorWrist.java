@@ -74,13 +74,15 @@ public class EndEffectorWrist extends SubsystemBase {
 
 	public void setBargeSpeed(boolean on) {
 		if (on) {
-			cfg.MotionMagic.MotionMagicAcceleration = 40;
-			cfg.MotionMagic.MotionMagicCruiseVelocity = 40;
+			cfg.MotionMagic.MotionMagicAcceleration = 50;
+			cfg.MotionMagic.MotionMagicCruiseVelocity = 50;
 			m_motor.getConfigurator().apply(cfg);
+			System.out.println("increasing speed");
 		} else {
 			cfg.MotionMagic.MotionMagicAcceleration = 20;
 			cfg.MotionMagic.MotionMagicCruiseVelocity = 20;
 			m_motor.getConfigurator().apply(cfg);
+			System.out.println("decreasing speed");
 		}
 	}
 

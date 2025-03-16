@@ -83,7 +83,6 @@ public class RobotContainer {
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
-        configureAutoAlignBindings();
     }
 
     private void configureBindings() {
@@ -122,13 +121,23 @@ public class RobotContainer {
 
         // auto align
         configureAutoAlignBindings();
-        m_leftJoystick.button(-1/* PUT A BUTTON HERE */).whileTrue(Commands.select(
-                Map.ofEntries(
-                        Map.entry(GPMode.Coral,
-                                driveUntilPoseAndStall(AutoAlignConstants.REEF_POSITIONS.get(autoAlignPosition))),
-                        Map.entry(GPMode.Algae,
-                                driveUntilPoseAndStall(AutoAlignConstants.ALGAE_POSITIONS.get(autoAlignPosition)))),
-                m_superstructure::getGPMode));
+		m_leftJoystick.button(3).whileTrue(Commands.select(
+		        Map.ofEntries(
+		                Map.entry(GPMode.Coral,
+		                        driveUntilPoseAndStall(AutoAlignConstants.REEF_POSITIONS.get(autoAlignPosition))),
+		                Map.entry(GPMode.Algae,
+		                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_POSITIONS.get(autoAlignPosition)))),
+		        m_superstructure::getGPMode));
+
+		m_leftJoystick.trigger().whileTrue(Commands.select(
+		        Map.ofEntries(
+		                Map.entry(GPMode.Coral,
+								m_superstructure.score()),
+		                        //ScoreCoral(AutoAlignConstants.REEF_POSITIONS.get(autoAlignPosition))),
+		                Map.entry(GPMode.Algae,
+								m_superstructure.score())),
+		                        //ScoreCoral(AutoAlignConstants.ALGAE_POSITIONS.get(autoAlignPosition)))),
+		        m_superstructure::getGPMode));
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -163,7 +172,7 @@ public class RobotContainer {
 
         // scoring commands
         m_rightJoystick.trigger().onTrue(m_superstructure.intake());
-        m_leftJoystick.trigger().onTrue(m_superstructure.score());
+        //m_leftJoystick.trigger().onTrue(m_superstructure.score());
         m_buttonBoard.button(1).onTrue(m_superstructure.moveL1());
         m_buttonBoard.button(2).onTrue(m_superstructure.moveL2());
         m_buttonBoard.button(3).onTrue(m_superstructure.moveL3());
@@ -198,6 +207,13 @@ public class RobotContainer {
                 new DriveToPoseCommand(drivetrain, pose),
                 new DriveUntilStall(drivetrain));
     }
+
+	public Command ScoreCoral(Pose2d pose) {
+		return Commands.sequence(
+			driveUntilPoseAndStall(pose),
+			m_superstructure.score()
+		);
+	}
 
     public void configureAutoAlignBindings() {
         m_buttonBoard.button(6).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.K));

@@ -26,7 +26,7 @@ public final class ElevatorConstants {
     public final static double L3_CORAL_HEIGHT = 0.5;
     public final static double L4_CORAL_HEIGHT = 3.25;
     public final static double PROCESSOR_ALGAE_HEIGHT = 0.1;
-    public final static double L2_ALGAE_HEIGHT = 0.6;
+    public final static double L2_ALGAE_HEIGHT = 0.1;
     public final static double L3_ALGAE_HEIGHT = 2;
     public final static double BARGE_ALGAE_HEIGHT = 3.25;
     public final static double STOWED_HEIGHT = 0.1;

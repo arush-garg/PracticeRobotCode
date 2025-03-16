@@ -24,13 +24,16 @@ public class AutoAlignConstants {
     private static final Rotation2d IJ = new Rotation2d(Math.toRadians(240));
     private static final Rotation2d KL = new Rotation2d(Math.toRadians(300));
 
+    // public static final Pose2d REEF_A = new Pose2d(3.213, 4.204, AB);
     public static final Pose2d REEF_A = new Pose2d(3.213, 4.204, AB);
     public static final Pose2d REEF_B = new Pose2d(3.245, 3.821, AB);
     public static final Pose2d REEF_C = new Pose2d(3.65, 2.97, CD);
     public static final Pose2d REEF_D = new Pose2d(4.04, 2.76, CD);
     public static final Pose2d REEF_E = new Pose2d(5.39, 2.51, EF);
     public static final Pose2d REEF_F = new Pose2d(5.77, 2.70, EF);
+    // public static final Pose2d REEF_G = new Pose2d(5.762, 3.851, GH);
     public static final Pose2d REEF_G = new Pose2d(5.96, 3.83, GH);
+    // public static final Pose2d REEF_H = new Pose2d(5.73, 4.21, GH);
     public static final Pose2d REEF_H = new Pose2d(5.96, 4.22, GH);
     public static final Pose2d REEF_I = new Pose2d(5.274, 5.037, IJ);
     public static final Pose2d REEF_J = new Pose2d(4.939, 5.198, IJ);

@@ -113,6 +113,7 @@ public class Superstructure {
                                 m_eeWrist.moveTo(EndEffectorWristPosition.L1_SCORE_ANGLE))),
                         Map.entry(GPMode.Algae, Commands.parallel(
                                 m_elevator.moveTo(ElevatorConstants.PROCESSOR_ALGAE_HEIGHT),
+                                m_intakeWrist.moveTo(IntakeConstants.Wrist.INTAKE_POSITION),
                                 m_eeWrist.moveTo(EndEffectorWristPosition.SCORE_PROCESSOR_ANGLE)))),
                 this::getGPMode);
     }
@@ -180,14 +181,15 @@ public class Superstructure {
                 case SCORE_PROCESSOR_ANGLE:
                     System.out.println("outtake proccesor");
                     m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_PROCCESOR_VOLTS);
+                    break;
                 case SCORE_BARGE_PRE_ANGLE:
                     System.out.println("outtake barge");
                     m_eeWrist.setBargeSpeed(true);
                     m_eeWrist.moveToFunc(EndEffectorWristPosition.SCORE_BARGE_ANGLE, EndEffectorWristSide.BACK);
-                    Commands.waitSeconds(1);
+                    System.out.println("spinning rollers");
                     m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_BARGE_VOLTS);
-                    Commands.waitSeconds(1);
                     m_eeWrist.setBargeSpeed(false);
+                    break;
                 default:
                     return;
             }
