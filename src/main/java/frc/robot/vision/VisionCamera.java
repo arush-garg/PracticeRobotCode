@@ -22,6 +22,7 @@ public class VisionCamera {
     private VisionConstants.CameraConfiguration config;
 
     private int lastSeenTag = -1;
+    private int lastSeenTagTime = 0;
 
     public VisionCamera(VisionConstants.CameraConfiguration config) {
         this.config = config;
@@ -53,6 +54,7 @@ public class VisionCamera {
             updateEstimationStdDevs(visionEst, change.getTargets());
             if (change.hasTargets()) {
                 lastSeenTag = change.getBestTarget().fiducialId;
+                lastSeenTagTime = (int) System.currentTimeMillis();
             }
         }
         return visionEst;
@@ -123,7 +125,11 @@ public class VisionCamera {
         return curStdDevs;
     }
 
-    public int getCurrentlySeenTag() {
+    public int getLastSeenTag() {
         return lastSeenTag;
+    }
+
+    public int getLastSeenTagTime() {
+        return lastSeenTagTime;
     }
 }

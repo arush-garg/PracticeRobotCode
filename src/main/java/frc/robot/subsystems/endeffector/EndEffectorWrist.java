@@ -77,17 +77,19 @@ public class EndEffectorWrist extends SubsystemBase {
 	public Command moveTo(EndEffectorWristPosition position) {
 		return Commands.runOnce(() -> {
 			Pose2d closestPose = new Pose2d();
+			Pose2d drivePose = m_drive.getState().Pose;
 			double minDistance = Double.MAX_VALUE;
 			for (Pose2d pose : AutoAlignConstants.ALL_REEF_POSES) {
-				double distance = pose.getTranslation().getDistance(m_drive.getState().Pose.getTranslation());
+				double distance = pose.getTranslation().getDistance(drivePose.getTranslation());
 				if (distance < minDistance) {
 					minDistance = distance;
 					closestPose = pose;
 				}
 			}
-			double rot = closestPose.getRotation().getDegrees();
+			double reefRot = closestPose.getRotation().getDegrees();
+			double driveRot = drivePose.getRotation().getDegrees();
 			EndEffectorWristSide side = EndEffectorWristSide.FRONT;
-			if (rot > 90 && rot < 270) {
+			if (Math.abs(reefRot - driveRot) > 90) {
 				side = EndEffectorWristSide.BACK;
 			}
 			moveTo(position, side).schedule();
