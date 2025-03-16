@@ -92,16 +92,34 @@ public class Superstructure {
                 m_eeWrist.moveTo(EndEffectorWristPosition.INTAKE_ALGAE_ANGLE),
                 m_eeRollers.run(EndEffectorConstants.Rollers.INTAKE_ALGAE_VOLTS),
                 Commands.waitUntil(() -> m_eeRollers.isStalled()),
-                new PrintCommand("" + EndEffectorConstants.Rollers.INTAKE_ALGAE_VOLTS),
                 m_eeRollers.stop(),
                 m_eeRollers.run(EndEffectorConstants.Rollers.RETAIN_ALGAE));
+                
+                // m_intakeWrist.moveTo(IntakeConstants.Wrist.INTAKE_POSITION),
+                // m_intakeRollers.run(IntakeConstants.Rollers.INTAKE_CORAL_VOLTS),
+                // m_channel.run(ChannelConstants.CHANNEL_VOLTS),
+                // m_eeRollers.run(EndEffectorConstants.Rollers.INTAKE_CORAL_VOLTS),
+                // Commands.waitUntil(m_channel.coralInEndEffectorSupplier),
+                // Commands.parallel(m_intakeRollers.stop(), m_channel.stop()),
+                // m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION));
+    }
+
+    public Command intakeCoralWhileInAlgae() {
+        return Commands.sequence(
+            m_intakeWrist.moveTo(IntakeConstants.Wrist.INTAKE_POSITION),
+            m_intakeRollers.run(IntakeConstants.Rollers.INTAKE_CORAL_VOLTS),
+            m_channel.run(ChannelConstants.CHANNEL_VOLTS),
+            m_eeRollers.run(EndEffectorConstants.Rollers.INTAKE_CORAL_VOLTS),
+            Commands.waitUntil(m_channel.coralInEndEffectorSupplier),
+            Commands.parallel(m_intakeRollers.stop(), m_channel.stop()),
+            m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION));
     }
 
     public Command intake() {
         return new SelectCommand<>(
                 Map.ofEntries(
                         Map.entry(GPMode.Coral, intakeCoral()),
-                        Map.entry(GPMode.Algae, intakeAlgae())),
+                        Map.entry(GPMode.Algae, intakeCoralWhileInAlgae())),
                 this::getGPMode);
     }
 
@@ -158,20 +176,22 @@ public class Superstructure {
         return Commands.runOnce(() -> {
             switch (m_eeWrist.getPosition()) {
                 case L1_SCORE_ANGLE:
-                    m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L1_CORAL_VOLTS);
+                    m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_L1_CORAL_VOLTS);
                     break;
                 case L2_PRE_ANGLE:
                 case L3_PRE_ANGLE:
-                    m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L2_L3_CORAL_VOLTS);
+                    m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_L2_L3_CORAL_VOLTS);
+                    m_eeWrist.moveToNextPosition();
                     break;
                 case L4_PRE_ANGLE:
-                    m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L4_CORAL_VOLTS);
+                    m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_L4_CORAL_VOLTS);
+                    m_eeWrist.moveToNextPosition();
                     break;
                 default:
-                    m_eeRollers.run(0);
+                    m_eeRollers.runFunc(0);
                     break;
             }
-            m_eeWrist.moveToNextPosition();
+            
         });
     }
 

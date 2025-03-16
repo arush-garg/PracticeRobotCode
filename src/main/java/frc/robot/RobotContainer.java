@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -21,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -57,8 +59,9 @@ public class RobotContainer {
     public final Vision vision = new Vision(drivetrain);
 
     private boolean slowModeOn = false;
-    private AutoAlignPosition autoAlignPosition = AutoAlignPosition.A;
-
+    private AutoAlignPosition autoAlignPosition;
+	private AutoAlignPosition tempPos;
+	private int tempNumber = 0;
     // controllers
     private final CommandJoystick m_leftJoystick = new CommandJoystick(0);
     private final CommandJoystick m_rightJoystick = new CommandJoystick(1);
@@ -79,9 +82,15 @@ public class RobotContainer {
             m_intakeRollers, m_channel, true);
 
     public RobotContainer() {
+		tempPos = AutoAlignPosition.A;
+		autoAlignPosition = AutoAlignPosition.A;
+
+		//configureAutoAlignBindings();
         configureBindings();
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
         SmartDashboard.putData("Auto Chooser", autoChooser);
+
+		System.out.println("instatiating");
 
     }
 
@@ -119,12 +128,27 @@ public class RobotContainer {
             drivetrain.resetTranslation(new Translation2d(0, 0));
         }));
 
-        // auto align
-        configureAutoAlignBindings();
+		m_buttonBoard.button(6).onTrue(Commands.runOnce(()-> {tempNumber = 5; System.out.println("changing to 5");}));
+        m_buttonBoard.button(7).whileTrue(Commands.runOnce(() -> {System.out.println("changing to j"); tempPos = AutoAlignPosition.J;}));
+        m_buttonBoard.button(8).onTrue(Commands.runOnce(() -> {System.out.println("changing to i"); tempPos = AutoAlignPosition.I;}));
+        m_buttonBoard.button(9).onTrue(Commands.runOnce(() -> {System.out.println("changing to h"); tempPos = AutoAlignPosition.H;}));
+        m_buttonBoard.button(10).onTrue(Commands.runOnce(() -> {System.out.println("changing to g"); tempPos = AutoAlignPosition.G;}));
+        m_buttonBoard.button(11).onTrue(Commands.runOnce(() -> {System.out.println("changing to f"); tempPos = AutoAlignPosition.F;}));
+        m_buttonBoard.button(12).onTrue(Commands.runOnce(() -> {System.out.println("changing to e"); tempPos = AutoAlignPosition.E;}));
+        m_buttonBoard.button(13).onTrue(Commands.runOnce(() -> {System.out.println("changing to d"); tempPos = AutoAlignPosition.D;}));
+        m_buttonBoard.button(14).onTrue(Commands.runOnce(() -> {System.out.println("changing to c"); tempPos = AutoAlignPosition.C;}));
+        m_buttonBoard.button(15).onTrue(Commands.runOnce(() -> {System.out.println("changing to b"); tempPos = AutoAlignPosition.B;}));
+        m_buttonBoard.button(16).onTrue(Commands.runOnce(() -> {System.out.println("changing to a"); tempPos = AutoAlignPosition.A;}));
+        m_buttonBoard.button(17).onTrue(Commands.runOnce(() -> {System.out.println("changing to l"); tempPos = AutoAlignPosition.L;}));
+
 		m_leftJoystick.button(3).whileTrue(Commands.select(
 		        Map.ofEntries(
 		                Map.entry(GPMode.Coral,
-		                        driveUntilPoseAndStall(AutoAlignConstants.REEF_POSITIONS.get(autoAlignPosition))),
+								Commands.parallel(
+									new PrintCommand("autoAlignPosition: " + (tempPos == null ? "" : tempPos.toString())),
+									new PrintCommand("tempNum: " + tempNumber),
+									new PrintCommand("autoAlignPosition: " + (autoAlignPosition == null ? "" : autoAlignPosition.toString())))),
+		                        	//driveUntilPoseAndStall(AutoAlignConstants.REEF_POSITIONS.get(autoAlignPosition)))),
 		                Map.entry(GPMode.Algae,
 		                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_POSITIONS.get(autoAlignPosition)))),
 		        m_superstructure::getGPMode));
@@ -204,6 +228,7 @@ public class RobotContainer {
 
     public Command driveUntilPoseAndStall(Pose2d pose) {
         return Commands.sequence(
+				new PrintCommand("pose: " + pose.toString()),
                 new DriveToPoseCommand(drivetrain, pose),
                 new DriveUntilStall(drivetrain));
     }
@@ -215,18 +240,27 @@ public class RobotContainer {
 		);
 	}
 
+	public Command ChangeAutoAlignPos(AutoAlignPosition pos) {
+		return Commands.runOnce( () -> {
+			tempPos = pos;
+			System.out.println("changing to " + tempPos.toString() + " and " + pos.toString()); 
+		});
+	}
+
     public void configureAutoAlignBindings() {
-        m_buttonBoard.button(6).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.K));
-        m_buttonBoard.button(7).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.J));
-        m_buttonBoard.button(8).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.I));
-        m_buttonBoard.button(9).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.H));
-        m_buttonBoard.button(10).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.G));
-        m_buttonBoard.button(11).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.F));
-        m_buttonBoard.button(12).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.E));
-        m_buttonBoard.button(13).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.D));
-        m_buttonBoard.button(14).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.C));
-        m_buttonBoard.button(15).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.B));
-        m_buttonBoard.button(16).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.A));
-        m_buttonBoard.button(17).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.L));
-    }
+        // m_buttonBoard.button(6).onTrue(Commands.runOnce(() -> {System.out.println("changing to k"); autoAlignPosition = AutoAlignPosition.K;}));
+        // m_buttonBoard.button(7).onTrue(Commands.runOnce(() -> {System.out.println("changing to j"); autoAlignPosition = AutoAlignPosition.J;}));
+        // m_buttonBoard.button(8).onTrue(Commands.runOnce(() -> {System.out.println("changing to i"); autoAlignPosition = AutoAlignPosition.I;}));
+        // m_buttonBoard.button(9).onTrue(Commands.runOnce(() -> {System.out.println("changing to h"); autoAlignPosition = AutoAlignPosition.H;}));
+        // m_buttonBoard.button(10).onTrue(Commands.runOnce(() -> {System.out.println("changing to g"); autoAlignPosition = AutoAlignPosition.G;}));
+        // m_buttonBoard.button(11).onTrue(Commands.runOnce(() -> {System.out.println("changing to f"); autoAlignPosition = AutoAlignPosition.F;}));
+        // m_buttonBoard.button(12).onTrue(Commands.runOnce(() -> {System.out.println("changing to e"); autoAlignPosition = AutoAlignPosition.E;}));
+        // m_buttonBoard.button(13).onTrue(Commands.runOnce(() -> {System.out.println("changing to d"); autoAlignPosition = AutoAlignPosition.D;}));
+        // m_buttonBoard.button(14).onTrue(Commands.runOnce(() -> {System.out.println("changing to c"); autoAlignPosition = AutoAlignPosition.C;}));
+        // m_buttonBoard.button(15).onTrue(Commands.runOnce(() -> {System.out.println("changing to b"); autoAlignPosition = AutoAlignPosition.B;}));
+        // m_buttonBoard.button(16).onTrue(Commands.runOnce(() -> {System.out.println("changing to a"); autoAlignPosition = AutoAlignPosition.A;}));
+        // m_buttonBoard.button(17).onTrue(Commands.runOnce(() -> {System.out.println("changing to l"); autoAlignPosition = AutoAlignPosition.L;}));
+
+		
+	}
 }
