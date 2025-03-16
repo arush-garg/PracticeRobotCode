@@ -80,9 +80,8 @@ public class RobotContainer {
             m_intakeRollers, m_channel, true);
 
     public RobotContainer() {
-        NamedCommands.registerCommand("ScoreL4", Commands.sequence(
-                m_superstructure.moveL4(),
-                m_superstructure.score()));
+        NamedCommands.registerCommand("ScoreL4", m_superstructure.score());
+        NamedCommands.registerCommand("ElevateL4", m_superstructure.moveL4());
         NamedCommands.registerCommand("IntakeCoral", m_superstructure.intake());
 
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
