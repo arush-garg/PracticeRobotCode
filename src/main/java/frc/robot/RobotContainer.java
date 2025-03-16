@@ -83,25 +83,28 @@ public class RobotContainer {
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
-        configureBindings();
+        configureAutoAlignBindings();
     }
 
-    private void configureBindings() {
-        drivetrain.setDefaultCommand(
-                drivetrain.applyRequest(() -> drive
-                        .withVelocityX(
-                                -m_leftJoystick.getY() * MaxSpeed * (slowModeOn
-                                        ? DriveConstants.SLOW_MODE_MULT
-                                        : 1))
-                        .withVelocityY(
-                                -m_leftJoystick.getX() * MaxSpeed * (slowModeOn
-                                        ? DriveConstants.SLOW_MODE_MULT
-                                        : 1))
-                        .withRotationalRate(
-                                -m_rightJoystick.getX() * MaxAngularRate
-                                        * (slowModeOn ? DriveConstants.SLOW_MODE_MULT
-                                                : 1))));
+	private void setDriveCmd() {
+		drivetrain.setDefaultCommand(
+			drivetrain.applyRequest(() -> drive
+					.withVelocityX(
+							-m_leftJoystick.getY() * MaxSpeed * (slowModeOn
+									? DriveConstants.SLOW_MODE_MULT
+									: 1))
+					.withVelocityY(
+							-m_leftJoystick.getX() * MaxSpeed * (slowModeOn
+									? DriveConstants.SLOW_MODE_MULT
+									: 1))
+					.withRotationalRate(
+							-m_rightJoystick.getX() * MaxAngularRate
+									* (slowModeOn ? DriveConstants.SLOW_MODE_MULT
+											: 1))));
+	}
 
+    private void configureBindings() {
+		setDriveCmd();
         m_rightJoystick.button(2)
                 .onTrue(Commands.runOnce(() -> slowModeOn = true))
                 .onFalse(Commands.runOnce(() -> slowModeOn = false));
@@ -126,8 +129,11 @@ public class RobotContainer {
 
         configureAutoAlignBindings();
 
-        // testing drive until stall
-        // m_buttonBoard.button(14).whileTrue(new DriveUntilStall(drivetrain));
+        // testing drive until stalls
+         m_buttonBoard.button(6).onTrue(new DriveUntilStall(drivetrain).finallyDo(() -> {
+			System.out.println("Setting drive commad");
+			setDriveCmd();
+		 }));
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -194,13 +200,13 @@ public class RobotContainer {
 
     public void configureAutoAlignBindings() {
         // K (6), J (7), I (8), H (9), G (10), F (11), E (12), D (13), C (14), B (15), A (16), L (17)
-        m_buttonBoard.button(6).whileTrue(
+        /*m_buttonBoard.button(6).whileTrue(
                 Commands.select(
                         Map.ofEntries(
                                 Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_K)),
                                 Map.entry(GPMode.Algae,
                                         new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_KL))),
-                        m_superstructure::getGPMode));
+                        m_superstructure::getGPMode));*/
         m_buttonBoard.button(7).whileTrue(
                 Commands.select(
                         Map.ofEntries(

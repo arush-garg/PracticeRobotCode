@@ -23,9 +23,6 @@ public class DriveToPoseCommand extends Command {
 
     public DriveToPoseCommand(EagleSwerveDrivetrain drivetrain, Pose2d targetPose) {
         this.drivetrain = drivetrain;
-        if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
-            targetPose = FlippingUtil.flipFieldPose(targetPose);
-        }
         this.targetPose = targetPose;
         addRequirements(drivetrain);
     }
@@ -58,6 +55,10 @@ public class DriveToPoseCommand extends Command {
     private void startPath() {
         if (targetPose != null) {
             Pose2d currentPose = drivetrain.getState().Pose;
+
+            if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
+                targetPose = FlippingUtil.flipFieldPose(targetPose);
+            }
 
             double distance = currentPose.getTranslation().getDistance(targetPose.getTranslation());
             double angleDifference = Math
