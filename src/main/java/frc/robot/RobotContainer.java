@@ -13,6 +13,7 @@ import java.util.Map;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -79,10 +80,15 @@ public class RobotContainer {
             m_intakeRollers, m_channel, true);
 
     public RobotContainer() {
-        configureBindings();
+        NamedCommands.registerCommand("ScoreL4", Commands.sequence(
+                m_superstructure.moveL4(),
+                m_superstructure.score()));
+        NamedCommands.registerCommand("IntakeCoral", m_superstructure.intake());
+
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
+        configureBindings();
         configureAutoAlignBindings();
     }
 
