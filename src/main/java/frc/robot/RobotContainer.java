@@ -42,17 +42,14 @@ import frc.robot.subsystems.superstructure.Superstructure;
 import frc.robot.vision.Vision;
 
 public class RobotContainer {
-    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
-                                                                                  // speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per
-                                                                                      // second
-                                                                                      // max
+    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
 
     // swerve
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive
-                                                                     // motors
+            .withDeadband(MaxSpeed * DriveConstants.DRIVE_DEADBAND_MULT)
+            .withRotationalDeadband(MaxAngularRate * DriveConstants.DRIVE_DEADBAND_MULT)
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
     private final EagleSwerveTelemetry logger = new EagleSwerveTelemetry(MaxSpeed);
     public final EagleSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -87,25 +84,18 @@ public class RobotContainer {
         configureAutoAlignBindings();
     }
 
-    private void setDriveCmd() {
-        drivetrain.setDefaultCommand(
-                drivetrain.applyRequest(() -> drive
-                        .withVelocityX(
-                                -m_leftJoystick.getY() * MaxSpeed * (slowModeOn
-                                        ? DriveConstants.SLOW_MODE_MULT
-                                        : 1))
-                        .withVelocityY(
-                                -m_leftJoystick.getX() * MaxSpeed * (slowModeOn
-                                        ? DriveConstants.SLOW_MODE_MULT
-                                        : 1))
-                        .withRotationalRate(
-                                -m_rightJoystick.getX() * MaxAngularRate
-                                        * (slowModeOn ? DriveConstants.SLOW_MODE_MULT
-                                                : 1))));
-    }
-
     private void configureBindings() {
-        setDriveCmd();
+        drivetrain.setDefaultCommand(
+                drivetrain.applyRequest(() -> {
+                    var driveMult = slowModeOn ? DriveConstants.SLOW_MODE_MULT : 1;
+                    return drive
+                            .withDeadband(MaxSpeed * DriveConstants.DRIVE_DEADBAND_MULT * driveMult)
+                            .withRotationalDeadband(MaxAngularRate * DriveConstants.DRIVE_DEADBAND_MULT * driveMult)
+                            .withVelocityX(-m_leftJoystick.getY() * MaxSpeed * driveMult)
+                            .withVelocityY(-m_leftJoystick.getX() * MaxSpeed * driveMult)
+                            .withRotationalRate(-m_rightJoystick.getX() * MaxAngularRate * driveMult);
+                }));
+
         m_rightJoystick.button(2)
                 .onTrue(Commands.runOnce(() -> slowModeOn = true))
                 .onFalse(Commands.runOnce(() -> slowModeOn = false));
