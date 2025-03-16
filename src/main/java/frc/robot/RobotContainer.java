@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.DriveToPoseCommand;
 import frc.robot.commands.DriveUntilStall;
 import frc.robot.constants.AutoAlignConstants;
+import frc.robot.constants.AutoAlignPosition;
 import frc.robot.constants.DriveConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Drive.EagleSwerveDrivetrain;
@@ -56,6 +57,7 @@ public class RobotContainer {
     public final Vision vision = new Vision(drivetrain);
 
     private boolean slowModeOn = false;
+    private AutoAlignPosition autoAlignPosition = AutoAlignPosition.A;
 
     // controllers
     private final CommandJoystick m_leftJoystick = new CommandJoystick(0);
@@ -118,7 +120,15 @@ public class RobotContainer {
             drivetrain.resetTranslation(new Translation2d(0, 0));
         }));
 
+        // auto align
         configureAutoAlignBindings();
+        m_leftJoystick.button(-1/* PUT A BUTTON HERE */).whileTrue(Commands.select(
+                Map.ofEntries(
+                        Map.entry(GPMode.Coral,
+                                driveUntilPoseAndStall(AutoAlignConstants.REEF_POSITIONS.get(autoAlignPosition))),
+                        Map.entry(GPMode.Algae,
+                                driveUntilPoseAndStall(AutoAlignConstants.ALGAE_POSITIONS.get(autoAlignPosition)))),
+                m_superstructure::getGPMode));
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -190,90 +200,17 @@ public class RobotContainer {
     }
 
     public void configureAutoAlignBindings() {
-        // K (6), J (7), I (8), H (9), G (10), F (11), E (12), D (13), C (14), B (15), A
-        // (16), L (17)
-        m_buttonBoard.button(6).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_K)),
-                                Map.entry(GPMode.Algae, driveUntilPoseAndStall(AutoAlignConstants.ALGAE_KL))),
-                        m_superstructure::getGPMode));
-        m_buttonBoard.button(7).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_J)),
-                                Map.entry(GPMode.Algae,
-                                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_IJ))),
-                        m_superstructure::getGPMode));
-        m_buttonBoard.button(8).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_I)),
-                                Map.entry(GPMode.Algae,
-                                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_IJ))),
-                        m_superstructure::getGPMode));
-        m_buttonBoard.button(9).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_H)),
-                                Map.entry(GPMode.Algae,
-                                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_GH))),
-                        m_superstructure::getGPMode));
-        m_buttonBoard.button(10).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_G)),
-                                Map.entry(GPMode.Algae,
-                                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_GH))),
-                        m_superstructure::getGPMode));
-        m_buttonBoard.button(11).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_F)),
-                                Map.entry(GPMode.Algae,
-                                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_EF))),
-                        m_superstructure::getGPMode));
-        m_buttonBoard.button(12).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_E)),
-                                Map.entry(GPMode.Algae,
-                                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_EF))),
-                        m_superstructure::getGPMode));
-        m_buttonBoard.button(13).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_D)),
-                                Map.entry(GPMode.Algae,
-                                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_CD))),
-                        m_superstructure::getGPMode));
-        m_buttonBoard.button(14).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_C)),
-                                Map.entry(GPMode.Algae,
-                                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_CD))),
-                        m_superstructure::getGPMode));
-        m_buttonBoard.button(15).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_B)),
-                                Map.entry(GPMode.Algae,
-                                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_AB))),
-                        m_superstructure::getGPMode));
-        m_buttonBoard.button(16).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_A)),
-                                Map.entry(GPMode.Algae,
-                                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_AB))),
-                        m_superstructure::getGPMode));
-        m_buttonBoard.button(17).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, driveUntilPoseAndStall(AutoAlignConstants.REEF_L)),
-                                Map.entry(GPMode.Algae,
-                                        driveUntilPoseAndStall(AutoAlignConstants.ALGAE_KL))),
-                        m_superstructure::getGPMode));
+        m_buttonBoard.button(6).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.K));
+        m_buttonBoard.button(7).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.J));
+        m_buttonBoard.button(8).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.I));
+        m_buttonBoard.button(9).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.H));
+        m_buttonBoard.button(10).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.G));
+        m_buttonBoard.button(11).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.F));
+        m_buttonBoard.button(12).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.E));
+        m_buttonBoard.button(13).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.D));
+        m_buttonBoard.button(14).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.C));
+        m_buttonBoard.button(15).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.B));
+        m_buttonBoard.button(16).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.A));
+        m_buttonBoard.button(17).onTrue(Commands.runOnce(() -> autoAlignPosition = AutoAlignPosition.L));
     }
 }
