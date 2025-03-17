@@ -11,12 +11,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "ElevateL4"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "StartToReefJ"
