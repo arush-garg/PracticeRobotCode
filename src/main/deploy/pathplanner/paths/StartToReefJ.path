@@ -3,42 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.8286530671239816,
-        "y": 6.470455367481828
+        "x": 7.555737123842593,
+        "y": 5.486566478587963
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5608713151865579,
-        "y": 6.132982063385077
+        "x": 6.459110966435185,
+        "y": 5.9637199797453695
       },
       "isLocked": false,
-      "linkedName": "StationSweepEnd"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.6819923182723624,
-        "y": 5.115230343794366
+        "x": 3.545935691550925,
+        "y": 5.645889395254629
       },
       "prevControl": {
-        "x": 2.6793742979334505,
-        "y": 5.562069624578414
+        "x": 4.632371238425927,
+        "y": 6.157982132523148
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "FL_RP"
+      "linkedName": "ReefJ"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "ElevateL4",
-      "waypointRelativePos": 0.8001332505841124,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -55,7 +48,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -56.80849089239332
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

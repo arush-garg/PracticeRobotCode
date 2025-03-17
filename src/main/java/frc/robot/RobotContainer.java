@@ -85,9 +85,14 @@ public class RobotContainer {
             m_intakeRollers, m_channel, true);
 
     public RobotContainer() {
-        NamedCommands.registerCommand("ScoreL4", m_superstructure.score());
-        NamedCommands.registerCommand("ElevateL4", m_superstructure.moveL4());
-        NamedCommands.registerCommand("IntakeCoral", m_superstructure.intake());
+        // NamedCommands.registerCommand("ScoreL4", m_superstructure.score());
+        // NamedCommands.registerCommand("ElevateL4", m_superstructure.moveL4());
+        // NamedCommands.registerCommand("IntakeCoral", m_superstructure.intake());
+        // NamedCommands.registerCommand("AutoAlignL",
+        // driveUntilPoseAndStall(AutoAlignConstants.REEF_POSITIONS.get(AutoAlignPosition.L)));
+        // NamedCommands.registerCommand("AutoAlignK",
+        // driveUntilPoseAndStall(AutoAlignConstants.REEF_POSITIONS.get(AutoAlignPosition.K)));
+        NamedCommands.registerCommand("ScoreL4", new PrintCommand("Score L4"));
 
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
         SmartDashboard.putData("Auto Chooser", autoChooser);
