@@ -22,12 +22,12 @@ public class Vision extends SubsystemBase {
     public void periodic() {
         updateDrivetrainVision(cameraFront);
         updateDrivetrainVision(cameraBack);
-        m_elastic.put("front camera", cameraFront.getEstimatedGlobalPose().toString(), false);
-        m_elastic.put("back camera", cameraBack.getEstimatedGlobalPose().toString(), false);
+        //m_elastic.put("front camera", cameraFront.getEstimatedGlobalPose().toString(), false);
+        //m_elastic.put("back camera", cameraBack.getEstimatedGlobalPose().toString(), false);
 
 
-        m_elastic.put("front camera std", cameraFront.getEstimationStdDevs() != null ? cameraFront.getEstimationStdDevs().get(0, 0) : "null", false);
-        m_elastic.put("back camera std", cameraBack.getEstimationStdDevs() != null ? cameraBack.getEstimationStdDevs().toString() : "null", false);
+        //m_elastic.put("front camera std", cameraFront.getEstimationStdDevs() != null ? cameraFront.getEstimationStdDevs().get(0, 0) : "null", false);
+        //m_elastic.put("back camera std", cameraBack.getEstimationStdDevs() != null ? cameraBack.getEstimationStdDevs().toString() : "null", false);
 
     }
 
@@ -44,7 +44,8 @@ public class Vision extends SubsystemBase {
     }
 
     public int getCurrentlySeenTag() {
-        return cameraFront.getCurrentlySeenTag() != -1 ? cameraFront.getCurrentlySeenTag()
-                : cameraBack.getCurrentlySeenTag();
+         return cameraFront.getCurrentlySeenTag() != -1 ? cameraFront.getCurrentlySeenTag()
+                 : cameraBack.getCurrentlySeenTag();
+        //return cameraFront.getCurrentlySeenTag();
     }
 }

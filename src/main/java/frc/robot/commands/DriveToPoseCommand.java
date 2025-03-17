@@ -60,6 +60,8 @@ public class DriveToPoseCommand extends Command {
                 targetPose = FlippingUtil.flipFieldPose(targetPose);
             }
 
+            //System.out.println(targetPose.getX() + ", " +  targetPose.getY());
+
             double distance = currentPose.getTranslation().getDistance(targetPose.getTranslation());
             double angleDifference = Math
                     .abs(currentPose.getRotation().getDegrees() - targetPose.getRotation().getDegrees());

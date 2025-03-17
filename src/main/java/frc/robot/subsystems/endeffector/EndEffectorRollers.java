@@ -29,4 +29,11 @@ public class EndEffectorRollers extends GenericRollerSubsystem {
     @Override
     public void periodic() {
     }
+
+    @Override
+    public Command stop() {
+        return runOnce(() -> {
+            m_motor.setVoltage(EndEffectorConstants.Rollers.RETAIN_CORAL);
+        });
+    }
 }

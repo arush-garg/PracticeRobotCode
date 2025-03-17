@@ -13,9 +13,9 @@ public class AutoAlignConstants {
             2.0, 2.0,
             Units.degreesToRadians(360), Units.degreesToRadians(540));
 
-    public static final double FORWARDS_SPEED = 0.5; // speed until stall
+    public static final double FORWARDS_SPEED = 0.7; // speed until stall
     public static final double VEL_THRESHOLD = 0.1; // velocity of stall threshold
-    public static final double CURRENT_THRESHOLD = 50; // current of stall threshold
+    public static final double CURRENT_THRESHOLD = 60; // current of stall threshold
 
     private static final Rotation2d AB = new Rotation2d(Math.toRadians(0));
     private static final Rotation2d CD = new Rotation2d(Math.toRadians(60));
@@ -24,18 +24,19 @@ public class AutoAlignConstants {
     private static final Rotation2d IJ = new Rotation2d(Math.toRadians(240));
     private static final Rotation2d KL = new Rotation2d(Math.toRadians(300));
 
-    public static final Pose2d REEF_A = new Pose2d(3.213, 4.204, AB);
-    public static final Pose2d REEF_B = new Pose2d(3.245, 3.821, AB);
-    public static final Pose2d REEF_C = new Pose2d(3.65, 2.97, CD);
-    public static final Pose2d REEF_D = new Pose2d(4.04, 2.76, CD);
-    public static final Pose2d REEF_E = new Pose2d(5.39, 2.51, EF);
-    public static final Pose2d REEF_F = new Pose2d(5.77, 2.70, EF);
-    public static final Pose2d REEF_G = new Pose2d(5.96, 3.83, GH);
-    public static final Pose2d REEF_H = new Pose2d(5.96, 4.22, GH);
-    public static final Pose2d REEF_I = new Pose2d(5.274, 5.037, IJ);
-    public static final Pose2d REEF_J = new Pose2d(4.939, 5.198, IJ);
-    public static final Pose2d REEF_K = new Pose2d(3.989, 5.201, KL);
-    public static final Pose2d REEF_L = new Pose2d(3.707, 5.010, KL);
+    public static final Pose2d REEF_A = new Pose2d(3.10, 4.19, AB);
+    public static final Pose2d REEF_B = new Pose2d(3.10, 3.87, AB);
+    public static final Pose2d REEF_C = new Pose2d(3.59, 2.80, CD);
+    public static final Pose2d REEF_D = new Pose2d(3.90, 2.61, CD);
+    public static final Pose2d REEF_E = new Pose2d(5.09, 2.66, EF);
+    public static final Pose2d REEF_F = new Pose2d(5.34, 2.88, EF);
+    public static final Pose2d REEF_G = new Pose2d(5.96, 3.86, GH);
+    public static final Pose2d REEF_H = new Pose2d(5.96, 4.18, GH);
+    public static final Pose2d REEF_I = new Pose2d(5.30, 5.37, IJ);
+    public static final Pose2d REEF_J = new Pose2d(5.125, 5.515, IJ);
+    public static final Pose2d REEF_K = new Pose2d(3.91, 5.36, KL);
+    public static final Pose2d REEF_L = new Pose2d(3.605, 5.22, KL);
+
 
     public static final Pose2d ALGAE_AB = new Pose2d(3.1876, 4.026, AB);
     public static final Pose2d ALGAE_CD = new Pose2d(3.839, 2.899, CD);
@@ -43,6 +44,7 @@ public class AutoAlignConstants {
     public static final Pose2d ALGAE_GH = new Pose2d(5.7909, 4.0258, GH);
     public static final Pose2d ALGAE_IJ = new Pose2d(5.1396, 5.15242, IJ);
     public static final Pose2d ALGAE_KL = new Pose2d(3.8389, 5.1524, KL);
+
 
     public static final HashMap<AutoAlignPosition, Pose2d> REEF_POSITIONS = new HashMap<AutoAlignPosition, Pose2d>() {
         {
@@ -77,4 +79,5 @@ public class AutoAlignConstants {
             put(AutoAlignPosition.L, ALGAE_KL);
         }
     };
+
 }
