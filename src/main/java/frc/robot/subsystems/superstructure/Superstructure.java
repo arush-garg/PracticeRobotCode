@@ -48,11 +48,12 @@ public class Superstructure {
         // m_elastic.addButton("Move L3", moveL3());
         // m_elastic.addButton("Move L4", moveL4());
         m_elastic.addButton("Stow", stow());
+        m_elastic.put("gp mode", gpMode.toString(), false);
     }
 
     public Command switchMode() {
         return Commands.runOnce(() -> {
-            if (lastTime > System.currentTimeMillis() - 500) {
+            if (lastTime > System.currentTimeMillis() - 100) {
                 return;
             }
             lastTime = System.currentTimeMillis();
@@ -218,8 +219,8 @@ public class Superstructure {
 
     public Command ejectIntake() {
         return Commands.sequence(
-                m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION),
-                m_intakeRollers.run(IntakeConstants.Rollers.INTAKE_CORAL_VOLTS),
+                m_intakeWrist.moveTo(IntakeConstants.Wrist.EJECT_POSITION),
+                m_intakeRollers.run(IntakeConstants.Rollers.EJECT_VOLTS),
                 m_channel.run(ChannelConstants.EJECT_VOLTS));
     }
 

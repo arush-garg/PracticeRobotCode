@@ -19,8 +19,8 @@ public final class EndEffectorConstants {
         public final static double kS = 0.0;
         public final static double kG = 0.0;
 
-        public final static double MOTION_ACCELERATION = 20;
-        public final static double MOTION_CRUISE_VELOCITY = 20;
+        public final static double MOTION_ACCELERATION = 15;
+        public final static double MOTION_CRUISE_VELOCITY = 15;
         public final static double MOTION_JERK = 0.0;
 
         public final static double OFFSET = 0;
@@ -30,15 +30,15 @@ public final class EndEffectorConstants {
         public final static int MOTOR_ID = 34;
 
         public final static double MAX_VOLTS = 8.0;
-        public final static double INTAKE_CORAL_VOLTS = 4;
+        public final static double INTAKE_CORAL_VOLTS = 5;
         public final static double INTAKE_ALGAE_VOLTS = 8.0;
         public final static double OUTTAKE_L2_L3_CORAL_VOLTS = 0.0;
         public final static double OUTTAKE_L1_CORAL_VOLTS = -4;
         public final static double OUTTAKE_L4_CORAL_VOLTS = 0.0;
         public final static double OUTTAKE_BARGE_VOLTS = -12.0;
-        public final static double OUTTAKE_PROCCESOR_VOLTS = -5.0;
+        public final static double OUTTAKE_PROCCESOR_VOLTS = -8.0;
         public final static double RETAIN_ALGAE = 2.0;
-        public final static double RETAIN_CORAL = 0.7;
+        public final static double RETAIN_CORAL = 1.0;
         public final static double EJECT_VOLTS = -5;
 
         public final static double STALL_CURRENT = 30;

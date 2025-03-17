@@ -25,12 +25,14 @@ public final class IntakeConstants {
 
         public final static double INTAKE_POSITION = 2.1;
         public final static double STOW_POSITION = 0.0;
+        public final static double EJECT_POSITION = 1;
     }
 
     public static class Rollers {
         public final static int MOTOR_ID = 36;
 
         public final static double MAX_VOLTS = 4.0;
-        public final static double INTAKE_CORAL_VOLTS = 4.0;
+        public final static double INTAKE_CORAL_VOLTS = 6.0;
+        public final static double EJECT_VOLTS = -6.0;
     }
 }

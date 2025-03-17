@@ -22,7 +22,7 @@ public final class ElevatorConstants {
     public final static double OFFSET = 0.0;
 
     public final static double L1_CORAL_HEIGHT = 0.1;
-    public final static double L2_CORAL_HEIGHT = 0.3;
+    public final static double L2_CORAL_HEIGHT = 0;
     public final static double L3_CORAL_HEIGHT = 0.5;
     public final static double L4_CORAL_HEIGHT = 3.1;
     public final static double PROCESSOR_ALGAE_HEIGHT = 0.1;
