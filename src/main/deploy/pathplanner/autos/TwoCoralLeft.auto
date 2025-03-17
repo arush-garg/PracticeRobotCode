@@ -57,30 +57,6 @@
           "data": {
             "pathName": "SweepCoral"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "HumanPlayerToReefK"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ElevateL4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AutoAlignK"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ScoreL4"
-          }
         }
       ]
     }
