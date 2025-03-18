@@ -23,16 +23,16 @@ public class VisionConstants {
 
    public static final CameraConfiguration CAMERA_FRONT_CONFIG = new CameraConfiguration()
            .withCameraName("CAMERA_FRONT")
-           .withRobotToCam(new Transform3d(new Translation3d(0.35999, 0, 0.13106),
-                   new Rotation3d(0.0, Units.degreesToRadians(20), 0.0)))
+           .withRobotToCam(new Transform3d(new Translation3d(0.19812, 0, 0.239776),
+                   new Rotation3d(0.0, Units.degreesToRadians(0), 0.0)))
            .withSingleTagStdDevs(VecBuilder.fill(0.05, 0.05, 0.3))
            .withMultiTagStdDevs(VecBuilder.fill(0.05, 0.05, 0.1));
 
 
    public static final CameraConfiguration CAMERA_BACK_CONFIG = new CameraConfiguration()
            .withCameraName("CAMERA_BACK")
-           .withRobotToCam(new Transform3d(new Translation3d(0.35999, 0, -0.13106),
-                   new Rotation3d(0.0, Units.degreesToRadians(20), Units.degreesToRadians(180))))
+           .withRobotToCam(new Transform3d(new Translation3d(-0.19812, 0, 0.239776),
+                   new Rotation3d(0.0, Units.degreesToRadians(0), Units.degreesToRadians(180))))
            .withSingleTagStdDevs(VecBuilder.fill(0.05, 0.05, 0.3))
            .withMultiTagStdDevs(VecBuilder.fill(0.05, 0.05, 0.1));
 
