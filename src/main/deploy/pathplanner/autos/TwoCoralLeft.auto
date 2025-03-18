@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "StartToReefJ"
+            "pathName": "StartToReefKL"
           }
         },
         {
@@ -37,13 +37,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ReefJToStation"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IntakeCoral"
+            "pathName": "ReefKLToStation"
           }
         },
         {

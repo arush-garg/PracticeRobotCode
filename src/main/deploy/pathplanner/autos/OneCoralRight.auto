@@ -5,9 +5,21 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "Stow"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "New Path"
+            "pathName": "Start2ToReefF"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
           }
         }
       ]

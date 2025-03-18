@@ -33,10 +33,15 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "ElevateL4",
-      "waypointRelativePos": 0.7308429468457944,
+      "name": "",
+      "waypointRelativePos": 0.7332615362149522,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "ElevateL4"
+        }
+      }
     }
   ],
   "globalConstraints": {

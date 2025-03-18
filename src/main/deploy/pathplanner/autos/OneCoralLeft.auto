@@ -11,21 +11,15 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "ElevateL4"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "StartToReefJ"
+            "pathName": "StartToReefKL"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "AutoAlign"
+            "name": "AutoAlignL"
           }
         },
         {

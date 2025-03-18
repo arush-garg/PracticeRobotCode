@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.576118344907407,
-        "y": 6.049845196759259
+        "x": 7.555737123842593,
+        "y": 5.486566478587963
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.013367043977354,
-        "y": 5.554954815714311
+        "x": 6.459110966435185,
+        "y": 5.9637199797453695
       },
       "isLocked": false,
-      "linkedName": "Start"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.309471002701568,
-        "y": 5.114995682462302
+        "x": 3.545935691550925,
+        "y": 5.645889395254629
       },
       "prevControl": {
-        "x": 6.523141974743479,
-        "y": 5.627751540200455
+        "x": 4.632371238425927,
+        "y": 6.157982132523148
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "BL_RP"
+      "linkedName": "ReefKL"
     }
   ],
   "rotationTargets": [],
@@ -33,10 +33,15 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "ElevateL4",
-      "waypointRelativePos": 0.8003522926401869,
+      "name": "",
+      "waypointRelativePos": 0.7179833528037388,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "ElevateL4"
+        }
+      }
     }
   ],
   "globalConstraints": {
@@ -49,7 +54,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": -59.99999999999999
   },
   "reversed": false,
   "folder": null,
