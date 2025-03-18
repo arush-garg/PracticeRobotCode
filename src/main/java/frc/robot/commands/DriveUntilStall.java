@@ -4,6 +4,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.AutoAlignConstants;
 import frc.robot.subsystems.Drive.EagleSwerveDrivetrain;
@@ -37,6 +38,9 @@ public class DriveUntilStall extends Command {
 
     @Override
     public boolean isFinished() {
+        if (RobotBase.isSimulation()) {
+            return true;
+        }
         if (isStalled) {
             isStalled = false;
             return true;

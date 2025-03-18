@@ -3,42 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.26669379339713,
-        "y": 7.332464554403125
+        "x": 3.6404463252314803,
+        "y": 2.569722583912037
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.548343098947038,
-        "y": 6.886465205449769
+        "x": 3.1064173589003916,
+        "y": 1.999033714882025
       },
       "isLocked": false,
-      "linkedName": "StationSweepStart"
+      "linkedName": "ReefCD"
     },
     {
       "anchor": {
-        "x": 0.8286530671239816,
-        "y": 6.470455367481828
+        "x": 2.9529003906249986,
+        "y": 0.6280910011574065
       },
       "prevControl": {
-        "x": 1.332535083906389,
-        "y": 6.806978443292014
+        "x": 3.4373081360657567,
+        "y": 1.280628221784227
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "StationSweepEnd"
+      "linkedName": "Station2SweepStart"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "IntakeCoral",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": 1.0,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -49,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -56.80849089239332
+    "rotation": -127.52674517815099
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -59.55463697833087
+    "rotation": 59.99999999999999
   },
   "useDefaultConstraints": true
 }

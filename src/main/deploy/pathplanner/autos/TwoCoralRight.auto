@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "StartToReefKL"
+            "pathName": "Start2ToReefCD"
           }
         },
         {
@@ -25,7 +25,7 @@
         {
           "type": "named",
           "data": {
-            "name": "AutoAlignL"
+            "name": "AutoAlignD"
           }
         },
         {
@@ -43,13 +43,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ReefKLToStation"
+            "pathName": "ReefCDToStation2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SweepCoral"
+            "pathName": "SweepCoral2"
           }
         },
         {
@@ -61,7 +61,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "StationToReefKL"
+            "pathName": "Station2ToReefCD"
           }
         },
         {
@@ -73,7 +73,7 @@
         {
           "type": "named",
           "data": {
-            "name": "AutoAlignK"
+            "name": "AutoAlignC"
           }
         },
         {

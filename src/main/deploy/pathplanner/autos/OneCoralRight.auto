@@ -13,7 +13,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start2ToReefF"
+            "pathName": "Start2ToReefEF"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevateL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoAlignE"
           }
         },
         {

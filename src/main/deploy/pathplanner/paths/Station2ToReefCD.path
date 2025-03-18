@@ -3,47 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.5351435908564803,
-        "y": 7.157943070023148
+        "x": 1.2008141637731469,
+        "y": 1.5906087239583326
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8123231783980445,
-        "y": 7.081485204726076
+        "x": 2.200814163773147,
+        "y": 1.5906087239583324
       },
       "isLocked": false,
-      "linkedName": "StationSweepJStart"
+      "linkedName": "Station2SweepEnd"
     },
     {
       "anchor": {
-        "x": 1.0248368778935173,
-        "y": 6.428411820023148
+        "x": 3.6404463252314803,
+        "y": 2.569722583912037
       },
       "prevControl": {
-        "x": 2.0645986047565272,
-        "y": 7.319011967897196
+        "x": 2.6404463252314803,
+        "y": 2.569722583912037
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "StationSweepEnd"
+      "linkedName": "ReefCD"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": 1.0,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "IntakeCoral"
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -54,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -56.80849089239332
+    "rotation": 59.99999999999999
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -81.79962382649535
+    "rotation": -137.73048213081861
   },
   "useDefaultConstraints": true
 }

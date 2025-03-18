@@ -3,47 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.5351435908564803,
-        "y": 7.157943070023148
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 2.8123231783980445,
-        "y": 7.081485204726076
-      },
-      "isLocked": false,
-      "linkedName": "StationSweepJStart"
-    },
-    {
-      "anchor": {
         "x": 1.0248368778935173,
         "y": 6.428411820023148
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.0727284579572913,
+        "y": 6.089144896132834
+      },
+      "isLocked": false,
+      "linkedName": "StationSweepEnd"
+    },
+    {
+      "anchor": {
+        "x": 3.545935691550925,
+        "y": 5.645889395254629
+      },
       "prevControl": {
-        "x": 2.0645986047565272,
-        "y": 7.319011967897196
+        "x": 2.464424771568881,
+        "y": 5.970329899771292
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "StationSweepEnd"
+      "linkedName": "ReefKL"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": 1.0,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "IntakeCoral"
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -54,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -56.80849089239332
+    "rotation": -59.99999999999999
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -81.79962382649535
+    "rotation": -56.80849089239332
   },
   "useDefaultConstraints": true
 }

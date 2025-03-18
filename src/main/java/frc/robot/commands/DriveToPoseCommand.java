@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import java.util.List;
 
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -20,6 +21,7 @@ public class DriveToPoseCommand extends Command {
 
     private Pose2d targetPose;
     private Command pathCommand;
+    private Alliance poseAlliance = Alliance.Blue;
 
     public DriveToPoseCommand(EagleSwerveDrivetrain drivetrain, Pose2d targetPose) {
         this.drivetrain = drivetrain;
@@ -50,17 +52,19 @@ public class DriveToPoseCommand extends Command {
             pathCommand.cancel();
             System.out.println("DriveToPoseCommand finished");
         }
+        drivetrain.setControl(new SwerveRequest.Idle());
     }
 
     private void startPath() {
         if (targetPose != null) {
             Pose2d currentPose = drivetrain.getState().Pose;
 
-            if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
+            if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red && poseAlliance == Alliance.Blue) {
                 targetPose = FlippingUtil.flipFieldPose(targetPose);
+                poseAlliance = Alliance.Red;
             }
 
-            //System.out.println(targetPose.getX() + ", " +  targetPose.getY());
+            // System.out.println(targetPose.getX() + ", " + targetPose.getY());
 
             double distance = currentPose.getTranslation().getDistance(targetPose.getTranslation());
             double angleDifference = Math

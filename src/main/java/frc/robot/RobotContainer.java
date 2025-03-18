@@ -91,15 +91,13 @@ public class RobotContainer {
         // NamedCommands.registerCommand("ElevateL4", m_superstructure.moveL4());
         // NamedCommands.registerCommand("IntakeCoral", m_superstructure.intake());
         // NamedCommands.registerCommand("Stow", m_superstructure.stow());
-        NamedCommands.registerCommand("AutoAlignL",
-        	driveUntilPoseAndStall(AutoAlignConstants.REEF_POSITIONS.get(AutoAlignPosition.L)));
-        NamedCommands.registerCommand("AutoAlignK",
-        	driveUntilPoseAndStall(AutoAlignConstants.REEF_POSITIONS.get(AutoAlignPosition.K)));
+        for (AutoAlignPosition pos : AutoAlignPosition.values()) {
+            NamedCommands.registerCommand("AutoAlign" + pos.toString(),
+                    driveUntilPoseAndStall(AutoAlignConstants.REEF_POSITIONS.get(pos)));
+        }
         NamedCommands.registerCommand("ScoreL4", new PrintCommand("Score L4"));
         NamedCommands.registerCommand("ElevateL4", new PrintCommand("Elevate L4"));
         NamedCommands.registerCommand("IntakeCoral", new PrintCommand("Intake Coral"));
-        //NamedCommands.registerCommand("AutoAlignL", new PrintCommand("Auto Align L"));
-        //NamedCommands.registerCommand("AutoAlignK", new PrintCommand("Auto Align K"));
 
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
         SmartDashboard.putData("Auto Chooser", autoChooser);
