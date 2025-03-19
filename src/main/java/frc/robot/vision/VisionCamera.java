@@ -7,12 +7,14 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import frc.robot.constants.AutoAlignConstants;
 import frc.robot.constants.VisionConstants;
 
 public class VisionCamera {
@@ -27,8 +29,8 @@ public class VisionCamera {
         this.config = config;
         camera = new PhotonCamera(config.cameraName);
         photonEstimator = new PhotonPoseEstimator(VisionConstants.FIELD_TAG_LAYOUT,
-                PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, config.robotToCam);
-        photonEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+                PoseStrategy.LOWEST_AMBIGUITY, config.robotToCam);
+        // photonEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
     }
 
     /**
@@ -48,6 +50,7 @@ public class VisionCamera {
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
         Optional<EstimatedRobotPose> visionEst = Optional.empty();
         for (var change : camera.getAllUnreadResults()) {
+            change.getTargets().removeIf(t -> VisionConstants.IGNORE_TAGS.contains(t.fiducialId));
             visionEst = photonEstimator.update(change);
             updateEstimationStdDevs(visionEst, change.getTargets());
             if (change.hasTargets()) {

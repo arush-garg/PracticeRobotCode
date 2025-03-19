@@ -87,18 +87,19 @@ public class RobotContainer {
             m_intakeRollers, m_channel, true);
 
     public RobotContainer() {
-        // NamedCommands.registerCommand("ScoreL4", m_superstructure.score());
-        // NamedCommands.registerCommand("ElevateL4", m_superstructure.moveL4());
-        // NamedCommands.registerCommand("IntakeCoral", m_superstructure.intake());
-        // NamedCommands.registerCommand("Stow", m_superstructure.stow());
+        NamedCommands.registerCommand("ScoreL4", m_superstructure.score());
+        NamedCommands.registerCommand("ElevateL4", m_superstructure.moveL4());
+        NamedCommands.registerCommand("IntakeCoral", m_superstructure.intake());
+        NamedCommands.registerCommand("Stow", m_superstructure.stow());
         for (AutoAlignPosition pos : AutoAlignPosition.values()) {
             NamedCommands.registerCommand("AutoAlign" + pos.toString(),
                     driveUntilPoseAndStall(AutoAlignConstants.REEF_POSITIONS.get(pos)));
         }
-        NamedCommands.registerCommand("ScoreL4", new PrintCommand("Score L4"));
-        NamedCommands.registerCommand("ElevateL4", new PrintCommand("Elevate L4"));
-        NamedCommands.registerCommand("IntakeCoral", new PrintCommand("Intake Coral"));
-        NamedCommands.registerCommand("Stow", new PrintCommand("Stow"));
+        // NamedCommands.registerCommand("ScoreL4", new PrintCommand("Score L4"));
+        // NamedCommands.registerCommand("ElevateL4", new PrintCommand("Elevate L4"));
+        // NamedCommands.registerCommand("IntakeCoral", new PrintCommand("Intake
+        // Coral"));
+        // NamedCommands.registerCommand("Stow", new PrintCommand("Stow"));
 
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
         SmartDashboard.putData("Auto Chooser", autoChooser);

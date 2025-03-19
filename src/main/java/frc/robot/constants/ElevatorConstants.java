@@ -3,8 +3,8 @@ package frc.robot.constants;
 public final class ElevatorConstants {
     public final static int MASTER_MOTOR_ID = 2;
     public final static int SLAVE_MOTOR_ID = 3;
-    public final static double MAX_VOLTS = 0.0;
-    public final static double MANUAL_RATIO = 0.0;
+    public final static double MAX_VOLTS = 4;
+    public final static double MANUAL_RATIO = 1;
     public final static double GEAR_RATIO = 4.0;
 
     public final static double kP = 7;
