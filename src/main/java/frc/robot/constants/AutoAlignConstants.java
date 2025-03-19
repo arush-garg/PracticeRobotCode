@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
 public class AutoAlignConstants {
@@ -18,6 +20,12 @@ public class AutoAlignConstants {
     public static final double VEL_THRESHOLD = 0.1; // velocity of stall threshold
     public static final double CURRENT_THRESHOLD = 80; // current of stall threshold
 
+    // private static final Rotation2d AB = new Rotation2d(Math.toRadians(0));
+    // private static final Rotation2d CD = new Rotation2d(Math.toRadians(60));
+    // private static final Rotation2d EF = new Rotation2d(Math.toRadians(120));
+    // private static final Rotation2d GH = new Rotation2d(Math.toRadians(180));
+    // private static final Rotation2d IJ = new Rotation2d(Math.toRadians(240));
+    // private static final Rotation2d KL = new Rotation2d(Math.toRadians(300));
     private static final Rotation2d AB = new Rotation2d(Math.toRadians(0));
     private static final Rotation2d CD = new Rotation2d(Math.toRadians(60));
     private static final Rotation2d EF = new Rotation2d(Math.toRadians(120));
@@ -25,18 +33,18 @@ public class AutoAlignConstants {
     private static final Rotation2d IJ = new Rotation2d(Math.toRadians(240));
     private static final Rotation2d KL = new Rotation2d(Math.toRadians(300));
 
-    public static final Pose2d REEF_A = new Pose2d(3.10, 4.19, AB);
-    public static final Pose2d REEF_B = new Pose2d(3.10, 3.87, AB);
-    public static final Pose2d REEF_C = new Pose2d(3.59, 2.80, CD);
-    public static final Pose2d REEF_D = new Pose2d(3.90, 2.61, CD);
-    public static final Pose2d REEF_E = new Pose2d(5.09, 2.66, EF);
-    public static final Pose2d REEF_F = new Pose2d(5.34, 2.88, EF);
-    public static final Pose2d REEF_G = new Pose2d(5.96, 3.86, GH);
-    public static final Pose2d REEF_H = new Pose2d(5.96, 4.18, GH);
-    public static final Pose2d REEF_I = new Pose2d(5.30, 5.37, IJ);
-    public static final Pose2d REEF_J = new Pose2d(5.125, 5.515, IJ);
-    public static final Pose2d REEF_K = new Pose2d(3.91, 5.36, KL);
-    public static final Pose2d REEF_L = new Pose2d(3.605, 5.22, KL);
+    public static final Pose2d REEF_A = new Pose2d(2.85, 4.21, AB);
+    public static final Pose2d REEF_B = new Pose2d(2.85, 3.77, AB);
+    public static final Pose2d REEF_C = new Pose2d(3.59, 2.69, CD);
+    public static final Pose2d REEF_D = new Pose2d(3.89, 2.54, CD);
+    public static final Pose2d REEF_E = new Pose2d(5.13, 2.53, EF);
+    public static final Pose2d REEF_F = new Pose2d(5.47, 2.74, EF);
+    public static final Pose2d REEF_G = new Pose2d(6.09, 3.81, GH);
+    public static final Pose2d REEF_H = new Pose2d(6.09, 4.21, GH);
+    public static final Pose2d REEF_I = new Pose2d(5.39, 5.36, IJ);
+    public static final Pose2d REEF_J = new Pose2d(5.06, 5.57, IJ);
+    public static final Pose2d REEF_K = new Pose2d(3.82, 5.51, KL);
+    public static final Pose2d REEF_L = new Pose2d(3.39, 5.48, KL);
 
     public static final Pose2d ALGAE_AB = new Pose2d(3.1876, 4.026, AB);
     public static final Pose2d ALGAE_CD = new Pose2d(3.839, 2.899, CD);

@@ -25,13 +25,19 @@
         {
           "type": "named",
           "data": {
-            "name": "AutoAlignD"
+            "name": "AutoAlignF"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "ScoreL4"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
           }
         },
         {
@@ -47,15 +53,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "SweepCoral2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Stow"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeCoral"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SweepCoral2"
+                }
+              }
+            ]
           }
         },
         {
@@ -80,6 +93,12 @@
           "type": "named",
           "data": {
             "name": "ScoreL4"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
           }
         },
         {
