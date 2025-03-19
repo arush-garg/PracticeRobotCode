@@ -15,7 +15,6 @@ public class Vision extends SubsystemBase {
         cameraFront = new VisionCamera(VisionConstants.CAMERA_FRONT_CONFIG);
         cameraBack = new VisionCamera(VisionConstants.CAMERA_BACK_CONFIG);
         m_elastic = new ElasticSender("vision", true);
-
     }
 
     @Override
@@ -46,11 +45,5 @@ public class Vision extends SubsystemBase {
                     drivetrain.addVisionMeasurement(
                             est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
                 });
-    }
-
-    public int getCurrentlySeenTag() {
-        return cameraFront.getCurrentlySeenTag() != -1 ? cameraFront.getCurrentlySeenTag()
-                : cameraBack.getCurrentlySeenTag();
-        // return cameraFront.getCurrentlySeenTag();
     }
 }
