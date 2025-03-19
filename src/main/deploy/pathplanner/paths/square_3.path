@@ -12,7 +12,7 @@
         "y": 6.358156262192504
       },
       "isLocked": false,
-      "linkedName": "test2"
+      "linkedName": "square2"
     },
     {
       "anchor": {
@@ -45,7 +45,7 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Square",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

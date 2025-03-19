@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.8286530671239816,
-        "y": 6.470455367481828
+        "x": 3.545935691550925,
+        "y": 5.645889395254629
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7443492814548227,
-        "y": 6.121476120603027
+        "x": 3.3685262629005024,
+        "y": 5.822031084317527
       },
       "isLocked": false,
-      "linkedName": "StationSweepEnd"
+      "linkedName": "ReefKL"
     },
     {
       "anchor": {
-        "x": 3.9438935908564803,
-        "y": 5.335337818287037
+        "x": 2.5351435908564803,
+        "y": 7.157943070023148
       },
       "prevControl": {
-        "x": 3.195132121843722,
-        "y": 5.598764500524296
+        "x": 2.7127127054685043,
+        "y": 6.981962362171685
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "FL_LP"
+      "linkedName": "StationSweepStart"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -59.99999999999999
+    "rotation": -81.79962382649535
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -56.80849089239332
+    "rotation": -59.99999999999999
   },
   "useDefaultConstraints": true
 }

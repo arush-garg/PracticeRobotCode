@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Stow"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Start2ToReefEF"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ElevateL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoAlignE"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

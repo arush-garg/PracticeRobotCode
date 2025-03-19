@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.8286530671239816,
-        "y": 6.470455367481828
+        "x": 5.336455078124999,
+        "y": 5.53583080150463
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5608713151865579,
-        "y": 6.132982063385077
+        "x": 4.715309441134731,
+        "y": 5.917903172009951
       },
       "isLocked": false,
-      "linkedName": "StationSweepEnd"
+      "linkedName": "ReefIJ"
     },
     {
       "anchor": {
-        "x": 3.656634837962962,
-        "y": 5.2206788917824065
+        "x": 2.5351435908564803,
+        "y": 7.157943070023148
       },
       "prevControl": {
-        "x": 2.6540168176240506,
-        "y": 5.667518172566455
+        "x": 4.139646361728755,
+        "y": 6.283692029983441
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "FL_RP"
+      "linkedName": "StationSweepStart"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -59.99999999999999
+    "rotation": -81.79962382649535
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -56.80849089239332
+    "rotation": -119.99999999999999
   },
   "useDefaultConstraints": true
 }

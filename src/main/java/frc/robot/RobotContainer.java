@@ -9,23 +9,32 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import java.util.Map;
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.events.EventTrigger;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.ElasticSender.ElasticSender;
 import frc.robot.commands.DriveToPoseCommand;
 import frc.robot.commands.DriveUntilStall;
 import frc.robot.constants.AutoAlignConstants;
+import frc.robot.constants.AutoAlignPosition;
 import frc.robot.constants.DriveConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Drive.EagleSwerveDrivetrain;
@@ -41,23 +50,22 @@ import frc.robot.subsystems.superstructure.Superstructure;
 import frc.robot.vision.Vision;
 
 public class RobotContainer {
-    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
-                                                                                  // speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per
-                                                                                      // second
-                                                                                      // max
+    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
 
     // swerve
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive
-                                                                     // motors
+            .withDeadband(MaxSpeed * DriveConstants.DRIVE_DEADBAND_MULT)
+            .withRotationalDeadband(MaxAngularRate * DriveConstants.DRIVE_DEADBAND_MULT)
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
     private final EagleSwerveTelemetry logger = new EagleSwerveTelemetry(MaxSpeed);
     public final EagleSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public final Vision vision = new Vision(drivetrain);
 
     private boolean slowModeOn = false;
+    private AutoAlignPosition autoAlignPosition = AutoAlignPosition.A;
+    private Supplier<Pose2d> autoAlignPositionSupplier = () -> AutoAlignConstants.REEF_POSITIONS.get(autoAlignPosition);
 
     // controllers
     private final CommandJoystick m_leftJoystick = new CommandJoystick(0);
@@ -79,28 +87,40 @@ public class RobotContainer {
             m_intakeRollers, m_channel, true);
 
     public RobotContainer() {
-        configureBindings();
+        // NamedCommands.registerCommand("ScoreL4", m_superstructure.score());
+        // NamedCommands.registerCommand("ElevateL4", m_superstructure.moveL4());
+        // NamedCommands.registerCommand("IntakeCoral", m_superstructure.intake());
+        // NamedCommands.registerCommand("Stow", m_superstructure.stow());
+        for (AutoAlignPosition pos : AutoAlignPosition.values()) {
+            NamedCommands.registerCommand("AutoAlign" + pos.toString(),
+                    driveUntilPoseAndStall(AutoAlignConstants.REEF_POSITIONS.get(pos)));
+        }
+        NamedCommands.registerCommand("ScoreL4", new PrintCommand("Score L4"));
+        NamedCommands.registerCommand("ElevateL4", new PrintCommand("Elevate L4"));
+        NamedCommands.registerCommand("IntakeCoral", new PrintCommand("Intake Coral"));
+        NamedCommands.registerCommand("Stow", new PrintCommand("Stow"));
+
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
+        configureAutoAlignBindings();
         configureBindings();
+
+        System.out.println("instatiating");
+
     }
 
     private void configureBindings() {
         drivetrain.setDefaultCommand(
-                drivetrain.applyRequest(() -> drive
-                        .withVelocityX(
-                                -m_leftJoystick.getY() * MaxSpeed * (slowModeOn
-                                        ? DriveConstants.SLOW_MODE_MULT
-                                        : 1))
-                        .withVelocityY(
-                                -m_leftJoystick.getX() * MaxSpeed * (slowModeOn
-                                        ? DriveConstants.SLOW_MODE_MULT
-                                        : 1))
-                        .withRotationalRate(
-                                -m_rightJoystick.getX() * MaxAngularRate
-                                        * (slowModeOn ? DriveConstants.SLOW_MODE_MULT
-                                                : 1))));
+                drivetrain.applyRequest(() -> {
+                    var driveMult = slowModeOn ? DriveConstants.SLOW_MODE_MULT : 1;
+                    return drive
+                            .withDeadband(MaxSpeed * DriveConstants.DRIVE_DEADBAND_MULT * driveMult)
+                            .withRotationalDeadband(MaxAngularRate * DriveConstants.DRIVE_DEADBAND_MULT * driveMult)
+                            .withVelocityX(-m_leftJoystick.getY() * MaxSpeed * driveMult)
+                            .withVelocityY(-m_leftJoystick.getX() * MaxSpeed * driveMult)
+                            .withRotationalRate(-m_rightJoystick.getX() * MaxAngularRate * driveMult);
+                }));
 
         m_rightJoystick.button(2)
                 .onTrue(Commands.runOnce(() -> slowModeOn = true))
@@ -119,15 +139,10 @@ public class RobotContainer {
 
         // reset yaw
         m_operatorController.button(8).onTrue(drivetrain.runOnce(() -> {
-            System.out.println("Zeroing");
+            System.out.println("Zeroing drive");
             drivetrain.seedFieldCentric();
             drivetrain.resetTranslation(new Translation2d(0, 0));
         }));
-
-        configureAutoAlignBindings();
-
-        // testing drive until stall
-        // m_buttonBoard.button(14).whileTrue(new DriveUntilStall(drivetrain));
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -171,6 +186,18 @@ public class RobotContainer {
         // stow commands
         m_leftJoystick.button(2).onTrue(m_superstructure.stow());
         m_operatorController.povUp().onTrue(m_superstructure.stow());
+
+        m_leftJoystick.button(3).whileTrue(Commands.select(
+                Map.ofEntries(
+                        Map.entry(GPMode.Coral,
+                                Commands.runOnce(() -> {
+                                    // System.out.println("autoAlignPosition: " +
+                                    // (autoAlignPositionSupplier.get().toString()));
+                                    driveUntilPoseAndStall(autoAlignPositionSupplier.get()).schedule();
+                                })),
+                        Map.entry(GPMode.Algae,
+                                driveUntilPoseAndStall(AutoAlignConstants.ALGAE_POSITIONS.get(autoAlignPosition)))),
+                m_superstructure::getGPMode));
     }
 
     public Command getAutonomousCommand() {
@@ -178,7 +205,7 @@ public class RobotContainer {
     }
 
     public void resetMechs() {
-        System.out.println("reseting mechs");
+        System.out.println("Reseting mechs");
         m_intakeRollers.stop();
         m_intakeWrist.kill();
         m_channel.stop();
@@ -192,93 +219,84 @@ public class RobotContainer {
          */
     }
 
-    public void configureAutoAlignBindings() {
-        // K (6), J (7), I (8), H (9), G (10), F (11), E (12), D (13), C (14), B (15), A
-        // (16), L (17)
-        m_buttonBoard.button(6).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_K)),
-                                Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_KL))),
-                        m_superstructure::getGPMode));
-        m_buttonBoard.button(7).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_J)),
-                                Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_IJ))),
-                        m_superstructure::getGPMode));
-        m_buttonBoard.button(8).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_I)),
-                                Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_IJ))),
-                        m_superstructure::getGPMode));
-        m_buttonBoard.button(9).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_H)),
-                                Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_GH))),
-                        m_superstructure::getGPMode));
-        m_buttonBoard.button(10).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_G)),
-                                Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_GH))),
-                        m_superstructure::getGPMode));
-        m_buttonBoard.button(11).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_F)),
-                                Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_EF))),
-                        m_superstructure::getGPMode));
-        m_buttonBoard.button(12).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_E)),
-                                Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_EF))),
-                        m_superstructure::getGPMode));
-        m_buttonBoard.button(13).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_D)),
-                                Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_CD))),
-                        m_superstructure::getGPMode));
-        m_buttonBoard.button(14).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_C)),
-                                Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_CD))),
-                        m_superstructure::getGPMode));
-        m_buttonBoard.button(15).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_B)),
-                                Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_AB))),
-                        m_superstructure::getGPMode));
-        m_buttonBoard.button(16).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_A)),
-                                Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_AB))),
-                        m_superstructure::getGPMode));
-        m_buttonBoard.button(17).whileTrue(
-                Commands.select(
-                        Map.ofEntries(
-                                Map.entry(GPMode.Coral, new DriveToPoseCommand(drivetrain, AutoAlignConstants.REEF_L)),
-                                Map.entry(GPMode.Algae,
-                                        new DriveToPoseCommand(drivetrain, AutoAlignConstants.ALGAE_KL))),
-                        m_superstructure::getGPMode));
+    public Command driveUntilPoseAndStall(Pose2d pose) {
+        return Commands.sequence(
+                new PrintCommand("pose: " + pose.toString()),
+                new DriveToPoseCommand(drivetrain, pose),
+                new DriveUntilStall(drivetrain));
     }
 
+    public Command ScoreCoral(Pose2d pose) {
+        return Commands.sequence(
+                driveUntilPoseAndStall(pose),
+                m_superstructure.score());
+    }
+
+    // public Command ChangeAutoAlignPos(AutoAlignPosition pos) {
+    // if(System.currentTimeMillis() - timeSinceUpdate < 100) {
+    // return null;
+    // }
+
+    // return Commands.runOnce( () -> {
+    // tempPos = pos;
+    // System.out.println("changing to " + tempPos.toString() + " and " +
+    // pos.toString());
+    // m_Sender.put("Reef pos", tempPos.toString(), false);
+    // rebindAutoAlign();
+    // timeSinceUpdate = System.currentTimeMillis();
+    // });
+    // }
+
+    // }
+
+    public void configureAutoAlignBindings() {
+        m_buttonBoard.button(6).onTrue(Commands.runOnce(() -> {
+            System.out.println("changing to k");
+            autoAlignPosition = AutoAlignPosition.K;
+        }));
+        m_buttonBoard.button(7).onTrue(Commands.runOnce(() -> {
+            System.out.println("changing to j");
+            autoAlignPosition = AutoAlignPosition.J;
+        }));
+        m_buttonBoard.button(8).onTrue(Commands.runOnce(() -> {
+            System.out.println("changing to i");
+            autoAlignPosition = AutoAlignPosition.I;
+        }));
+        m_buttonBoard.button(9).onTrue(Commands.runOnce(() -> {
+            System.out.println("changing to h");
+            autoAlignPosition = AutoAlignPosition.H;
+        }));
+        m_buttonBoard.button(10).onTrue(Commands.runOnce(() -> {
+            System.out.println("changing to g");
+            autoAlignPosition = AutoAlignPosition.G;
+        }));
+        m_buttonBoard.button(11).onTrue(Commands.runOnce(() -> {
+            System.out.println("changing to f");
+            autoAlignPosition = AutoAlignPosition.F;
+        }));
+        m_buttonBoard.button(12).onTrue(Commands.runOnce(() -> {
+            System.out.println("changing to e");
+            autoAlignPosition = AutoAlignPosition.E;
+        }));
+        m_buttonBoard.button(13).onTrue(Commands.runOnce(() -> {
+            System.out.println("changing to d");
+            autoAlignPosition = AutoAlignPosition.D;
+        }));
+        m_buttonBoard.button(14).onTrue(Commands.runOnce(() -> {
+            System.out.println("changing to c");
+            autoAlignPosition = AutoAlignPosition.C;
+        }));
+        m_buttonBoard.button(15).onTrue(Commands.runOnce(() -> {
+            System.out.println("changing to b");
+            autoAlignPosition = AutoAlignPosition.B;
+        }));
+        m_buttonBoard.button(16).onTrue(Commands.runOnce(() -> {
+            System.out.println("changing to a");
+            autoAlignPosition = AutoAlignPosition.A;
+        }));
+        m_buttonBoard.button(17).onTrue(Commands.runOnce(() -> {
+            System.out.println("changing to l");
+            autoAlignPosition = AutoAlignPosition.L;
+        }));
+    }
 }

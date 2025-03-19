@@ -27,7 +27,6 @@ public class VisionCamera {
     public VisionCamera(VisionConstants.CameraConfiguration config) {
         this.config = config;
         camera = new PhotonCamera(config.cameraName);
-
         photonEstimator = new PhotonPoseEstimator(VisionConstants.FIELD_TAG_LAYOUT,
                 PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, config.robotToCam);
         photonEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);

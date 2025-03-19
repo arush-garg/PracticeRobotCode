@@ -1,6 +1,7 @@
 package frc.robot.constants;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.pathplanner.lib.path.PathConstraints;
 
@@ -13,9 +14,9 @@ public class AutoAlignConstants {
             2.0, 2.0,
             Units.degreesToRadians(360), Units.degreesToRadians(540));
 
-    public static final double FORWARDS_SPEED = 0.5; // speed until stall
+    public static final double FORWARDS_SPEED = 0.7; // speed until stall
     public static final double VEL_THRESHOLD = 0.1; // velocity of stall threshold
-    public static final double CURRENT_THRESHOLD = 10; // current of stall threshold
+    public static final double CURRENT_THRESHOLD = 80; // current of stall threshold
 
     private static final Rotation2d AB = new Rotation2d(Math.toRadians(0));
     private static final Rotation2d CD = new Rotation2d(Math.toRadians(60));
@@ -24,20 +25,18 @@ public class AutoAlignConstants {
     private static final Rotation2d IJ = new Rotation2d(Math.toRadians(240));
     private static final Rotation2d KL = new Rotation2d(Math.toRadians(300));
 
-    public static final Pose2d REEF_A = new Pose2d(3.213, 4.204, AB);
-    public static final Pose2d REEF_B = new Pose2d(3.245, 3.821, AB);
-    public static final Pose2d REEF_C = new Pose2d(3.695, 3.008, CD);
-    public static final Pose2d REEF_D = new Pose2d(4.005, 2.862, CD);
-    public static final Pose2d REEF_E = new Pose2d(4.970, 2.839, EF);
-    public static final Pose2d REEF_F = new Pose2d(5.265, 3.037, EF);
-    // public static final Pose2d REEF_G = new Pose2d(5.762, 3.851, GH);
-    public static final Pose2d REEF_G = new Pose2d(5.96, 3.83, GH);
-    // public static final Pose2d REEF_H = new Pose2d(5.73, 4.21, GH);
-    public static final Pose2d REEF_H = new Pose2d(5.96, 4.22, GH);
-    public static final Pose2d REEF_I = new Pose2d(5.274, 5.037, IJ);
-    public static final Pose2d REEF_J = new Pose2d(4.939, 5.198, IJ);
-    public static final Pose2d REEF_K = new Pose2d(3.989, 5.201, KL);
-    public static final Pose2d REEF_L = new Pose2d(3.707, 5.010, KL);
+    public static final Pose2d REEF_A = new Pose2d(3.10, 4.19, AB);
+    public static final Pose2d REEF_B = new Pose2d(3.10, 3.87, AB);
+    public static final Pose2d REEF_C = new Pose2d(3.59, 2.80, CD);
+    public static final Pose2d REEF_D = new Pose2d(3.90, 2.61, CD);
+    public static final Pose2d REEF_E = new Pose2d(5.09, 2.66, EF);
+    public static final Pose2d REEF_F = new Pose2d(5.34, 2.88, EF);
+    public static final Pose2d REEF_G = new Pose2d(5.96, 3.86, GH);
+    public static final Pose2d REEF_H = new Pose2d(5.96, 4.18, GH);
+    public static final Pose2d REEF_I = new Pose2d(5.30, 5.37, IJ);
+    public static final Pose2d REEF_J = new Pose2d(5.125, 5.515, IJ);
+    public static final Pose2d REEF_K = new Pose2d(3.91, 5.36, KL);
+    public static final Pose2d REEF_L = new Pose2d(3.605, 5.22, KL);
 
     public static final Pose2d ALGAE_AB = new Pose2d(3.1876, 4.026, AB);
     public static final Pose2d ALGAE_CD = new Pose2d(3.839, 2.899, CD);
@@ -62,4 +61,38 @@ public class AutoAlignConstants {
             add(REEF_L);
         }
     };
+    public static final HashMap<AutoAlignPosition, Pose2d> REEF_POSITIONS = new HashMap<AutoAlignPosition, Pose2d>() {
+        {
+            put(AutoAlignPosition.A, REEF_A);
+            put(AutoAlignPosition.B, REEF_B);
+            put(AutoAlignPosition.C, REEF_C);
+            put(AutoAlignPosition.D, REEF_D);
+            put(AutoAlignPosition.E, REEF_E);
+            put(AutoAlignPosition.F, REEF_F);
+            put(AutoAlignPosition.G, REEF_G);
+            put(AutoAlignPosition.H, REEF_H);
+            put(AutoAlignPosition.I, REEF_I);
+            put(AutoAlignPosition.J, REEF_J);
+            put(AutoAlignPosition.K, REEF_K);
+            put(AutoAlignPosition.L, REEF_L);
+        }
+    };
+
+    public static final HashMap<AutoAlignPosition, Pose2d> ALGAE_POSITIONS = new HashMap<AutoAlignPosition, Pose2d>() {
+        {
+            put(AutoAlignPosition.A, ALGAE_AB);
+            put(AutoAlignPosition.B, ALGAE_AB);
+            put(AutoAlignPosition.C, ALGAE_CD);
+            put(AutoAlignPosition.D, ALGAE_CD);
+            put(AutoAlignPosition.E, ALGAE_EF);
+            put(AutoAlignPosition.F, ALGAE_EF);
+            put(AutoAlignPosition.G, ALGAE_GH);
+            put(AutoAlignPosition.H, ALGAE_GH);
+            put(AutoAlignPosition.I, ALGAE_IJ);
+            put(AutoAlignPosition.J, ALGAE_IJ);
+            put(AutoAlignPosition.K, ALGAE_KL);
+            put(AutoAlignPosition.L, ALGAE_KL);
+        }
+    };
+
 }

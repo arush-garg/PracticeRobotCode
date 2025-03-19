@@ -70,14 +70,9 @@ public class IntakeWrist extends SubsystemBase {
     public Command zero() {
         return runOnce(
                 () -> {
-                    System.out.println("zeroing intake");
+                    System.out.println("Zeroing intake");
                     m_motor.setPosition(IntakeConstants.Wrist.OFFSET);
                 });
-    }
-
-    public void zeroing() {
-        System.out.println("zeroing intake");
-        m_motor.setPosition(IntakeConstants.Wrist.OFFSET);
     }
 
     public Command kill() {
