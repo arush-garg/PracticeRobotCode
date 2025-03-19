@@ -98,6 +98,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("ScoreL4", new PrintCommand("Score L4"));
         NamedCommands.registerCommand("ElevateL4", new PrintCommand("Elevate L4"));
         NamedCommands.registerCommand("IntakeCoral", new PrintCommand("Intake Coral"));
+        NamedCommands.registerCommand("Stow", new PrintCommand("Stow"));
 
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
         SmartDashboard.putData("Auto Chooser", autoChooser);
