@@ -17,7 +17,6 @@ public class AutoAlignConstants {
             Units.degreesToRadians(360), Units.degreesToRadians(540));
 
     public static final double FORWARDS_SPEED = 0.7; // speed until stall
-    public static final double VEL_THRESHOLD = 0.1; // velocity of stall threshold
     public static final double CURRENT_THRESHOLD = 80; // current of stall threshold
 
     // private static final Rotation2d AB = new Rotation2d(Math.toRadians(0));

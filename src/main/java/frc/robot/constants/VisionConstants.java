@@ -1,6 +1,8 @@
 
 package frc.robot.constants;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,10 +16,22 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Filesystem;
 
 public class VisionConstants {
-    public static final AprilTagFieldLayout FIELD_TAG_LAYOUT = AprilTagFieldLayout
-            .loadField(AprilTagFields.k2025ReefscapeWelded);
+    public static final AprilTagFieldLayout FIELD_TAG_LAYOUT;
+
+    static {
+        AprilTagFieldLayout layout = null;
+        try {
+            layout = new AprilTagFieldLayout(Path.of(
+                    Filesystem.getDeployDirectory().getPath(),
+                    "reefscape-field-target-tags.json"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        FIELD_TAG_LAYOUT = layout;
+    }
 
     public static final CameraConfiguration CAMERA_FRONT_CONFIG = new CameraConfiguration()
             .withCameraName("CAMERA_FRONT")

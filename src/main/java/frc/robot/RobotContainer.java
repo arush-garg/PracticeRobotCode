@@ -77,7 +77,7 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
 
     private final Elevator m_elevator = new Elevator(true);
-    private final EndEffectorWrist m_eeWrist = new EndEffectorWrist(true, drivetrain);
+    private final EndEffectorWrist m_eeWrist = new EndEffectorWrist(true, drivetrain, vision);
     private final EndEffectorRollers m_eeRollers = new EndEffectorRollers();
     private final IntakeWrist m_intakeWrist = new IntakeWrist(true);
     private final IntakeRollers m_intakeRollers = new IntakeRollers();
@@ -179,6 +179,8 @@ public class RobotContainer {
         // scoring commands
         m_rightJoystick.trigger().onTrue(m_superstructure.intake());
         m_leftJoystick.trigger().onTrue(m_superstructure.score());
+        m_buttonBoard.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.05)
+                .onTrue(m_superstructure.moveL1().andThen(new PrintCommand("Move L1")));
         m_buttonBoard.button(1).onTrue(m_superstructure.moveL1());
         m_buttonBoard.button(2).onTrue(m_superstructure.moveL2());
         m_buttonBoard.button(3).onTrue(m_superstructure.moveL3());

@@ -12,6 +12,8 @@ import frc.robot.ElasticSender.ElasticSender;
 import frc.robot.constants.*;
 import frc.robot.subsystems.Drive.EagleSwerveDrivetrain;
 import frc.robot.utils.*;
+import frc.robot.vision.Vision;
+
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.*;
@@ -30,10 +32,12 @@ public class EndEffectorWrist extends SubsystemBase {
 	TalonFXConfiguration cfg;
 
 	private EagleSwerveDrivetrain m_drive;
+	private Vision m_vision;
 
-	public EndEffectorWrist(boolean debug, EagleSwerveDrivetrain drive) {
+	public EndEffectorWrist(boolean debug, EagleSwerveDrivetrain drive, Vision vision) {
 		this.debug = debug;
 		this.m_drive = drive;
+		this.m_vision = vision;
 		m_elastic = new ElasticSender("EE: Wrist", debug);
 		m_elastic.addButton("Zero", zero());
 		m_elastic.addButton("Kill", kill());
@@ -76,22 +80,24 @@ public class EndEffectorWrist extends SubsystemBase {
 
 	public Command moveTo(EndEffectorWristPosition position) {
 		return Commands.runOnce(() -> {
-			Pose2d closestPose = new Pose2d();
-			Pose2d drivePose = m_drive.getState().Pose;
-			double minDistance = Double.MAX_VALUE;
-			for (Pose2d pose : AutoAlignConstants.ALL_REEF_POSES) {
-				double distance = pose.getTranslation().getDistance(drivePose.getTranslation());
-				if (distance < minDistance) {
-					minDistance = distance;
-					closestPose = pose;
-				}
+			int lastTag = m_vision.getLastSeenTag();
+			// System.out.println("Last Tag: " + lastTag);
+			if (lastTag == -1) {
+				moveTo(position, EndEffectorWristSide.FRONT).schedule();
+				return;
 			}
-			double reefRot = closestPose.getRotation().getDegrees();
-			double driveRot = drivePose.getRotation().getDegrees();
+			double reefRot = VisionConstants.FIELD_TAG_LAYOUT.getTagPose(lastTag).get().getRotation()
+					.getAngle() * 180 / Math.PI; // 0 to 360
+			double driveRot = m_drive.getState().Pose.getRotation().getDegrees(); // -180 to 180
+			// System.out.println("Reef Rot: " + reefRot + " Drive Rot: " + driveRot);
 			EndEffectorWristSide side = EndEffectorWristSide.FRONT;
-			if (Math.abs(reefRot - driveRot) > 90) {
+			if (reefRot > 180) {
+				reefRot -= 360;
+			}
+			if (reefRot > driveRot) {
 				side = EndEffectorWristSide.BACK;
 			}
+			// System.out.println("Side: " + side);
 			moveTo(position, side).schedule();
 		});
 	}
