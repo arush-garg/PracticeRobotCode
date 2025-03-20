@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "StartToReefIJ"
+            "pathName": "Start2ToReefEF"
           }
         },
         {
@@ -29,7 +29,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "AutoAlignI"
+                  "name": "AutoAlignF"
                 }
               }
             ]
@@ -48,15 +48,9 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Stow"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "ReefIJToStation"
+            "pathName": "ReefEFToStation2"
           }
         },
         {
@@ -72,7 +66,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "SweepCoral"
+                  "pathName": "SweepCoral2"
                 }
               }
             ]
@@ -81,7 +75,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "StationToReefKL"
+            "pathName": "Station2ToReefCD"
           }
         },
         {
@@ -97,7 +91,69 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "AutoAlignL"
+                  "name": "AutoAlignD"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ReefCDToStation2"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeCoral"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SweepCoral2"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Station2ToReefCD"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ElevateL4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AutoAlignC"
                 }
               }
             ]

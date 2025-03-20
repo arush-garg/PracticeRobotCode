@@ -13,11 +13,11 @@ import edu.wpi.first.math.util.Units;
 
 public class AutoAlignConstants {
     public static final PathConstraints PATH_PLANNER_CONSTRAINTS = new PathConstraints(
-            2.0, 2.0,
+            4.0, 4.0,
             Units.degreesToRadians(360), Units.degreesToRadians(540));
 
-    public static final double FORWARDS_SPEED = 0.7; // speed until stall
-    public static final double CURRENT_THRESHOLD = 80; // current of stall threshold
+    public static final double FORWARDS_SPEED = 0.9; // speed until stall
+    public static final double CURRENT_THRESHOLD = 70; // current of stall threshold
 
     // private static final Rotation2d AB = new Rotation2d(Math.toRadians(0));
     // private static final Rotation2d CD = new Rotation2d(Math.toRadians(60));

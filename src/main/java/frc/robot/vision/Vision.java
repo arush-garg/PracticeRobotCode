@@ -13,25 +13,25 @@ public class Vision extends SubsystemBase {
     public Vision(EagleSwerveDrivetrain drivetrain) {
         this.drivetrain = drivetrain;
         cameraFront = new VisionCamera(VisionConstants.CAMERA_FRONT_CONFIG);
-        cameraBack = new VisionCamera(VisionConstants.CAMERA_BACK_CONFIG);
-        m_elastic = new ElasticSender("vision", true);
+        //cameraBack = new VisionCamera(VisionConstants.CAMERA_BACK_CONFIG);
+        //m_elastic = new ElasticSender("vision", true);
     }
 
     @Override
     public void periodic() {
         updateDrivetrainVision(cameraFront);
-        updateDrivetrainVision(cameraBack);
+        //updateDrivetrainVision(cameraBack);
         // m_elastic.put("front camera",
         // cameraFront.getEstimatedGlobalPose().toString(), false);
         // m_elastic.put("back camera", cameraBack.getEstimatedGlobalPose().toString(),
         // false);
 
-        m_elastic.put("front camera std",
+        /*m_elastic.put("front camera std",
                 cameraFront.getEstimationStdDevs() != null ? cameraFront.getEstimationStdDevs().get(0, 0) : "null",
                 false);
         m_elastic.put("back camera std",
                 cameraBack.getEstimationStdDevs() != null ? cameraBack.getEstimationStdDevs().toString() : "null",
-                false);
+                false);*/
 
     }
 
@@ -48,11 +48,12 @@ public class Vision extends SubsystemBase {
     }
 
     public int getLastSeenTag() {
-        if (cameraFront.getLastSeenTagTime() > cameraBack.getLastSeenTagTime() && cameraFront.getLastSeenTag() != -1) {
-            return cameraFront.getLastSeenTag();
-        } else {
-            return cameraBack.getLastSeenTag();
-        }
+        return cameraFront.getLastSeenTag();
+        // if (cameraFront.getLastSeenTagTime() > cameraBack.getLastSeenTagTime() && cameraFront.getLastSeenTag() != -1) {
+        //     return cameraFront.getLastSeenTag();
+        // } else {
+        //     return cameraBack.getLastSeenTag();
+        // }
     }
 
     @Override

@@ -5,5 +5,5 @@ public class ChannelConstants {
     public static final int DISTANCE_SENSOR_ID = 0;
     public static final double CHANNEL_VOLTS = 4.0;
     public static final double DISTANCE_SENSOR_THRESH = 40;
-    public static final double EJECT_VOLTS = -3.0;
+    public static final double EJECT_VOLTS = -2.0;
 }

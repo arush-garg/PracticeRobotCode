@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.298606339539377,
-        "y": 2.0297623303955254
+        "x": 4.670949263502455,
+        "y": 1.538349976984451
       },
       "isLocked": false,
       "linkedName": "ReefEF"
     },
     {
       "anchor": {
-        "x": 2.9529003906249986,
-        "y": 0.6280910011574065
+        "x": 3.3371739463993446,
+        "y": 0.7860298818535182
       },
       "prevControl": {
-        "x": 3.7663274624816068,
-        "y": 1.2301850422110165
+        "x": 4.214348915711948,
+        "y": 1.075728186374795
       },
       "nextControl": null,
       "isLocked": false,
@@ -41,8 +41,8 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": -127.52674517815099
+    "velocity": 2.0,
+    "rotation": -87.41677686347947
   },
   "reversed": false,
   "folder": null,

@@ -1,5 +1,6 @@
 package frc.robot.subsystems.superstructure;
 
+import java.lang.Character.Subset;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
 
@@ -7,11 +8,14 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.AddressableLEDBufferView;
 import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.AddressableLED.ColorOrder;
+import edu.wpi.first.wpilibj.LEDPattern.GradientType;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.ElasticSender.ElasticSender;
 import frc.robot.constants.*;
 import frc.robot.subsystems.channel.Channel;
@@ -21,7 +25,7 @@ import frc.robot.subsystems.endeffector.EndEffectorWrist;
 import frc.robot.subsystems.intake.IntakeRollers;
 import frc.robot.subsystems.intake.IntakeWrist;
 
-public class Superstructure {
+public class Superstructure extends SubsystemBase{
     private GPMode gpMode = GPMode.Coral;
 
     private final Elevator m_elevator;
@@ -33,17 +37,9 @@ public class Superstructure {
     private final ElasticSender m_elastic;
     private long lastTime = 0;
 
-    private AddressableLED m_led = new AddressableLED(0);
-    private AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(22);
-    private AddressableLEDBufferView m_leftLED = m_ledBuffer.createView(0, 6);
-    private AddressableLEDBufferView m_rightLED = m_ledBuffer.createView(7, 14);
-    private AddressableLEDBufferView m_topLED = m_ledBuffer.createView(15, 21);
+    //private LED m_leds = new LED();
 
-    private LEDPattern hasCoralLED = LEDPattern.solid(Color.kGreen);
-    private LEDPattern noCoralLED = LEDPattern.solid(Color.kBlue);
-
-    private LEDPattern coralModeLED = LEDPattern.solid(Color.kWhite);
-    private LEDPattern algaeModeLED = LEDPattern.solid(Color.kRed);
+    
 
     public Superstructure(Elevator elevator, EndEffectorWrist eeWrist, EndEffectorRollers eeRollers,
             IntakeWrist intakeWrist, IntakeRollers intakeRollers, Channel channel, boolean debug) {
@@ -65,14 +61,38 @@ public class Superstructure {
         // // m_elastic.addButton("Move L3", moveL3());
         // // m_elastic.addButton("Move L4", moveL4());
         // m_elastic.addButton("Stow", stow());
+        
 
-        hasCoralLED.applyTo(m_topLED);
-        coralModeLED.applyTo(m_leftLED);
-        coralModeLED.applyTo(m_rightLED);
+        /*noCoralLED.applyTo(m_topLED);
+        algaeModeLED.applyTo(m_leftLED);
+        algaeModeLED.applyTo(m_rightLED);
 
-        m_led.setData(m_ledBuffer);
+        m_led.setData(m_ledBuffer);*/
+        //m_led.start();
 
 
+    }
+
+    @Override
+    public void periodic() {
+        /*if (getGPMode() == GPMode.Coral) {
+            coralModeLED.applyTo(m_leftLED);
+            coralModeLED.applyTo(m_rightLED);
+        }
+        else {
+            algaeModeLED.applyTo(m_leftLED);
+            algaeModeLED.applyTo(m_rightLED);
+        }
+
+        if (m_channel.coralInEndEffectorSupplier.getAsBoolean()) {
+            hasCoralLED.applyTo(m_topLED);
+        }
+        else {
+            noCoralLED.applyTo(m_topLED);
+        }*/
+        /*LEDPattern pattern = LEDPattern.gradient(GradientType.kDiscontinuous, Color.kBlue, Color.kRed);
+        pattern.applyTo(m_ledBuffer);
+        m_led.setData(m_ledBuffer);*/
     }
 
     public Command switchMode() {
@@ -85,18 +105,9 @@ public class Superstructure {
                 gpMode = GPMode.Algae;
                 System.out.println("switching mode to algae");
 
-                algaeModeLED.applyTo(m_leftLED);
-                algaeModeLED.applyTo(m_rightLED);
-
-                m_led.setData(m_ledBuffer);
-
             } else {
                 gpMode = GPMode.Coral;
                 System.out.println("switching mode to coral");
-                coralModeLED.applyTo(m_leftLED);
-                coralModeLED.applyTo(m_rightLED);
-
-                m_led.setData(m_ledBuffer);
             }
             m_elastic.put("gp mode", gpMode.toString(), false);
         });
@@ -109,10 +120,6 @@ public class Superstructure {
     }
     public Command intakeCoral() {
         return Commands.sequence(
-                Commands.runOnce ( () -> {
-                    noCoralLED.applyTo(m_topLED);
-                    m_led.setData(m_ledBuffer);
-                }),
                 m_elevator.moveTo(ElevatorConstants.INTAKE_HEIGHT),
                 m_eeWrist.moveTo(EndEffectorWristPosition.INTAKE_CORAL_ANGLE),
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.INTAKE_POSITION),
@@ -120,10 +127,7 @@ public class Superstructure {
                 m_channel.run(ChannelConstants.CHANNEL_VOLTS),
                 m_eeRollers.run(EndEffectorConstants.Rollers.INTAKE_CORAL_VOLTS),
                 Commands.waitUntil(m_channel.coralInEndEffectorSupplier),
-                Commands.runOnce ( () -> {
-                    hasCoralLED.applyTo(m_topLED);
-                    m_led.setData(m_ledBuffer);
-                }),
+                Commands.waitSeconds(0.2),
                 Commands.parallel(m_intakeRollers.stop(), m_channel.stop(),
                         m_eeRollers.run(EndEffectorConstants.Rollers.RETAIN_CORAL)),
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION));
@@ -131,17 +135,9 @@ public class Superstructure {
 
     public Command intakeAlgae() {
         return Commands.sequence(
-                Commands.runOnce ( () -> {
-                    noCoralLED.applyTo(m_topLED);
-                    m_led.setData(m_ledBuffer);
-                }),
                 m_eeWrist.moveTo(EndEffectorWristPosition.INTAKE_ALGAE_ANGLE),
                 m_eeRollers.run(EndEffectorConstants.Rollers.INTAKE_ALGAE_VOLTS),
                 Commands.waitUntil(() -> m_eeRollers.isStalled()),
-                Commands.runOnce ( () -> {
-                    hasCoralLED.applyTo(m_topLED);
-                    m_led.setData(m_ledBuffer);
-                }),
                 m_eeRollers.stop(),
                 m_eeRollers.run(EndEffectorConstants.Rollers.RETAIN_ALGAE));
 
@@ -156,19 +152,11 @@ public class Superstructure {
 
     public Command intakeCoralWhileInAlgae() {
         return Commands.sequence(
-                Commands.runOnce ( () -> {
-                    noCoralLED.applyTo(m_topLED);
-                    m_led.setData(m_ledBuffer);
-                }),
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.INTAKE_POSITION),
                 m_intakeRollers.run(IntakeConstants.Rollers.INTAKE_CORAL_VOLTS),
                 m_channel.run(ChannelConstants.CHANNEL_VOLTS),
                 m_eeRollers.run(EndEffectorConstants.Rollers.INTAKE_CORAL_VOLTS),
                 Commands.waitUntil(m_channel.coralInEndEffectorSupplier),
-                Commands.runOnce ( () -> {
-                    hasCoralLED.applyTo(m_topLED);
-                    m_led.setData(m_ledBuffer);
-                }),
                 Commands.parallel(m_intakeRollers.stop(), m_channel.stop()),
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION));
     }
@@ -249,9 +237,6 @@ public class Superstructure {
                     m_eeRollers.runFunc(0);
                     break;
             }
-
-            noCoralLED.applyTo(m_topLED);
-            m_led.setData(m_ledBuffer);
         });
     }
 
@@ -262,15 +247,13 @@ public class Superstructure {
                     m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_PROCCESOR_VOLTS);
                     break;
                 case SCORE_BARGE_PRE_ANGLE:
-                    m_eeWrist.moveToFunc(EndEffectorWristPosition.SCORE_BARGE_ANGLE, EndEffectorWristSide.BACK);
+                    m_eeWrist.moveToFunc(EndEffectorWristPosition.SCORE_BARGE_ANGLE, EndEffectorWristSide.FRONT);
                     m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_BARGE_VOLTS);
                     break;
                 default:
                     return;
             }
 
-            noCoralLED.applyTo(m_topLED);
-            m_led.setData(m_ledBuffer);
         });
     }
 

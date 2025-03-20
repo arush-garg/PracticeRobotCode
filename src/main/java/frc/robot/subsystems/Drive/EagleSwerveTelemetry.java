@@ -31,7 +31,7 @@ public class EagleSwerveTelemetry {
         public EagleSwerveTelemetry(double maxSpeed) {
                 MaxSpeed = maxSpeed;
                 SignalLogger.start();
-                System.out.println("Started signal logger");
+                //System.out.println("Started signal logger");
         }
 
         /* What to publish over networktables for telemetry */

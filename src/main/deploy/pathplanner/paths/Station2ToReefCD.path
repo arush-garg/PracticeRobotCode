@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.2008141637731469,
-        "y": 1.5906087239583326
+        "x": 0.9969427680032726,
+        "y": 1.642464325900163
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.200814163773147,
-        "y": 1.5906087239583324
+        "x": 1.6117947152309302,
+        "y": 1.973895170684259
       },
       "isLocked": false,
       "linkedName": "Station2SweepEnd"
@@ -20,8 +20,8 @@
         "y": 2.569722583912037
       },
       "prevControl": {
-        "x": 2.6404463252314803,
-        "y": 2.569722583912037
+        "x": 1.7914691917161158,
+        "y": 3.015382454902518
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,7 +47,7 @@
   "reversed": false,
   "folder": null,
   "idealStartingState": {
-    "velocity": 0,
+    "velocity": 5.0,
     "rotation": -137.73048213081861
   },
   "useDefaultConstraints": true

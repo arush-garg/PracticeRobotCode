@@ -50,7 +50,7 @@ public class DriveToPoseCommand extends Command {
     public void end(boolean interrupted) {
         if (pathCommand != null) {
             pathCommand.cancel();
-            System.out.println("DriveToPoseCommand finished");
+            //System.out.println("DriveToPoseCommand finished");
         }
         drivetrain.setControl(new SwerveRequest.Idle());
     }
@@ -71,7 +71,7 @@ public class DriveToPoseCommand extends Command {
                     .abs(currentPose.getRotation().getDegrees() - targetPose.getRotation().getDegrees());
 
             if (distance < 0.05 && angleDifference < 2) { // 5 cm and 2 degrees tolerance
-                System.out.println("Already at target pose");
+                //System.out.println("Already at target pose");
                 pathCommand = null;
                 return;
             }
@@ -79,14 +79,14 @@ public class DriveToPoseCommand extends Command {
             List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(currentPose, targetPose);
 
             if (waypoints.isEmpty()) {
-                System.out.println("No waypoints generated");
+                //System.out.println("No waypoints generated");
                 pathCommand = null;
                 return;
             }
 
-            System.out.println("Waypoints: " + waypoints.size());
+            //System.out.println("Waypoints: " + waypoints.size());
 
-            System.out.println("Waypoints first: " + waypoints.get(0).toString());
+            //System.out.println("Waypoints first: " + waypoints.get(0).toString());
 
             PathPlannerPath generatedPath = new PathPlannerPath(waypoints, AutoAlignConstants.PATH_PLANNER_CONSTRAINTS,
                     null,
@@ -95,7 +95,7 @@ public class DriveToPoseCommand extends Command {
             pathCommand = AutoBuilder.followPath(generatedPath);
 
             if (pathCommand == null) {
-                System.out.println("PathPlanner failed to generate a command");
+                //System.out.println("PathPlanner failed to generate a command");
                 return;
             }
 

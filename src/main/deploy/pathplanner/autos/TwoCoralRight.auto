@@ -13,19 +13,26 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Start2ToReefCD"
+            "pathName": "Start2ToReefEF"
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "ElevateL4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AutoAlignD"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ElevateL4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AutoAlignF"
+                }
+              }
+            ]
           }
         },
         {
@@ -35,6 +42,12 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "Stow"
@@ -43,19 +56,26 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ReefCDToStation2"
+            "pathName": "ReefEFToStation2"
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "SweepCoral2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Stow"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeCoral"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SweepCoral2"
+                }
+              }
+            ]
           }
         },
         {
@@ -65,21 +85,34 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "ElevateL4"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AutoAlignC"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ElevateL4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AutoAlignD"
+                }
+              }
+            ]
           }
         },
         {
           "type": "named",
           "data": {
             "name": "ScoreL4"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
           }
         },
         {

@@ -94,9 +94,9 @@ public class EndEffectorWrist extends SubsystemBase {
 			if (reefRot > 180) {
 				reefRot -= 360;
 			}
-			if (reefRot > driveRot) {
-				side = EndEffectorWristSide.BACK;
-			}
+			// if (reefRot > driveRot) {
+			// 	side = EndEffectorWristSide.BACK;
+			// }
 			// System.out.println("Side: " + side);
 			moveTo(position, side).schedule();
 		});

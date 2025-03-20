@@ -120,6 +120,74 @@
           "data": {
             "name": "Stow"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ReefKLToStation"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeCoral"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "SweepCoral"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "StationToReefKL"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "ElevateL4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AutoAlignK"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreL4"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stow"
+          }
         }
       ]
     }
