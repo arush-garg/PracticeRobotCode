@@ -26,10 +26,10 @@ public class IntakeWrist extends SubsystemBase {
 
     public IntakeWrist(boolean debug) {
         m_sender = new ElasticSender("Intake Wrist", debug);
-        m_sender.put("Pos Target", m_targetPos, true);
-        m_sender.addButton("Move to target", moveTo(m_targetPos));
-        m_sender.addButton("Zero", zero());
-        m_sender.addButton("Kill", kill());
+        //m_sender.put("Pos Target", m_targetPos, true);
+        //m_sender.addButton("Move to target", moveTo(m_targetPos));
+        //m_sender.addButton("Zero", zero());
+        //m_sender.addButton("Kill", kill());
 
         TalonFXConfiguration cfg = new TalonFXConfiguration();
 
@@ -70,7 +70,7 @@ public class IntakeWrist extends SubsystemBase {
     public Command zero() {
         return runOnce(
                 () -> {
-                    System.out.println("Zeroing intake");
+                    System.out.println("Zeroing Intake");
                     m_motor.setPosition(IntakeConstants.Wrist.OFFSET);
                 });
     }
@@ -92,6 +92,6 @@ public class IntakeWrist extends SubsystemBase {
 
     @Override
     public void periodic() {
-        m_targetPos = m_sender.getNumber("Pos Target");
+        //m_targetPos = m_sender.getNumber("Pos Target");
     }
 }

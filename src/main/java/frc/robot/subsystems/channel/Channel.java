@@ -24,8 +24,8 @@ public class Channel extends SubsystemBase {
 
     public Channel(boolean debug) {
         m_sender = new ElasticSender("Channel", debug);
-        m_sender.addButton("Stop", stop());
-        m_sender.addButton("Run", run(ChannelConstants.CHANNEL_VOLTS));
+        //m_sender.addButton("Stop", stop());
+        //m_sender.addButton("Run", run(ChannelConstants.CHANNEL_VOLTS));
         m_sender.put("in channel", coralInEndEffector, false);
 
         MotorOutputConfigs motorConfigs = new MotorOutputConfigs();
@@ -51,7 +51,7 @@ public class Channel extends SubsystemBase {
         LaserCan.Measurement measurement = distanceSensor.getMeasurement();
         if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
             coralInEndEffector = measurement.distance_mm < ChannelConstants.DISTANCE_SENSOR_THRESH;
-            m_sender.put("Distance", measurement.distance_mm, false);
+            //m_sender.put("Distance", measurement.distance_mm, false);
         } else {
             coralInEndEffector = false;
         }

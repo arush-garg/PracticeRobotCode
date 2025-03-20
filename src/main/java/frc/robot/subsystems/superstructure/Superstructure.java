@@ -3,6 +3,11 @@ package frc.robot.subsystems.superstructure;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
 
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.AddressableLEDBufferView;
+import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
@@ -28,6 +33,18 @@ public class Superstructure {
     private final ElasticSender m_elastic;
     private long lastTime = 0;
 
+    private AddressableLED m_led = new AddressableLED(0);
+    private AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(22);
+    private AddressableLEDBufferView m_leftLED = m_ledBuffer.createView(0, 6);
+    private AddressableLEDBufferView m_rightLED = m_ledBuffer.createView(7, 14);
+    private AddressableLEDBufferView m_topLED = m_ledBuffer.createView(15, 21);
+
+    private LEDPattern hasCoralLED = LEDPattern.solid(Color.kGreen);
+    private LEDPattern noCoralLED = LEDPattern.solid(Color.kBlue);
+
+    private LEDPattern coralModeLED = LEDPattern.solid(Color.kWhite);
+    private LEDPattern algaeModeLED = LEDPattern.solid(Color.kRed);
+
     public Superstructure(Elevator elevator, EndEffectorWrist eeWrist, EndEffectorRollers eeRollers,
             IntakeWrist intakeWrist, IntakeRollers intakeRollers, Channel channel, boolean debug) {
         this.m_elevator = elevator;
@@ -39,15 +56,23 @@ public class Superstructure {
 
         m_elastic = new ElasticSender("Superstructure", debug);
         // m_elastic.addButton("Switch Mode", switchMode());
-        m_elastic.addButton("Intake", intake());
-        m_elastic.addButton("Score", score());
-        m_elastic.addButton("Eject Intake", ejectIntake());
-        m_elastic.addButton("Eject EE", ejectEE());
-        // m_elastic.addButton("Move L1", moveL1());
-        // m_elastic.addButton("Move L2", moveL2());
-        // m_elastic.addButton("Move L3", moveL3());
-        // m_elastic.addButton("Move L4", moveL4());
-        m_elastic.addButton("Stow", stow());
+        // m_elastic.addButton("Intake", intake());
+        // m_elastic.addButton("Score", score());
+        // m_elastic.addButton("Eject Intake", ejectIntake());
+        // m_elastic.addButton("Eject EE", ejectEE());
+        // // m_elastic.addButton("Move L1", moveL1());
+        // // m_elastic.addButton("Move L2", moveL2());
+        // // m_elastic.addButton("Move L3", moveL3());
+        // // m_elastic.addButton("Move L4", moveL4());
+        // m_elastic.addButton("Stow", stow());
+
+        hasCoralLED.applyTo(m_topLED);
+        coralModeLED.applyTo(m_leftLED);
+        coralModeLED.applyTo(m_rightLED);
+
+        m_led.setData(m_ledBuffer);
+
+
     }
 
     public Command switchMode() {
@@ -59,9 +84,19 @@ public class Superstructure {
             if (gpMode == GPMode.Coral) {
                 gpMode = GPMode.Algae;
                 System.out.println("switching mode to algae");
+
+                algaeModeLED.applyTo(m_leftLED);
+                algaeModeLED.applyTo(m_rightLED);
+
+                m_led.setData(m_ledBuffer);
+
             } else {
                 gpMode = GPMode.Coral;
                 System.out.println("switching mode to coral");
+                coralModeLED.applyTo(m_leftLED);
+                coralModeLED.applyTo(m_rightLED);
+
+                m_led.setData(m_ledBuffer);
             }
             m_elastic.put("gp mode", gpMode.toString(), false);
         });
@@ -72,9 +107,12 @@ public class Superstructure {
             return GPMode.Coral;
         return gpMode;
     }
-
     public Command intakeCoral() {
         return Commands.sequence(
+                Commands.runOnce ( () -> {
+                    noCoralLED.applyTo(m_topLED);
+                    m_led.setData(m_ledBuffer);
+                }),
                 m_elevator.moveTo(ElevatorConstants.INTAKE_HEIGHT),
                 m_eeWrist.moveTo(EndEffectorWristPosition.INTAKE_CORAL_ANGLE),
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.INTAKE_POSITION),
@@ -82,6 +120,10 @@ public class Superstructure {
                 m_channel.run(ChannelConstants.CHANNEL_VOLTS),
                 m_eeRollers.run(EndEffectorConstants.Rollers.INTAKE_CORAL_VOLTS),
                 Commands.waitUntil(m_channel.coralInEndEffectorSupplier),
+                Commands.runOnce ( () -> {
+                    hasCoralLED.applyTo(m_topLED);
+                    m_led.setData(m_ledBuffer);
+                }),
                 Commands.parallel(m_intakeRollers.stop(), m_channel.stop(),
                         m_eeRollers.run(EndEffectorConstants.Rollers.RETAIN_CORAL)),
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION));
@@ -89,9 +131,17 @@ public class Superstructure {
 
     public Command intakeAlgae() {
         return Commands.sequence(
+                Commands.runOnce ( () -> {
+                    noCoralLED.applyTo(m_topLED);
+                    m_led.setData(m_ledBuffer);
+                }),
                 m_eeWrist.moveTo(EndEffectorWristPosition.INTAKE_ALGAE_ANGLE),
                 m_eeRollers.run(EndEffectorConstants.Rollers.INTAKE_ALGAE_VOLTS),
                 Commands.waitUntil(() -> m_eeRollers.isStalled()),
+                Commands.runOnce ( () -> {
+                    hasCoralLED.applyTo(m_topLED);
+                    m_led.setData(m_ledBuffer);
+                }),
                 m_eeRollers.stop(),
                 m_eeRollers.run(EndEffectorConstants.Rollers.RETAIN_ALGAE));
 
@@ -106,11 +156,19 @@ public class Superstructure {
 
     public Command intakeCoralWhileInAlgae() {
         return Commands.sequence(
+                Commands.runOnce ( () -> {
+                    noCoralLED.applyTo(m_topLED);
+                    m_led.setData(m_ledBuffer);
+                }),
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.INTAKE_POSITION),
                 m_intakeRollers.run(IntakeConstants.Rollers.INTAKE_CORAL_VOLTS),
                 m_channel.run(ChannelConstants.CHANNEL_VOLTS),
                 m_eeRollers.run(EndEffectorConstants.Rollers.INTAKE_CORAL_VOLTS),
                 Commands.waitUntil(m_channel.coralInEndEffectorSupplier),
+                Commands.runOnce ( () -> {
+                    hasCoralLED.applyTo(m_topLED);
+                    m_led.setData(m_ledBuffer);
+                }),
                 Commands.parallel(m_intakeRollers.stop(), m_channel.stop()),
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION));
     }
@@ -119,7 +177,7 @@ public class Superstructure {
         return new SelectCommand<>(
                 Map.ofEntries(
                         Map.entry(GPMode.Coral, intakeCoral()),
-                        Map.entry(GPMode.Algae, intakeCoralWhileInAlgae())),
+                        Map.entry(GPMode.Algae, new PrintCommand("still in algae")/*intakeCoralWhileInAlgae()*/)),
                 this::getGPMode);
     }
 
@@ -192,6 +250,8 @@ public class Superstructure {
                     break;
             }
 
+            noCoralLED.applyTo(m_topLED);
+            m_led.setData(m_ledBuffer);
         });
     }
 
@@ -199,20 +259,18 @@ public class Superstructure {
         return Commands.runOnce(() -> {
             switch (m_eeWrist.getPosition()) {
                 case SCORE_PROCESSOR_ANGLE:
-                    System.out.println("outtake proccesor");
                     m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_PROCCESOR_VOLTS);
                     break;
                 case SCORE_BARGE_PRE_ANGLE:
-                    System.out.println("outtake barge");
-                    m_eeWrist.setBargeSpeed(true);
                     m_eeWrist.moveToFunc(EndEffectorWristPosition.SCORE_BARGE_ANGLE, EndEffectorWristSide.BACK);
-                    System.out.println("spinning rollers");
                     m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_BARGE_VOLTS);
-                    m_eeWrist.setBargeSpeed(false);
                     break;
                 default:
                     return;
             }
+
+            noCoralLED.applyTo(m_topLED);
+            m_led.setData(m_ledBuffer);
         });
     }
 
