@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveRequest.Idle;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -46,7 +47,7 @@ import frc.robot.vision.Vision;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
+    private double MaxAngularRate = RotationsPerSecond.of(1.5).in(RadiansPerSecond);
 
     // swerve
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -87,19 +88,18 @@ public class RobotContainer {
 
 
     public RobotContainer() {
-        NamedCommands.registerCommand("ScoreL4", m_superstructure.score());
-        NamedCommands.registerCommand("ElevateL4", m_superstructure.moveL4());
-        NamedCommands.registerCommand("IntakeCoral", m_superstructure.intake());
-        NamedCommands.registerCommand("Stow", m_superstructure.stow());
+        // NamedCommands.registerCommand("ScoreL4", m_superstructure.score());
+        // NamedCommands.registerCommand("ElevateL4", m_superstructure.moveL4());
+        // NamedCommands.registerCommand("IntakeCoral", m_superstructure.intake());
+        // NamedCommands.registerCommand("Stow", m_superstructure.stow());
         for (AutoAlignPosition pos : AutoAlignPosition.values()) {
             NamedCommands.registerCommand("AutoAlign" + pos.toString(),
                     driveUntilPoseAndStall(AutoAlignConstants.REEF_POSITIONS.get(pos)));
         }
-        // NamedCommands.registerCommand("ScoreL4", new PrintCommand("Score L4"));
-        // NamedCommands.registerCommand("ElevateL4", new PrintCommand("Elevate L4"));
-        // NamedCommands.registerCommand("IntakeCoral", new PrintCommand("Intake
-        // Coral"));
-        // NamedCommands.registerCommand("Stow", new PrintCommand("Stow"));
+        NamedCommands.registerCommand("ScoreL4", new PrintCommand("Score L4"));
+        NamedCommands.registerCommand("ElevateL4", new PrintCommand("Elevate L4"));
+        NamedCommands.registerCommand("IntakeCoral", new PrintCommand("IntakeCoral"));
+        NamedCommands.registerCommand("Stow", new PrintCommand("Stow"));
 
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
         SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -184,6 +184,14 @@ public class RobotContainer {
                         Map.entry(GPMode.Algae,
                                 driveUntilPoseAndStall(AutoAlignConstants.ALGAE_POSITIONS.get(autoAlignPosition)))),
                 m_superstructure::getGPMode));
+
+        m_leftJoystick.button(4).onTrue(
+            drivetrain.applyRequest(() -> {
+                return drive
+                        .withVelocityX(0)
+                        .withVelocityY(0 )
+                        .withRotationalRate(0);
+            }));
     }
 
     public Command getAutonomousCommand() {

@@ -37,8 +37,6 @@ public class Superstructure extends SubsystemBase{
     private final ElasticSender m_elastic;
     private long lastTime = 0;
 
-    //private LED m_leds = new LED();
-
     
 
     public Superstructure(Elevator elevator, EndEffectorWrist eeWrist, EndEffectorRollers eeRollers,
@@ -61,38 +59,9 @@ public class Superstructure extends SubsystemBase{
         // // m_elastic.addButton("Move L3", moveL3());
         // // m_elastic.addButton("Move L4", moveL4());
         // m_elastic.addButton("Stow", stow());
-        
-
-        /*noCoralLED.applyTo(m_topLED);
-        algaeModeLED.applyTo(m_leftLED);
-        algaeModeLED.applyTo(m_rightLED);
-
-        m_led.setData(m_ledBuffer);*/
-        //m_led.start();
+    
 
 
-    }
-
-    @Override
-    public void periodic() {
-        /*if (getGPMode() == GPMode.Coral) {
-            coralModeLED.applyTo(m_leftLED);
-            coralModeLED.applyTo(m_rightLED);
-        }
-        else {
-            algaeModeLED.applyTo(m_leftLED);
-            algaeModeLED.applyTo(m_rightLED);
-        }
-
-        if (m_channel.coralInEndEffectorSupplier.getAsBoolean()) {
-            hasCoralLED.applyTo(m_topLED);
-        }
-        else {
-            noCoralLED.applyTo(m_topLED);
-        }*/
-        /*LEDPattern pattern = LEDPattern.gradient(GradientType.kDiscontinuous, Color.kBlue, Color.kRed);
-        pattern.applyTo(m_ledBuffer);
-        m_led.setData(m_ledBuffer);*/
     }
 
     public Command switchMode() {

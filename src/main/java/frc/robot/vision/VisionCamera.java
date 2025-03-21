@@ -81,8 +81,7 @@ public class VisionCamera {
                 if (VisionConstants.IGNORE_TAGS.contains(change.getBestTarget().fiducialId)) {
                     continue;
                 }
-                // System.out.println("Vision Estimation: " +
-                // change.getBestTarget().fiducialId);
+                //System.out.println("Vision Estimation: " + change.getBestTarget().fiducialId);
                 lastSeenTag = change.getBestTarget().fiducialId;
                 lastSeenTagTime = (int) System.currentTimeMillis();
             }
