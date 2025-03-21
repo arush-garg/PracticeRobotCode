@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.249642677483557,
-        "y": 1.968892246305154
+        "x": 3.710526799825727,
+        "y": 2.252554320855895
       },
       "isLocked": false,
       "linkedName": "ReefCD"
     },
     {
       "anchor": {
-        "x": 3.3371739463993446,
-        "y": 0.7860298818535182
+        "x": 3.9400502748842583,
+        "y": 1.0226714409722217
       },
       "prevControl": {
-        "x": 3.5579947499165185,
-        "y": 1.8181011174047321
+        "x": 3.75490024506748,
+        "y": 1.9745427524433536
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,7 +48,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 59.99999999999999
+    "rotation": -118.11966983447613
   },
   "useDefaultConstraints": true
 }

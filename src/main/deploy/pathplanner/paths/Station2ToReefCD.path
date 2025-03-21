@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.9969427680032726,
-        "y": 1.642464325900163
+        "x": 0.8193941695601841,
+        "y": 1.6113393373842586
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6117947152309302,
-        "y": 1.973895170684259
+        "x": 1.4342461167878415,
+        "y": 1.9427701821683545
       },
       "isLocked": false,
       "linkedName": "Station2SweepEnd"
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 59.99999999999999
+    "rotation": -118.11966983447613
   },
   "reversed": false,
   "folder": null,
