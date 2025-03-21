@@ -4,16 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
 public class AutoAlignConstants {
     public static final PathConstraints PATH_PLANNER_CONSTRAINTS = new PathConstraints(
-            4.0, 4.0,
+            5.5, 5.5,
             Units.degreesToRadians(360), Units.degreesToRadians(540));
 
     public static final double FORWARDS_SPEED = 0.9; // speed until stall

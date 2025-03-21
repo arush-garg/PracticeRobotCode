@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -88,18 +89,18 @@ public class RobotContainer {
 
 
     public RobotContainer() {
-        // NamedCommands.registerCommand("ScoreL4", m_superstructure.score());
-        // NamedCommands.registerCommand("ElevateL4", m_superstructure.moveL4());
-        // NamedCommands.registerCommand("IntakeCoral", m_superstructure.intake());
-        // NamedCommands.registerCommand("Stow", m_superstructure.stow());
+        NamedCommands.registerCommand("ScoreL4", m_superstructure.score());
+        NamedCommands.registerCommand("ElevateL4", m_superstructure.moveL4());
+        NamedCommands.registerCommand("IntakeCoral", m_superstructure.intake());
+        NamedCommands.registerCommand("Stow", m_superstructure.stow());
         for (AutoAlignPosition pos : AutoAlignPosition.values()) {
             NamedCommands.registerCommand("AutoAlign" + pos.toString(),
                     driveUntilPoseAndStall(AutoAlignConstants.REEF_POSITIONS.get(pos)));
         }
-        NamedCommands.registerCommand("ScoreL4", new PrintCommand("Score L4"));
-        NamedCommands.registerCommand("ElevateL4", new PrintCommand("Elevate L4"));
-        NamedCommands.registerCommand("IntakeCoral", new PrintCommand("IntakeCoral"));
-        NamedCommands.registerCommand("Stow", new PrintCommand("Stow"));
+        // NamedCommands.registerCommand("ScoreL4", new PrintCommand("Score L4"));
+        // NamedCommands.registerCommand("ElevateL4", new PrintCommand("Elevate L4"));
+        // NamedCommands.registerCommand("IntakeCoral", new PrintCommand("IntakeCoral"));
+        // NamedCommands.registerCommand("Stow", new PrintCommand("Stow"));
 
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
         SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -187,11 +188,15 @@ public class RobotContainer {
 
         m_leftJoystick.button(4).onTrue(
             drivetrain.applyRequest(() -> {
-                return drive
-                        .withVelocityX(0)
-                        .withVelocityY(0 )
-                        .withRotationalRate(0);
+                var driveMult = slowModeOn ? DriveConstants.SLOW_MODE_MULT : 1;
+                    return drive
+                            .withDeadband(MaxSpeed * DriveConstants.DRIVE_DEADBAND_MULT * driveMult)
+                            .withRotationalDeadband(MaxAngularRate * DriveConstants.DRIVE_DEADBAND_MULT * driveMult)
+                            .withVelocityX(-m_leftJoystick.getY() * MaxSpeed * driveMult)
+                            .withVelocityY(-m_leftJoystick.getX() * MaxSpeed * driveMult)
+                            .withRotationalRate(-m_rightJoystick.getX() * MaxAngularRate * driveMult);
             }));
+
     }
 
     public Command getAutonomousCommand() {

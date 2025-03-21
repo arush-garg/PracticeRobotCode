@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.7832703993055543,
-        "y": 7.297874710648148
+        "x": 3.364892216435184,
+        "y": 6.709497974537037
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0604499868471184,
-        "y": 7.221416845351076
+        "x": 2.9722916666666657,
+        "y": 7.6330002170138895
       },
       "isLocked": false,
       "linkedName": "StationSweepStart"
@@ -33,10 +33,10 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 600.0,
+    "maxAngularAcceleration": 800.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
@@ -48,7 +48,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 2.0,
-    "rotation": -87.78108695124351
+    "rotation": -141.33467298465624
   },
   "useDefaultConstraints": true
 }

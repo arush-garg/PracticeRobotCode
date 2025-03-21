@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.715309441134731,
-        "y": 5.917903172009951
+        "x": 4.787806488181683,
+        "y": 5.845528073869179
       },
       "isLocked": false,
       "linkedName": "ReefIJ"
     },
     {
       "anchor": {
-        "x": 2.7832703993055543,
-        "y": 7.297874710648148
+        "x": 3.364892216435184,
+        "y": 6.709497974537037
       },
       "prevControl": {
-        "x": 4.452608868634258,
-        "y": 7.0434006076388895
+        "x": 4.884350304954008,
+        "y": 5.727707934965639
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,16 +33,16 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 600.0,
+    "maxAngularAcceleration": 800.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 2.0,
-    "rotation": -87.78108695124351
+    "rotation": -141.33467298465624
   },
   "reversed": false,
   "folder": null,

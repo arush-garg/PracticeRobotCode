@@ -183,7 +183,7 @@ public class Superstructure extends SubsystemBase{
                                 m_eeWrist.moveTo(EndEffectorWristPosition.L4_PRE_ANGLE))),
                         Map.entry(GPMode.Algae, Commands.parallel(
                                 m_elevator.moveTo(ElevatorConstants.BARGE_ALGAE_HEIGHT),
-                                m_eeWrist.moveTo(EndEffectorWristPosition.SCORE_BARGE_PRE_ANGLE)))),
+                                m_eeWrist.moveTo(EndEffectorWristPosition.SCORE_BARGE_PRE_ANGLE, EndEffectorWristSide.FRONT)))),
                 this::getGPMode);
     }
 
@@ -216,7 +216,6 @@ public class Superstructure extends SubsystemBase{
                     m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_PROCCESOR_VOLTS);
                     break;
                 case SCORE_BARGE_PRE_ANGLE:
-                    m_eeWrist.moveToFunc(EndEffectorWristPosition.SCORE_BARGE_ANGLE, EndEffectorWristSide.FRONT);
                     m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_BARGE_VOLTS);
                     break;
                 default:

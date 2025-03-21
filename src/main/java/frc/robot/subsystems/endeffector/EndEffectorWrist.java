@@ -81,7 +81,7 @@ public class EndEffectorWrist extends SubsystemBase {
 	public Command moveTo(EndEffectorWristPosition position) {
 		return Commands.runOnce(() -> {
 			int lastTag = m_vision.getLastSeenTag();
-			System.out.println("Last Tag: " + lastTag);
+			//.println("Last Tag: " + lastTag);
 			if (lastTag == -1) {
 				moveTo(position, EndEffectorWristSide.FRONT).schedule();
 				return;
@@ -99,7 +99,7 @@ public class EndEffectorWrist extends SubsystemBase {
 			// }
 			EndEffectorWristSide side = m_vision.getScoringSide();
 			//EndEffectorWristSide side = EndEffectorWristSide.FRONT;
-			System.out.println("Side: " + side);
+			//System.out.println("Side: " + side);
 			moveTo(position, side).schedule();
 		});
 	}
