@@ -30,18 +30,24 @@ public class AutoAlignConstants {
     private static final Rotation2d IJ = new Rotation2d(Math.toRadians(240));
     private static final Rotation2d KL = new Rotation2d(Math.toRadians(300));
 
-    public static final Pose2d REEF_A = new Pose2d(2.85, 4.21, AB);
+    // tag 18 - revised a/b SIM
+    public static final Pose2d REEF_A = new Pose2d(2.85, 4.25, AB);
     public static final Pose2d REEF_B = new Pose2d(2.85, 3.77, AB);
-    public static final Pose2d REEF_C = new Pose2d(3.59, 2.69, CD);
+    // tag 17 - revised c/d SIM
+    public static final Pose2d REEF_C = new Pose2d(3.59, 2.75, CD);
     public static final Pose2d REEF_D = new Pose2d(3.89, 2.54, CD);
+    // tag 22 - revised e/f SIM
     public static final Pose2d REEF_E = new Pose2d(5.13, 2.53, EF);
     public static final Pose2d REEF_F = new Pose2d(5.47, 2.74, EF);
-    public static final Pose2d REEF_G = new Pose2d(6.09, 3.81, GH);
-    public static final Pose2d REEF_H = new Pose2d(6.09, 4.21, GH);
-    public static final Pose2d REEF_I = new Pose2d(5.39, 5.36, IJ);
-    public static final Pose2d REEF_J = new Pose2d(5.06, 5.57, IJ);
+    // tag 21 - revised h SIM
+    public static final Pose2d REEF_G = new Pose2d(6.09, 3.81, GH); // works irl
+    public static final Pose2d REEF_H = new Pose2d(6.09, 4.18, GH); // works in sim
+    // tag 20 - revised i/j SIM
+    public static final Pose2d REEF_I = new Pose2d(5.52, 5.42, IJ);
+    public static final Pose2d REEF_J = new Pose2d(5.03, 5.57, IJ);
+    // tag 19 - works
     public static final Pose2d REEF_K = new Pose2d(3.82, 5.51, KL);
-    public static final Pose2d REEF_L = new Pose2d(3.39, 5.48, KL);
+    public static final Pose2d REEF_L = new Pose2d(3.39, 5.48, KL); // very reliable
 
     public static final Pose2d ALGAE_AB = new Pose2d(3.1876, 4.026, AB);
     public static final Pose2d ALGAE_CD = new Pose2d(3.839, 2.899, CD);
