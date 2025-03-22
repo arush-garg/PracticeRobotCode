@@ -18,6 +18,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -54,6 +55,9 @@ public class RobotContainer {
             .withDeadband(MaxSpeed * DriveConstants.DRIVE_DEADBAND_MULT)
             .withRotationalDeadband(MaxAngularRate * DriveConstants.DRIVE_DEADBAND_MULT)
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+    
+    private final SwerveRequest.ApplyRobotSpeeds strafeDrive = new SwerveRequest.ApplyRobotSpeeds()
+        .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
     private final EagleSwerveTelemetry logger = new EagleSwerveTelemetry(MaxSpeed);
     public final EagleSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -193,6 +197,16 @@ public class RobotContainer {
 
         // gpMode switching
         m_buttonBoard.button(5).onTrue(m_superstructure.switchMode().ignoringDisable(true));
+
+        m_leftJoystick.povLeft().whileTrue(drivetrain.applyRequest(() -> strafeDrive.withSpeeds(new ChassisSpeeds(
+            0.0,
+            0.2,
+            0.0))));
+
+        m_leftJoystick.povRight().whileTrue(drivetrain.applyRequest(() -> strafeDrive.withSpeeds(new ChassisSpeeds(
+            0.0,
+            -0.2,
+            0.0))));
 
         // scoring commands
         m_rightJoystick.trigger().whileTrue(m_superstructure.intake()).onFalse(m_superstructure.stow());
