@@ -84,10 +84,6 @@ public class RobotContainer {
             m_intakeRollers, m_channel, true);
 
     
-
-
-
-
     public RobotContainer() {
         NamedCommands.registerCommand("ScoreL4", m_superstructure.score());
         NamedCommands.registerCommand("ElevateL4", m_superstructure.moveL4());
@@ -137,12 +133,12 @@ public class RobotContainer {
 
         // manual commands
         m_operatorController.x()
-                .and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.05))
+                .and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.01))
                 .whileTrue(m_elevator.setManualVoltage(m_operatorController.getLeftY()));
         m_operatorController.b()
-                .and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.05))
+                .and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.01))
                 .whileTrue(m_intakeWrist.setManualVoltage(m_operatorController.getLeftY()));
-        m_operatorController.y().and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.05))
+        m_operatorController.y().and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.01))
                 .whileTrue(m_eeWrist.setManualVoltage(m_operatorController.getLeftY()));
 
         m_operatorController.b()
@@ -211,6 +207,10 @@ public class RobotContainer {
         m_elevator.kill();
         m_eeWrist.kill();
         m_eeRollers.stop();
+    }
+
+    public void zeroAll() {
+        
     }
 
     public Command driveUntilPoseAndStall(Pose2d pose) {

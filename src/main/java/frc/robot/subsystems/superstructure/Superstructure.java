@@ -49,16 +49,17 @@ public class Superstructure extends SubsystemBase{
         this.m_channel = channel;
 
         m_elastic = new ElasticSender("Superstructure", debug);
-        // m_elastic.addButton("Switch Mode", switchMode());
-        // m_elastic.addButton("Intake", intake());
-        // m_elastic.addButton("Score", score());
-        // m_elastic.addButton("Eject Intake", ejectIntake());
-        // m_elastic.addButton("Eject EE", ejectEE());
-        // // m_elastic.addButton("Move L1", moveL1());
-        // // m_elastic.addButton("Move L2", moveL2());
-        // // m_elastic.addButton("Move L3", moveL3());
-        // // m_elastic.addButton("Move L4", moveL4());
-        // m_elastic.addButton("Stow", stow());
+        m_elastic.addButton("Switch Mode", switchMode());
+        m_elastic.addButton("Intake", intake());
+        m_elastic.addButton("Score", score());
+        m_elastic.addButton("Eject Intake", ejectIntake());
+        m_elastic.addButton("Eject EE", ejectEE());
+        m_elastic.addButton("Move L1", moveL1());
+        m_elastic.addButton("Move L2", moveL2());
+        m_elastic.addButton("Move L3", moveL3());
+        m_elastic.addButton("Move L4", moveL4());
+        m_elastic.addButton("Stow", stow());
+        m_elastic.put("gp mode", gpMode.toString(), false);
     
 
 
@@ -195,15 +196,15 @@ public class Superstructure extends SubsystemBase{
                     break;
                 case L2_PRE_ANGLE:
                 case L3_PRE_ANGLE:
-                    m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_L2_L3_CORAL_VOLTS);
+                    //m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_L2_L3_CORAL_VOLTS);
                     m_eeWrist.moveToNextPosition();
                     break;
                 case L4_PRE_ANGLE:
-                    m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_L4_CORAL_VOLTS);
+                    //m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_L4_CORAL_VOLTS);
                     m_eeWrist.moveToNextPosition();
                     break;
                 default:
-                    m_eeRollers.runFunc(0);
+                    //m_eeRollers.runFunc(0);
                     break;
             }
         });

@@ -9,7 +9,7 @@
       "prevControl": null,
       "nextControl": {
         "x": 4.527336785078373,
-        "y": 1.5034598454622845
+        "y": 1.5034598454622847
       },
       "isLocked": false,
       "linkedName": "ReefEF"
@@ -33,10 +33,10 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
-    "maxAcceleration": 5.0,
-    "maxAngularVelocity": 600.0,
-    "maxAngularAcceleration": 800.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
@@ -48,7 +48,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -55.20454952206098
+    "rotation": -55.20454952206099
   },
   "useDefaultConstraints": true
 }

@@ -49,36 +49,19 @@ public class Vision extends SubsystemBase {
     }
 
     public int getLastSeenTag() {
-        //return cameraFront.getLastSeenTag();
-        //System.out.println("front tag: " + cameraFront.getLastSeenTag() + "  back tag: " + cameraBack.getLastSeenTag());
-        //System.out.println("front time: " + cameraFront.getLastSeenTagTime() + "  back time: " + cameraBack.getLastSeenTagTime());
-        //System.out.println("front is bigger time? " + (cameraFront.getLastSeenTagTime() > cameraBack.getLastSeenTagTime()));
         if ( cameraFront.getLastSeenTagTime() > cameraBack.getLastSeenTagTime()) {
-            /*if ((cameraFront.getLastSeenTag() >= 6 && cameraFront.getLastSeenTag() <= 11) || (cameraFront.getLastSeenTag() >= 17 && cameraFront.getLastSeenTag() <= 22))  {
-                System.out.println("correct tag");
-            }*/
-            
-            //System.out.println("sending front");
             return cameraFront.getLastSeenTag();
         }
         else {
-            //System.out.println("sending back");
             return cameraBack.getLastSeenTag();
         }
-        // if (cameraFront.getLastSeenTagTime() > cameraBack.getLastSeenTagTime() && cameraFront.getLastSeenTag() != -1) {
-        //     return cameraFront.getLastSeenTag();
-        // } else {
-        //     return cameraBack.getLastSeenTag();
-        // }
     }
 
     public EndEffectorWristSide getScoringSide() {
         if ( cameraFront.getLastSeenTagTime() > cameraBack.getLastSeenTagTime()) {
-            //System.out.println("sending front");
             return EndEffectorWristSide.FRONT;
         }
         else {
-            //System.out.println("sending back");
             return EndEffectorWristSide.BACK;
         }
     }
