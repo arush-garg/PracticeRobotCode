@@ -141,6 +141,13 @@ public class RobotContainer {
                 })).onFalse(Commands.runOnce(() -> {
                     m_elevator.setManualVoltage(0).schedule();
                 }));
+        m_operatorController.a()
+                .and(m_operatorController.axisMagnitudeGreaterThan(Axis.kRightX.value, 0.01))
+                .whileTrue(Commands.run(() -> {
+                    m_channel.setManualVoltage(m_operatorController.getRightX()).schedule();
+                })).onFalse(Commands.runOnce(() -> {
+                    m_channel.setManualVoltage(0).schedule();
+                }));
         m_operatorController.b()
                 .and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.01))
                 .whileTrue(Commands.run(() -> {
@@ -148,11 +155,24 @@ public class RobotContainer {
                 })).onFalse(Commands.runOnce(() -> {
                     m_intakeWrist.setManualVoltage(0).schedule();
                 }));
+        m_operatorController.b()
+                .and(m_operatorController.axisMagnitudeGreaterThan(Axis.kRightX.value, 0.01))
+                .whileTrue(Commands.run(() -> {
+                    m_intakeRollers.setManualVoltage(m_operatorController.getRightX()).schedule();
+                })).onFalse(Commands.runOnce(() -> {
+                    m_intakeRollers.setManualVoltage(0).schedule();
+                }));
         m_operatorController.y().and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.01))
                 .whileTrue(Commands.run(() -> {
                     m_eeWrist.setManualVoltage(m_operatorController.getLeftY()).schedule();
                 })).onFalse(Commands.runOnce(() -> {
                     m_eeWrist.setManualVoltage(0).schedule();
+                }));
+        m_operatorController.y().and(m_operatorController.axisMagnitudeGreaterThan(Axis.kRightX.value, 0.01))
+                .whileTrue(Commands.run(() -> {
+                    m_eeRollers.setManualVoltage(m_operatorController.getRightX()).schedule();
+                })).onFalse(Commands.runOnce(() -> {
+                    m_eeRollers.setManualVoltage(0).schedule();
                 }));
 
         m_operatorController.b()
@@ -175,7 +195,7 @@ public class RobotContainer {
         m_buttonBoard.button(5).onTrue(m_superstructure.switchMode().ignoringDisable(true));
 
         // scoring commands
-        m_rightJoystick.trigger().whileTrue(m_superstructure.intake());
+        m_rightJoystick.trigger().whileTrue(m_superstructure.intake()).onFalse(m_superstructure.stow());
         m_leftJoystick.trigger().onTrue(m_superstructure.score());
         m_buttonBoard.button(1).onTrue(m_superstructure.moveL1());
         m_buttonBoard.button(2).onTrue(m_superstructure.moveL2());

@@ -30,6 +30,14 @@ public class EndEffectorRollers extends GenericRollerSubsystem {
     public void periodic() {
     }
 
+    public Command setManualVoltage(double joystickPosition) {
+		return run(
+				() -> {
+					m_motor.setVoltage(joystickPosition * EndEffectorConstants.Rollers.MAX_VOLTS
+							/ EndEffectorConstants.Rollers.MANUAL_RATIO);
+				});
+	}
+
     @Override
     public Command stop() {
         return runOnce(() -> {

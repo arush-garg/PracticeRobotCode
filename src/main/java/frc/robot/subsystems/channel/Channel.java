@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.ElasticSender.ElasticSender;
 import frc.robot.constants.ChannelConstants;
+import frc.robot.constants.IntakeConstants;
 
 public class Channel extends SubsystemBase {
     private final TalonFX m_motor = new TalonFX(ChannelConstants.CHANNEL_MOTOR_ID, "rio");
@@ -44,6 +45,14 @@ public class Channel extends SubsystemBase {
     public Command stop() {
         return runOnce(() -> m_motor.setVoltage(0));
     }
+
+    public Command setManualVoltage(double joystickPosition) {
+		return run(
+				() -> {
+					m_motor.setVoltage(joystickPosition * ChannelConstants.CHANNEL_VOLTS
+							/ ChannelConstants.MANUAL_RATIO);
+				});
+	}
 
     @Override
     public void periodic() {

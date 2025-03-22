@@ -7,7 +7,7 @@ public final class EndEffectorConstants {
         public final static int ENCODER_ID = 10;
 
         public final static double MAX_VOLTS = 3;
-        public final static double MANUAL_RATIO = 0.3;
+        public final static double MANUAL_RATIO = 3;
         public final static double SENSOR_TO_MECHANISM_RATIO = 0.26;
         public final static double ROTOR_TO_SENSOR_RATIO = 1;
 
@@ -30,6 +30,7 @@ public final class EndEffectorConstants {
         public final static int MOTOR_ID = 34;
 
         public final static double MAX_VOLTS = 8.0;
+        public final static double MANUAL_RATIO = 4.0;
         public final static double INTAKE_CORAL_VOLTS = 5;
         public final static double INTAKE_ALGAE_VOLTS = 8.0;
         public final static double OUTTAKE_L2_L3_CORAL_VOLTS = 0.0;
