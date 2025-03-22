@@ -6,8 +6,8 @@ public final class EndEffectorConstants {
         public final static int MOTOR_ID = 14;
         public final static int ENCODER_ID = 10;
 
-        public final static double MAX_VOLTS = 4;
-        public final static double MANUAL_RATIO = 1;
+        public final static double MAX_VOLTS = 3;
+        public final static double MANUAL_RATIO = 0.3;
         public final static double SENSOR_TO_MECHANISM_RATIO = 0.26;
         public final static double ROTOR_TO_SENSOR_RATIO = 1;
 
