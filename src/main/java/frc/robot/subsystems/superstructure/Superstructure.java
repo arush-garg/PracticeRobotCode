@@ -275,17 +275,11 @@ public class Superstructure extends SubsystemBase{
 
         return Commands.parallel(
                 m_elevator.moveTo(ElevatorConstants.STOWED_HEIGHT),
-                new PrintCommand("moved elevator"),
                 m_eeWrist.moveTo(EndEffectorWristPosition.STOW_ANGLE),
-                new PrintCommand("moved end effector"),
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION),
-                new PrintCommand("moved intake"),
                 m_intakeRollers.stop(),
-                new PrintCommand("stoped intake"),
                 m_eeRollers.stop(),
-                new PrintCommand("stoped end effector"),
-                m_channel.stop(),
-                new PrintCommand("stoped channel"));
+                m_channel.stop());
 
     }
 }

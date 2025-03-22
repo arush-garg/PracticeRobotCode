@@ -160,7 +160,7 @@ public class RobotContainer {
         m_buttonBoard.button(5).onTrue(m_superstructure.switchMode().ignoringDisable(true));
 
         // scoring commands
-        m_rightJoystick.trigger().onTrue(m_superstructure.intake());
+        m_rightJoystick.trigger().whileTrue(m_superstructure.intake());
         m_leftJoystick.trigger().onTrue(m_superstructure.score());
         m_buttonBoard.button(1).onTrue(m_superstructure.moveL1());
         m_buttonBoard.button(2).onTrue(m_superstructure.moveL2());
