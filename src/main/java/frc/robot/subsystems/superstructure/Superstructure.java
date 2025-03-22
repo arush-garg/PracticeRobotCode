@@ -37,6 +37,8 @@ public class Superstructure extends SubsystemBase{
     private final ElasticSender m_elastic;
     private long lastTime = 0;
 
+    //private LED m_leds = new LED();
+
     
 
     public Superstructure(Elevator elevator, EndEffectorWrist eeWrist, EndEffectorRollers eeRollers,
@@ -60,9 +62,30 @@ public class Superstructure extends SubsystemBase{
         m_elastic.addButton("Move L4", moveL4());
         m_elastic.addButton("Stow", stow());
         m_elastic.put("gp mode", gpMode.toString(), false);
-    
 
 
+    }
+
+    @Override
+    public void periodic() {
+        /*if (getGPMode() == GPMode.Coral) {
+            coralModeLED.applyTo(m_leftLED);
+            coralModeLED.applyTo(m_rightLED);
+        }
+        else {
+            algaeModeLED.applyTo(m_leftLED);
+            algaeModeLED.applyTo(m_rightLED);
+        }
+
+        if (m_channel.coralInEndEffectorSupplier.getAsBoolean()) {
+            hasCoralLED.applyTo(m_topLED);
+        }
+        else {
+            noCoralLED.applyTo(m_topLED);
+        }*/
+        /*LEDPattern pattern = LEDPattern.gradient(GradientType.kDiscontinuous, Color.kBlue, Color.kRed);
+        pattern.applyTo(m_ledBuffer);
+        m_led.setData(m_ledBuffer);*/
     }
 
     public Command switchMode() {
@@ -184,7 +207,7 @@ public class Superstructure extends SubsystemBase{
                                 m_eeWrist.moveTo(EndEffectorWristPosition.L4_PRE_ANGLE))),
                         Map.entry(GPMode.Algae, Commands.parallel(
                                 m_elevator.moveTo(ElevatorConstants.BARGE_ALGAE_HEIGHT),
-                                m_eeWrist.moveTo(EndEffectorWristPosition.SCORE_BARGE_PRE_ANGLE, EndEffectorWristSide.FRONT)))),
+                                m_eeWrist.moveTo(EndEffectorWristPosition.SCORE_BARGE_PRE_ANGLE)))),
                 this::getGPMode);
     }
 
@@ -249,12 +272,20 @@ public class Superstructure extends SubsystemBase{
     }
 
     public Command stow() {
+
         return Commands.parallel(
                 m_elevator.moveTo(ElevatorConstants.STOWED_HEIGHT),
+                new PrintCommand("moved elevator"),
                 m_eeWrist.moveTo(EndEffectorWristPosition.STOW_ANGLE),
+                new PrintCommand("moved end effector"),
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION),
+                new PrintCommand("moved intake"),
                 m_intakeRollers.stop(),
+                new PrintCommand("stoped intake"),
                 m_eeRollers.stop(),
-                m_channel.stop());
+                new PrintCommand("stoped end effector"),
+                m_channel.stop(),
+                new PrintCommand("stoped channel"));
+
     }
 }

@@ -2,7 +2,6 @@ package frc.robot.vision;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.ElasticSender.ElasticSender;
-import frc.robot.constants.EndEffectorWristSide;
 import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.Drive.EagleSwerveDrivetrain;
 
@@ -14,14 +13,14 @@ public class Vision extends SubsystemBase {
     public Vision(EagleSwerveDrivetrain drivetrain) {
         this.drivetrain = drivetrain;
         cameraFront = new VisionCamera(VisionConstants.CAMERA_FRONT_CONFIG);
-        cameraBack = new VisionCamera(VisionConstants.CAMERA_BACK_CONFIG);
+        //cameraBack = new VisionCamera(VisionConstants.CAMERA_BACK_CONFIG);
         //m_elastic = new ElasticSender("vision", true);
     }
 
     @Override
     public void periodic() {
         updateDrivetrainVision(cameraFront);
-        updateDrivetrainVision(cameraBack);
+        //updateDrivetrainVision(cameraBack);
         // m_elastic.put("front camera",
         // cameraFront.getEstimatedGlobalPose().toString(), false);
         // m_elastic.put("back camera", cameraBack.getEstimatedGlobalPose().toString(),
@@ -49,21 +48,12 @@ public class Vision extends SubsystemBase {
     }
 
     public int getLastSeenTag() {
-        if ( cameraFront.getLastSeenTagTime() > cameraBack.getLastSeenTagTime()) {
-            return cameraFront.getLastSeenTag();
-        }
-        else {
-            return cameraBack.getLastSeenTag();
-        }
-    }
-
-    public EndEffectorWristSide getScoringSide() {
-        if ( cameraFront.getLastSeenTagTime() > cameraBack.getLastSeenTagTime()) {
-            return EndEffectorWristSide.FRONT;
-        }
-        else {
-            return EndEffectorWristSide.BACK;
-        }
+        return cameraFront.getLastSeenTag();
+        // if (cameraFront.getLastSeenTagTime() > cameraBack.getLastSeenTagTime() && cameraFront.getLastSeenTag() != -1) {
+        //     return cameraFront.getLastSeenTag();
+        // } else {
+        //     return cameraBack.getLastSeenTag();
+        // }
     }
 
     @Override
