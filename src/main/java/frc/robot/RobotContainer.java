@@ -82,7 +82,6 @@ public class RobotContainer {
             m_intakeWrist,
             m_intakeRollers, m_channel, true);
 
-    
     public RobotContainer() {
         NamedCommands.registerCommand("ScoreL4", m_superstructure.score());
         NamedCommands.registerCommand("ElevateL4", m_superstructure.moveL4());
@@ -94,8 +93,9 @@ public class RobotContainer {
         }
         // NamedCommands.registerCommand("ScoreL4", new PrintCommand("Score L4"));
         // NamedCommands.registerCommand("ElevateL4", new PrintCommand("Elevate L4"));
-        // NamedCommands.registerCommand("IntakeCoral", new PrintCommand("IntakeCoral"));
-        //NamedCommands.registerCommand("Stow", new PrintCommand("Stow"));
+        // NamedCommands.registerCommand("IntakeCoral", new
+        // PrintCommand("IntakeCoral"));
+        // NamedCommands.registerCommand("Stow", new PrintCommand("Stow"));
 
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
         SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -131,14 +131,29 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
 
         // manual commands
+        // m_operatorController.x()
+        // .and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.01))
+        // .whileTrue(m_elevator.setManualVoltage(m_operatorController.getLeftY()));
         m_operatorController.x()
                 .and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.01))
-                .whileTrue(m_elevator.setManualVoltage(m_operatorController.getLeftY()));
+                .whileTrue(Commands.run(() -> {
+                    m_elevator.setManualVoltage(m_operatorController.getLeftY()).schedule();
+                })).onFalse(Commands.runOnce(() -> {
+                    m_elevator.setManualVoltage(0).schedule();
+                }));
         m_operatorController.b()
                 .and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.01))
-                .whileTrue(m_intakeWrist.setManualVoltage(m_operatorController.getLeftY()));
+                .whileTrue(Commands.run(() -> {
+                    m_intakeWrist.setManualVoltage(m_operatorController.getLeftY()).schedule();
+                })).onFalse(Commands.runOnce(() -> {
+                    m_intakeWrist.setManualVoltage(0).schedule();
+                }));
         m_operatorController.y().and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.01))
-                .whileTrue(m_eeWrist.setManualVoltage(m_operatorController.getLeftY()));
+                .whileTrue(Commands.run(() -> {
+                    m_eeWrist.setManualVoltage(m_operatorController.getLeftY()).schedule();
+                })).onFalse(Commands.runOnce(() -> {
+                    m_eeWrist.setManualVoltage(0).schedule();
+                }));
 
         m_operatorController.b()
                 .and(m_operatorController.leftBumper())
@@ -182,15 +197,15 @@ public class RobotContainer {
                 m_superstructure::getGPMode));
 
         m_leftJoystick.button(4).onTrue(
-            drivetrain.applyRequest(() -> {
-                var driveMult = slowModeOn ? DriveConstants.SLOW_MODE_MULT : 1;
+                drivetrain.applyRequest(() -> {
+                    var driveMult = slowModeOn ? DriveConstants.SLOW_MODE_MULT : 1;
                     return drive
                             .withDeadband(MaxSpeed * DriveConstants.DRIVE_DEADBAND_MULT * driveMult)
                             .withRotationalDeadband(MaxAngularRate * DriveConstants.DRIVE_DEADBAND_MULT * driveMult)
                             .withVelocityX(-m_leftJoystick.getY() * MaxSpeed * driveMult)
                             .withVelocityY(-m_leftJoystick.getX() * MaxSpeed * driveMult)
                             .withRotationalRate(-m_rightJoystick.getX() * MaxAngularRate * driveMult);
-            }));
+                }));
 
     }
 
@@ -209,7 +224,7 @@ public class RobotContainer {
     }
 
     public void zeroAll() {
-        
+
     }
 
     public Command driveUntilPoseAndStall(Pose2d pose) {
@@ -227,51 +242,51 @@ public class RobotContainer {
 
     public void configureAutoAlignBindings() {
         m_buttonBoard.button(6).onTrue(Commands.runOnce(() -> {
-            //System.out.println("changing to k");
+            // System.out.println("changing to k");
             autoAlignPosition = AutoAlignPosition.K;
         }));
         m_buttonBoard.button(7).onTrue(Commands.runOnce(() -> {
-            //System.out.println("changing to j");
+            // System.out.println("changing to j");
             autoAlignPosition = AutoAlignPosition.J;
         }));
         m_buttonBoard.button(8).onTrue(Commands.runOnce(() -> {
-            //System.out.println("changing to i");
+            // System.out.println("changing to i");
             autoAlignPosition = AutoAlignPosition.I;
         }));
         m_buttonBoard.button(9).onTrue(Commands.runOnce(() -> {
-            //System.out.println("changing to h");
+            // System.out.println("changing to h");
             autoAlignPosition = AutoAlignPosition.H;
         }));
         m_buttonBoard.button(10).onTrue(Commands.runOnce(() -> {
-            //System.out.println("changing to g");
+            // System.out.println("changing to g");
             autoAlignPosition = AutoAlignPosition.G;
         }));
         m_buttonBoard.button(11).onTrue(Commands.runOnce(() -> {
-            //System.out.println("changing to f");
+            // System.out.println("changing to f");
             autoAlignPosition = AutoAlignPosition.F;
         }));
         m_buttonBoard.button(12).onTrue(Commands.runOnce(() -> {
-            //System.out.println("changing to e");
+            // System.out.println("changing to e");
             autoAlignPosition = AutoAlignPosition.E;
         }));
         m_buttonBoard.button(13).onTrue(Commands.runOnce(() -> {
-            //System.out.println("changing to d");
+            // System.out.println("changing to d");
             autoAlignPosition = AutoAlignPosition.D;
         }));
         m_buttonBoard.button(14).onTrue(Commands.runOnce(() -> {
-            //System.out.println("changing to c");
+            // System.out.println("changing to c");
             autoAlignPosition = AutoAlignPosition.C;
         }));
         m_buttonBoard.button(15).onTrue(Commands.runOnce(() -> {
-            //System.out.println("changing to b");
+            // System.out.println("changing to b");
             autoAlignPosition = AutoAlignPosition.B;
         }));
         m_buttonBoard.button(16).onTrue(Commands.runOnce(() -> {
-            //System.out.println("changing to a");
+            // System.out.println("changing to a");
             autoAlignPosition = AutoAlignPosition.A;
         }));
         m_buttonBoard.button(17).onTrue(Commands.runOnce(() -> {
-            //System.out.println("changing to l");
+            // System.out.println("changing to l");
             autoAlignPosition = AutoAlignPosition.L;
         }));
     }
