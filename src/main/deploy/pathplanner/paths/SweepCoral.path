@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.8123231783980445,
-        "y": 7.081485204726076
+        "x": 2.0339402488425917,
+        "y": 6.859561993634259
       },
       "isLocked": false,
       "linkedName": "StationSweepStart"
     },
     {
       "anchor": {
-        "x": 1.0248368778935173,
-        "y": 6.428411820023148
+        "x": 1.2792527488425913,
+        "y": 6.388930483217592
       },
       "prevControl": {
-        "x": 2.0645986047565272,
-        "y": 7.319011967897196
+        "x": 2.319014475705601,
+        "y": 7.279530631091641
       },
       "nextControl": null,
       "isLocked": false,
@@ -48,7 +48,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 2.0,
-    "rotation": -87.78108695124351
+    "rotation": -70.9996706504074
   },
   "useDefaultConstraints": true
 }
