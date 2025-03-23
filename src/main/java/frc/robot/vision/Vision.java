@@ -59,12 +59,12 @@ public class Vision extends SubsystemBase {
     @Override
     public void simulationPeriodic() {
         cameraFront.simulationPeriodic(drivetrain.getState().Pose);
-        cameraBack.simulationPeriodic(drivetrain.getState().Pose);
+        // cameraBack.simulationPeriodic(drivetrain.getState().Pose);
 
         var debugField = cameraFront.getSimDebugField();
         debugField.getObject("EstimatedRobot").setPose(drivetrain.getState().Pose);
 
-        debugField = cameraBack.getSimDebugField();
-        debugField.getObject("EstimatedRobot").setPose(drivetrain.getState().Pose);
+        // debugField = cameraBack.getSimDebugField();
+        // debugField.getObject("EstimatedRobot").setPose(drivetrain.getState().Pose);
     }
 }

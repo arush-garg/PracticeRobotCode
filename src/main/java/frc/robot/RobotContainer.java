@@ -209,7 +209,7 @@ public class RobotContainer {
             0.0))));
 
         // scoring commands
-        m_rightJoystick.trigger().whileTrue(m_superstructure.intake()).onFalse(m_superstructure.stow());
+        m_rightJoystick.trigger().onTrue(m_superstructure.intake());
         m_leftJoystick.trigger().onTrue(m_superstructure.score());
         m_buttonBoard.button(1).onTrue(m_superstructure.moveL1());
         m_buttonBoard.button(2).onTrue(m_superstructure.moveL2());

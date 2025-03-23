@@ -120,7 +120,7 @@ public class Superstructure extends SubsystemBase{
                 m_channel.run(ChannelConstants.CHANNEL_VOLTS),
                 m_eeRollers.run(EndEffectorConstants.Rollers.INTAKE_CORAL_VOLTS),
                 Commands.waitUntil(m_channel.coralInEndEffectorSupplier),
-                Commands.waitSeconds(0.2),
+                Commands.waitSeconds(0.7),
                 Commands.parallel(m_intakeRollers.stop(), m_channel.stop(),
                         m_eeRollers.run(EndEffectorConstants.Rollers.RETAIN_CORAL)),
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION));
