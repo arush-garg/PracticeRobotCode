@@ -8,6 +8,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import au.grapplerobotics.LaserCan;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.ElasticSender.ElasticSender;
@@ -25,8 +26,8 @@ public class Channel extends SubsystemBase {
 
     public Channel(boolean debug) {
         m_sender = new ElasticSender("Channel", debug);
-        //m_sender.addButton("Stop", stop());
-        //m_sender.addButton("Run", run(ChannelConstants.CHANNEL_VOLTS));
+        // m_sender.addButton("Stop", stop());
+        // m_sender.addButton("Run", run(ChannelConstants.CHANNEL_VOLTS));
         m_sender.put("in channel", coralInEndEffector, false);
 
         MotorOutputConfigs motorConfigs = new MotorOutputConfigs();
@@ -47,12 +48,12 @@ public class Channel extends SubsystemBase {
     }
 
     public Command setManualVoltage(double joystickPosition) {
-		return run(
-				() -> {
-					m_motor.setVoltage(joystickPosition * ChannelConstants.CHANNEL_VOLTS
-							/ ChannelConstants.MANUAL_RATIO);
-				});
-	}
+        return run(
+                () -> {
+                    m_motor.setVoltage(joystickPosition * ChannelConstants.CHANNEL_VOLTS
+                            / ChannelConstants.MANUAL_RATIO);
+                });
+    }
 
     @Override
     public void periodic() {
@@ -60,9 +61,12 @@ public class Channel extends SubsystemBase {
         LaserCan.Measurement measurement = distanceSensor.getMeasurement();
         if (measurement != null && measurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
             coralInEndEffector = measurement.distance_mm < ChannelConstants.DISTANCE_SENSOR_THRESH;
-            //m_sender.put("Distance", measurement.distance_mm, false);
+            // m_sender.put("Distance", measurement.distance_mm, false);
         } else {
             coralInEndEffector = false;
+        }
+        if (RobotBase.isSimulation()) {
+            coralInEndEffector = true;
         }
     }
 }
