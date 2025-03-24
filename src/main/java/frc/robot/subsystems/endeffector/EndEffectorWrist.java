@@ -5,14 +5,30 @@
 package frc.robot.subsystems.endeffector;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.ElasticSender.ElasticSender;
 import frc.robot.constants.*;
 import frc.robot.subsystems.Drive.EagleSwerveDrivetrain;
 import frc.robot.utils.*;
 import frc.robot.vision.Vision;
+
+import static edu.wpi.first.units.Units.Volts;
+
+import java.util.function.Supplier;
+
+import org.littletonrobotics.junction.AutoLog;
+import org.littletonrobotics.junction.AutoLogOutput;
 
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.*;
@@ -34,7 +50,11 @@ public class EndEffectorWrist extends SubsystemBase {
 	private EagleSwerveDrivetrain m_drive;
 	private Vision m_vision;
 
-	public EndEffectorWrist(boolean debug, EagleSwerveDrivetrain drive, Vision vision) {
+	private Supplier<Pose3d> m_elevatorPoseSupplier;
+
+	public EndEffectorWrist(boolean debug, EagleSwerveDrivetrain drive, Vision vision,
+			Supplier<Pose3d> elevatorPoseSupplier) {
+		this.m_elevatorPoseSupplier = elevatorPoseSupplier;
 		this.debug = debug;
 		this.m_drive = drive;
 		this.m_vision = vision;
@@ -92,12 +112,12 @@ public class EndEffectorWrist extends SubsystemBase {
 			// System.out.println("Reef Rot: " + reefRot + " Drive Rot: " + driveRot);
 			EndEffectorWristSide side = EndEffectorWristSide.FRONT;
 			// if (reefRot > 180) {
-			// 	reefRot -= 360;
+			// reefRot -= 360;
 			// }
 			// if (reefRot > driveRot) {
-			// 	side = EndEffectorWristSide.BACK;
+			// side = EndEffectorWristSide.BACK;
 			// }
-			//System.out.println("Side: " + side);
+			// System.out.println("Side: " + side);
 			moveTo(position, side).schedule();
 		});
 	}
@@ -193,5 +213,36 @@ public class EndEffectorWrist extends SubsystemBase {
 	@Override
 	public void periodic() {
 		m_elastic.periodic();
+	}
+
+	private final SingleJointedArmSim m_armSim = new SingleJointedArmSim(
+			DCMotor.getKrakenX60(1),
+			58.56, // motor (shaft to) 9t (connected to) 84t (shaft to) 18t (connected to) 64t
+					// (shaft to) 34t (connected to) 60t
+			SingleJointedArmSim.estimateMOI(0.578228, 3.17),
+			0.578228,
+			Double.MIN_VALUE,
+			Double.MAX_VALUE,
+			true,
+			0);
+
+	@AutoLogOutput
+	public Pose3d getPose() {
+		return m_elevatorPoseSupplier.get()
+				.plus(new Transform3d(new Translation3d(0, 0.2, 0.9),
+						new Rotation3d(0, -m_motor.getPosition().getValueAsDouble(), 0)));
+	}
+
+	@Override
+	public void simulationPeriodic() {
+		var talonFXSim = m_motor.getSimState();
+		var canCoderSim = m_encoder.getSimState();
+		talonFXSim.setSupplyVoltage(RobotController.getBatteryVoltage());
+		var motorVoltage = talonFXSim.getMotorVoltageMeasure();
+		m_armSim.setInputVoltage(motorVoltage.in(Volts));
+		m_armSim.update(0.02);
+		// System.out.println(m_armSim.getAngleRads());
+		canCoderSim.setRawPosition(m_armSim.getAngleRads() * EndEffectorConstants.Wrist.SENSOR_TO_MECHANISM_RATIO);
+		canCoderSim.setVelocity(m_armSim.getVelocityRadPerSec() * EndEffectorConstants.Wrist.SENSOR_TO_MECHANISM_RATIO);
 	}
 }

@@ -1,0 +1,132 @@
+{
+  "hubs": [
+    {
+      "x": 551,
+      "y": 304,
+      "width": 1100,
+      "height": 650,
+      "state": {
+        "sidebar": {
+          "width": 300,
+          "expanded": [
+            "/AdvantageKit",
+            "/AdvantageKit/RealOutputs",
+            "/AdvantageKit/RealOutputs/IntakeWrist",
+            "/AdvantageKit/RealOutputs/EndEffectorWrist",
+            "/AdvantageKit/RealOutputs/Elevator"
+          ]
+        },
+        "tabs": {
+          "selected": 3,
+          "tabs": [
+            {
+              "type": 0,
+              "title": "",
+              "controller": null,
+              "controllerUUID": "prl9fjjl2dw2rb4iun8no0o0e1j3nxun",
+              "renderer": "#/",
+              "controlsHeight": 0
+            },
+            {
+              "type": 1,
+              "title": "Line Graph",
+              "controller": {
+                "leftSources": [],
+                "rightSources": [],
+                "discreteSources": [],
+                "leftLockedRange": null,
+                "rightLockedRange": null,
+                "leftUnitConversion": {
+                  "type": null,
+                  "factor": 1
+                },
+                "rightUnitConversion": {
+                  "type": null,
+                  "factor": 1
+                },
+                "leftFilter": 0,
+                "rightFilter": 0
+              },
+              "controllerUUID": "glv8koxwojr2upyaelm6qtqf2v5mc1pr",
+              "renderer": null,
+              "controlsHeight": 200
+            },
+            {
+              "type": 2,
+              "title": "Odometry",
+              "controller": {
+                "sources": [],
+                "game": "2025 Field (Welded)",
+                "bumpers": "auto",
+                "origin": "blue",
+                "orientation": 0,
+                "size": 30
+              },
+              "controllerUUID": "7vvkvx0o1ufev711rl4l520yvur4nfsl",
+              "renderer": null,
+              "controlsHeight": 200
+            },
+            {
+              "type": 3,
+              "title": "3D Field",
+              "controller": {
+                "sources": [
+                  {
+                    "type": "robot",
+                    "logKey": "NT:/DriveState/Pose",
+                    "logType": "Pose2d",
+                    "visible": true,
+                    "options": {
+                      "model": "Theseus"
+                    }
+                  },
+                  {
+                    "type": "component",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/IntakeWrist/Pose",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {}
+                  },
+                  {
+                    "type": "component",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/EndEffectorWrist/Pose",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {}
+                  },
+                  {
+                    "type": "component",
+                    "logKey": "NT:/AdvantageKit/RealOutputs/Elevator/Pose",
+                    "logType": "Pose3d",
+                    "visible": true,
+                    "options": {}
+                  }
+                ],
+                "game": "2025 Field (Welded)",
+                "origin": "blue"
+              },
+              "controllerUUID": "4t3j8tsygq5lqa06ohjhpn6j035yzdyh",
+              "renderer": {
+                "cameraIndex": -1,
+                "orbitFov": 50,
+                "cameraPosition": [
+                  10.321833747583542,
+                  0.3582376908926696,
+                  -4.6503610339888795
+                ],
+                "cameraTarget": [
+                  -0.3066918035893026,
+                  -0.009779780142763591,
+                  -0.9254752264588917
+                ]
+              },
+              "controlsHeight": 200
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "satellites": [],
+  "version": "4.1.2"
+}

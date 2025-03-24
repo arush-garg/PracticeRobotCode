@@ -1,5 +1,9 @@
 package frc.robot;
 
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+
 import au.grapplerobotics.CanBridge;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -10,11 +14,10 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
   private final RobotContainer m_robotContainer;
   StructPublisher<Pose2d> zeroedPosePublisher = NetworkTableInstance.getDefault()
@@ -24,6 +27,10 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     CanBridge.runTCP();
+    Logger.recordMetadata("ProjectName", "Theseus");
+    Logger.addDataReceiver(new NT4Publisher());
+
+    Logger.start();
     m_robotContainer = new RobotContainer();
   }
 
