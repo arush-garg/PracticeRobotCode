@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.ElasticSender.ElasticSender;
@@ -25,6 +26,7 @@ import com.ctre.phoenix6.hardware.*;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.sim.ChassisReference;
 
 public class IntakeWrist extends SubsystemBase {
 
@@ -121,25 +123,17 @@ public class IntakeWrist extends SubsystemBase {
                 new Rotation3d(m_motor.getPosition().getValueAsDouble(), 0, 0));
     }
 
-    @AutoLogOutput
-    public Pose3d getZeroPose() {
-        return new Pose3d(new Translation3d(0, 0, 0),
-                new Rotation3d(0, 0, 0));
-    }
-
     @Override
     public void simulationPeriodic() {
         var talonFXSim = m_motor.getSimState();
+        talonFXSim.Orientation = ChassisReference.Clockwise_Positive;
         talonFXSim.setSupplyVoltage(RobotController.getBatteryVoltage());
         var motorVoltage = talonFXSim.getMotorVoltageMeasure();
         m_armSim.setInputVoltage(motorVoltage.in(Volts));
         m_armSim.update(0.02);
-        System.out.println(
-                motorVoltage.in(Volts) + " " + m_armSim.getAngleRads() + " " +
-                        m_armSim.getVelocityRadPerSec());
         talonFXSim.setRawRotorPosition((m_armSim.getAngleRads() + IntakeConstants.Wrist.OFFSET) *
-                IntakeConstants.Wrist.GEAR_RATIO);
+                IntakeConstants.Wrist.GEAR_RATIO / (2 * Math.PI));
         talonFXSim.setRotorVelocity(m_armSim.getVelocityRadPerSec() *
-                IntakeConstants.Wrist.GEAR_RATIO);
+                IntakeConstants.Wrist.GEAR_RATIO / (2 * Math.PI));
     }
 }
