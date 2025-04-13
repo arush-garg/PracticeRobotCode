@@ -12,9 +12,11 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -54,7 +56,8 @@ public class RobotContainer {
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * DriveConstants.DRIVE_DEADBAND_MULT)
             .withRotationalDeadband(MaxAngularRate * DriveConstants.DRIVE_DEADBAND_MULT)
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
+            .withSteerRequestType(SteerRequestType.MotionMagicExpo);
 
     private final SwerveRequest.ApplyRobotSpeeds strafeDrive = new SwerveRequest.ApplyRobotSpeeds()
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
@@ -104,6 +107,12 @@ public class RobotContainer {
         // NamedCommands.registerCommand("IntakeCoral", new
         // PrintCommand("IntakeCoral"));
         // NamedCommands.registerCommand("Stow", new PrintCommand("Stow"));
+
+        // choreo commands
+        NamedCommands.registerCommand("Score", m_superstructure.score());
+        NamedCommands.registerCommand("ElevateL4", m_superstructure.moveL4());
+        NamedCommands.registerCommand("IntakeDown", m_superstructure.intake());
+        NamedCommands.registerCommand("Stow", m_superstructure.stow());
 
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
         SmartDashboard.putData("Auto Chooser", autoChooser);

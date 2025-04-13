@@ -32,19 +32,22 @@ public class VisionConstants {
         FIELD_TAG_LAYOUT = layout;
     }
 
+    public static final Matrix<N3, N1> defaultSingleTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+    public static final Matrix<N3, N1> defaultMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+
     public static final CameraConfiguration CAMERA_FRONT_CONFIG = new CameraConfiguration()
             .withCameraName("CAMERA_FRONT")
             .withRobotToCam(new Transform3d(new Translation3d(0.19812, 0, 0.239776),
                     new Rotation3d(0.0, Units.degreesToRadians(0), 0.0)))
-            .withSingleTagStdDevs(VecBuilder.fill(0.05, 0.05, 0.3))
-            .withMultiTagStdDevs(VecBuilder.fill(0.05, 0.05, 0.1));
+            .withSingleTagStdDevs(defaultSingleTagStdDevs)
+            .withMultiTagStdDevs(defaultMultiTagStdDevs);
 
     public static final CameraConfiguration CAMERA_BACK_CONFIG = new CameraConfiguration()
             .withCameraName("CAMERA_BACK")
             .withRobotToCam(new Transform3d(new Translation3d(-0.19812, 0, 0.239776),
                     new Rotation3d(0.0, Units.degreesToRadians(0), Units.degreesToRadians(180))))
-            .withSingleTagStdDevs(VecBuilder.fill(0.05, 0.05, 0.3))
-            .withMultiTagStdDevs(VecBuilder.fill(0.05, 0.05, 0.1));
+            .withSingleTagStdDevs(defaultSingleTagStdDevs)
+            .withMultiTagStdDevs(defaultMultiTagStdDevs);
 
     public static final ArrayList<Integer> IGNORE_TAGS = new ArrayList<>(List.of(13, 14, 12, 16, 15, 5, 4, 3, 2, 1));
 

@@ -9,7 +9,6 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
-import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.Matrix;
@@ -18,7 +17,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.networktables.DoubleArrayPublisher;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import frc.robot.Robot;
 import frc.robot.constants.VisionConstants;
 
@@ -28,23 +29,27 @@ public class VisionCamera {
     private Matrix<N3, N1> curStdDevs;
     private VisionConstants.CameraConfiguration config;
 
-    // Simulation
     private PhotonCameraSim cameraSim;
-    private VisionSystemSim visionSim;
 
     private int lastSeenTag = -1;
     private int lastSeenTagTime = 0;
 
-    public VisionCamera(VisionConstants.CameraConfiguration config) {
+    private final StructPublisher<Pose2d> log_camPose;
+    private final DoubleArrayPublisher log_stdDevs;
+
+    public VisionCamera(VisionConstants.CameraConfiguration config, VisionSim visionSim) {
         this.config = config;
         camera = new PhotonCamera(config.cameraName);
         photonEstimator = new PhotonPoseEstimator(VisionConstants.FIELD_TAG_LAYOUT,
                 PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, config.robotToCam);
         photonEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
 
+        log_camPose = NetworkTableInstance.getDefault()
+                .getStructTopic("Vision/" + config.cameraName + "/estRobotPose", Pose2d.struct).publish();
+        log_stdDevs = NetworkTableInstance.getDefault()
+                .getDoubleArrayTopic("Vision/" + config.cameraName + "/stdDevs").publish();
+
         if (Robot.isSimulation()) {
-            visionSim = new VisionSystemSim(config.cameraName);
-            visionSim.addAprilTags(VisionConstants.FIELD_TAG_LAYOUT);
             var cameraProp = new SimCameraProperties();
             cameraProp.setCalibration(960, 720, Rotation2d.fromDegrees(90));
             cameraProp.setCalibError(0.35, 0.10);
@@ -74,28 +79,19 @@ public class VisionCamera {
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
         Optional<EstimatedRobotPose> visionEst = Optional.empty();
         for (var change : camera.getAllUnreadResults()) {
+            if (!change.hasTargets())
+                continue;
+            if (VisionConstants.IGNORE_TAGS.contains(change.getBestTarget().fiducialId)) {
+                continue;
+            }
             visionEst = photonEstimator.update(change);
             updateEstimationStdDevs(visionEst, change.getTargets());
-            // System.out.println("Has targets?" + change.hasTargets());
-            if (change.hasTargets()) {
-                if (VisionConstants.IGNORE_TAGS.contains(change.getBestTarget().fiducialId)) {
-                    continue;
-                }
-                // System.out.println("Vision Estimation: " +
-                // change.getBestTarget().fiducialId);
-                lastSeenTag = change.getBestTarget().fiducialId;
-                lastSeenTagTime = (int) System.currentTimeMillis();
-            }
-
-            if (Robot.isSimulation()) {
-                visionEst.ifPresentOrElse(
-                        est -> getSimDebugField()
-                                .getObject("VisionEstimation")
-                                .setPose(est.estimatedPose.toPose2d()),
-                        () -> {
-                            getSimDebugField().getObject("VisionEstimation").setPoses();
-                        });
-            }
+            log_stdDevs.accept(curStdDevs.getData());
+            lastSeenTag = change.getBestTarget().fiducialId;
+            lastSeenTagTime = (int) System.currentTimeMillis();
+        }
+        if (visionEst.isPresent()) {
+            log_camPose.accept(visionEst.get().estimatedPose.toPose2d());
         }
         return visionEst;
     }
@@ -114,7 +110,6 @@ public class VisionCamera {
         if (estimatedPose.isEmpty()) {
             // No pose input. Default to single-tag std devs
             curStdDevs = this.config.singleTagStdDevs;
-
         } else {
             // Pose present. Start running Heuristic
             var estStdDevs = this.config.singleTagStdDevs;
@@ -171,21 +166,5 @@ public class VisionCamera {
 
     public int getLastSeenTagTime() {
         return lastSeenTagTime;
-    }
-
-    // Simulation
-    public void simulationPeriodic(Pose2d robotSimPose) {
-        visionSim.update(robotSimPose);
-    }
-
-    public void resetSimPose(Pose2d pose) {
-        if (Robot.isSimulation())
-            visionSim.resetRobotPose(pose);
-    }
-
-    public Field2d getSimDebugField() {
-        if (!Robot.isSimulation())
-            return null;
-        return visionSim.getDebugField();
     }
 }
