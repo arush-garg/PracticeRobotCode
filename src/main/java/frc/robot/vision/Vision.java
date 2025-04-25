@@ -33,7 +33,7 @@ public class Vision extends SubsystemBase {
                     var estStdDevs = camera.getEstimationStdDevs();
 
                     if (!useCameraAngle) {
-                        estStdDevs.set(0, 2, Double.POSITIVE_INFINITY);
+                        estStdDevs.set(2, 0, Double.POSITIVE_INFINITY);
                     }
 
                     drivetrain.addVisionMeasurement(
