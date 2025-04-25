@@ -20,6 +20,9 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
@@ -31,6 +34,11 @@ public class DriveToPosePID extends Command {
 
     private final EagleSwerveDrivetrain drivetrain;
     private final Supplier<Pose2d> target;
+    private NetworkTable table = NetworkTableInstance.getDefault().getTable("DriveToPosePID");
+    private DoublePublisher driveSetptPublisher = table.getDoubleTopic("drive setpt").publish();
+    private DoublePublisher driveValuePublisher = table.getDoubleTopic("drive err").publish();
+    private DoublePublisher thetaSetptPublisher = table.getDoubleTopic("theta setpt").publish();
+    private DoublePublisher thetaValuePublisher = table.getDoubleTopic("theta err").publish();
 
     private final ProfiledPIDController driveController = new ProfiledPIDController(
             DriveToPoseConstants.DRIVE_PID.kP, DriveToPoseConstants.DRIVE_PID.kI,
@@ -124,6 +132,7 @@ public class DriveToPosePID extends Command {
                         currentPose.getRotation().getRadians(),
                         targetPose.getRotation().getRadians());
         thetaErrorAbs = Math.abs(currentPose.getRotation().minus(targetPose.getRotation()).getRadians());
+
         if (thetaErrorAbs < DriveToPoseConstants.THETA_TOLERANCE.in(Radian))
             thetaVelocity = 0.0;
 
@@ -139,6 +148,11 @@ public class DriveToPosePID extends Command {
         drivetrain.setControl(driveRequest.withVelocityX(requestedSpeeds.vxMetersPerSecond)
                 .withVelocityY(requestedSpeeds.vyMetersPerSecond)
                 .withRotationalRate(requestedSpeeds.omegaRadiansPerSecond));
+
+        driveSetptPublisher.set(driveController.getSetpoint().position);
+        thetaSetptPublisher.set(thetaController.getSetpoint().position);
+        driveValuePublisher.set(driveController.getPositionError());
+        thetaValuePublisher.set(thetaController.getPositionError());
     }
 
     @Override
