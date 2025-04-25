@@ -45,7 +45,7 @@ public class IntakeWrist extends SubsystemBase {
 
         TalonFXConfiguration cfg = new TalonFXConfiguration();
 
-        MotorOutputConfigs motorConfigs = new MotorOutputConfigs();
+        MotorOutputConfigs motorConfigs = cfg.MotorOutput;
         motorConfigs.Inverted = InvertedValue.Clockwise_Positive;
         motorConfigs.NeutralMode = NeutralModeValue.Brake;
 

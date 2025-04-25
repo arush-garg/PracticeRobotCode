@@ -1,5 +1,6 @@
 package frc.robot.vision;
 
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.Drive.EagleSwerveDrivetrain;
@@ -8,6 +9,7 @@ public class Vision extends SubsystemBase {
     public VisionCamera cameraFront, cameraBack;
     private EagleSwerveDrivetrain drivetrain;
     private VisionSim visionSim;
+    private boolean useCameraAngle = false;
 
     public Vision(EagleSwerveDrivetrain drivetrain) {
         this.drivetrain = drivetrain;
@@ -18,6 +20,7 @@ public class Vision extends SubsystemBase {
 
     @Override
     public void periodic() {
+        useCameraAngle = RobotState.isDisabled();
         updateDrivetrainVision(cameraFront);
         updateDrivetrainVision(cameraBack);
     }
@@ -28,6 +31,10 @@ public class Vision extends SubsystemBase {
         visionEst.ifPresent(
                 est -> {
                     var estStdDevs = camera.getEstimationStdDevs();
+
+                    if (!useCameraAngle) {
+                        estStdDevs.set(0, 2, Double.POSITIVE_INFINITY);
+                    }
 
                     drivetrain.addVisionMeasurement(
                             est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
