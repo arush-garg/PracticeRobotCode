@@ -87,5 +87,17 @@ public class VisionConstants {
         public CameraConfiguration withCameraName(String cameraName) {
             return new CameraConfiguration(cameraName, robotToCam, singleTagStdDevs, multiTagStdDevs);
         }
+
+        public void setSingleTagStdDevs(double x, double y, double theta) {
+            singleTagStdDevs.set(0, 0, x);
+            singleTagStdDevs.set(1, 0, y);
+            singleTagStdDevs.set(2, 0, theta);
+        }
+
+        public void setMultiTagStdDevs(double x, double y, double theta) {
+            multiTagStdDevs.set(0, 0, x);
+            multiTagStdDevs.set(1, 0, y);
+            multiTagStdDevs.set(2, 0, theta);
+        }
     }
 }

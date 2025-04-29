@@ -232,7 +232,9 @@ public class RobotContainer {
 
         m_leftJoystick.button(3).onTrue(Commands.select(
                 Map.ofEntries(
-                        Map.entry(GPMode.Coral, new DriveToPosePID(drivetrain, autoAlignPositionSupplier)),
+                        Map.entry(GPMode.Coral, Commands.sequence(
+                                Commands.print("starting auto align"),
+                                new DriveToPosePID(drivetrain, autoAlignPositionSupplier))),
                         Map.entry(GPMode.Algae, new PrintCommand("Auto align not applicable for algae"))),
                 m_superstructure::getGPMode));
 

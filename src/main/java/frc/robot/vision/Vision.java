@@ -33,6 +33,7 @@ public class Vision extends SubsystemBase {
                     var estStdDevs = camera.getEstimationStdDevs();
 
                     if (!useCameraAngle) {
+                        System.out.println("not using camera angle");
                         estStdDevs.set(2, 0, Double.POSITIVE_INFINITY);
                     }
 

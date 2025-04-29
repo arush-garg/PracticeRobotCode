@@ -23,6 +23,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
@@ -39,6 +40,8 @@ public class DriveToPosePID extends Command {
     private DoublePublisher driveValuePublisher = table.getDoubleTopic("drive err").publish();
     private DoublePublisher thetaSetptPublisher = table.getDoubleTopic("theta setpt").publish();
     private DoublePublisher thetaValuePublisher = table.getDoubleTopic("theta err").publish();
+    private final StructPublisher<Pose2d> targetPosePublisher = table.getStructTopic("TargetPose", Pose2d.struct)
+            .publish();
 
     private final ProfiledPIDController driveController = new ProfiledPIDController(
             DriveToPoseConstants.DRIVE_PID.kP, DriveToPoseConstants.DRIVE_PID.kI,
@@ -70,6 +73,7 @@ public class DriveToPosePID extends Command {
 
     @Override
     public void initialize() {
+        System.out.println("initializing drive pid");
         Pose2d currentPose = drivetrain.getState().Pose;
         ChassisSpeeds fieldVelocity = ChassisSpeeds.fromRobotRelativeSpeeds(drivetrain.getState().Speeds,
                 currentPose.getRotation());
@@ -153,10 +157,12 @@ public class DriveToPosePID extends Command {
         thetaSetptPublisher.set(thetaController.getSetpoint().position);
         driveValuePublisher.set(driveController.getPositionError());
         thetaValuePublisher.set(thetaController.getPositionError());
+        targetPosePublisher.set(targetPose);
     }
 
     @Override
     public void end(boolean interrupted) {
+        System.out.println("ending drive pid");
         drivetrain.setControl(driveRequest.withVelocityX(0).withVelocityY(0).withRotationalRate(0));
         running = false;
     }
@@ -173,6 +179,7 @@ public class DriveToPosePID extends Command {
 
     @Override
     public boolean isFinished() {
+        System.out.println(withinTolerance(DriveToPoseConstants.DRIVE_TOLERANCE, DriveToPoseConstants.THETA_TOLERANCE));
         return withinTolerance(DriveToPoseConstants.DRIVE_TOLERANCE, DriveToPoseConstants.THETA_TOLERANCE);
     }
 }
