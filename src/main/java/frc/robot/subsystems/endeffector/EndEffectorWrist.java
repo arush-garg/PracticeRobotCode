@@ -100,24 +100,9 @@ public class EndEffectorWrist extends SubsystemBase {
 
 	public Command moveTo(EndEffectorWristPosition position) {
 		return Commands.runOnce(() -> {
-			int lastTag = m_vision.getLastSeenTag();
-			// System.out.println("Last Tag: " + lastTag);
-			if (lastTag == -1) {
-				moveTo(position, EndEffectorWristSide.FRONT).schedule();
-				return;
-			}
-			double reefRot = VisionConstants.FIELD_TAG_LAYOUT.getTagPose(lastTag).get().getRotation()
-					.getAngle() * 180 / Math.PI; // 0 to 360
-			double driveRot = m_drive.getState().Pose.getRotation().getDegrees(); // -180 to 180
-			// System.out.println("Reef Rot: " + reefRot + " Drive Rot: " + driveRot);
-			EndEffectorWristSide side = EndEffectorWristSide.FRONT;
-			// if (reefRot > 180) {
-			// reefRot -= 360;
-			// }
-			// if (reefRot > driveRot) {
-			// side = EndEffectorWristSide.BACK;
-			// }
-			// System.out.println("Side: " + side);
+			Pose2d currentPose = m_drive.getState().Pose;
+			EndEffectorWristSide side = EndEffectorSideUtils.facingReef(currentPose) ? EndEffectorWristSide.FRONT
+					: EndEffectorWristSide.BACK;
 			moveTo(position, side).schedule();
 		});
 	}

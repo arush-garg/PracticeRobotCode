@@ -21,6 +21,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -43,6 +44,7 @@ import frc.robot.subsystems.Drive.EagleSwerveTelemetry;
 import frc.robot.subsystems.channel.Channel;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.endeffector.EndEffectorRollers;
+import frc.robot.subsystems.endeffector.EndEffectorSideUtils;
 import frc.robot.subsystems.endeffector.EndEffectorWrist;
 import frc.robot.subsystems.intake.IntakeRollers;
 import frc.robot.subsystems.intake.IntakeWrist;
@@ -70,8 +72,16 @@ public class RobotContainer {
 
     private boolean slowModeOn = false;
     private AutoAlignPosition autoAlignPosition = AutoAlignPosition.A;
-    private Supplier<Pose2d> autoAlignPositionSupplier = () -> ReefPositions
-            .getReefPosition(DriverStation.getAlliance().orElse(Alliance.Blue), autoAlignPosition);
+    private Supplier<Pose2d> autoAlignPositionSupplier = () -> {
+        Pose2d reefPosition = ReefPositions.getReefPosition(DriverStation.getAlliance().orElse(Alliance.Blue),
+                autoAlignPosition);
+        if (!EndEffectorSideUtils.facingReef(drivetrain.getState().Pose)) {
+            System.out.println("[Auto Align] Flipping reef position, not facing reef");
+            reefPosition = new Pose2d(reefPosition.getTranslation(),
+                    reefPosition.getRotation().rotateBy(new Rotation2d(Math.PI)));
+        }
+        return reefPosition;
+    };
 
     // controllers
     private final CommandJoystick m_leftJoystick = new CommandJoystick(0);
