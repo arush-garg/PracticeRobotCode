@@ -5,6 +5,7 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.Milliseconds;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
@@ -230,13 +231,11 @@ public class RobotContainer {
         m_leftJoystick.button(2).onTrue(m_superstructure.stow());
         m_operatorController.povUp().onTrue(m_superstructure.stow());
 
-        m_leftJoystick.button(3).onTrue(Commands.select(
-                Map.ofEntries(
-                        Map.entry(GPMode.Coral, Commands.sequence(
-                                Commands.print("starting auto align"),
-                                new DriveToPosePID(drivetrain, autoAlignPositionSupplier))),
-                        Map.entry(GPMode.Algae, new PrintCommand("Auto align not applicable for algae"))),
-                m_superstructure::getGPMode));
+        m_leftJoystick.button(3).and(() -> m_superstructure.getGPMode() == GPMode.Coral)
+                .onTrue(Commands.sequence(
+                        new DriveToPosePID(drivetrain, autoAlignPositionSupplier),
+                        Commands.waitTime(Milliseconds.of(500)),
+                        m_superstructure.score()));
 
         m_leftJoystick.button(4).onTrue(
                 drivetrain.applyRequest(() -> {

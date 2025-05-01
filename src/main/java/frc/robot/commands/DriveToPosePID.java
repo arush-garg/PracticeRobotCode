@@ -73,7 +73,6 @@ public class DriveToPosePID extends Command {
 
     @Override
     public void initialize() {
-        System.out.println("initializing drive pid");
         Pose2d currentPose = drivetrain.getState().Pose;
         ChassisSpeeds fieldVelocity = ChassisSpeeds.fromRobotRelativeSpeeds(drivetrain.getState().Speeds,
                 currentPose.getRotation());
@@ -162,7 +161,6 @@ public class DriveToPosePID extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        System.out.println("ending drive pid");
         drivetrain.setControl(driveRequest.withVelocityX(0).withVelocityY(0).withRotationalRate(0));
         running = false;
     }
@@ -179,7 +177,6 @@ public class DriveToPosePID extends Command {
 
     @Override
     public boolean isFinished() {
-        System.out.println(withinTolerance(DriveToPoseConstants.DRIVE_TOLERANCE, DriveToPoseConstants.THETA_TOLERANCE));
         return withinTolerance(DriveToPoseConstants.DRIVE_TOLERANCE, DriveToPoseConstants.THETA_TOLERANCE);
     }
 }
