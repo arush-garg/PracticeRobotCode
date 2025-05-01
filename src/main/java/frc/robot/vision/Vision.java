@@ -1,7 +1,8 @@
 package frc.robot.vision;
 
-import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.Drive.EagleSwerveDrivetrain;
 
@@ -16,11 +17,18 @@ public class Vision extends SubsystemBase {
         visionSim = new VisionSim();
         cameraFront = new VisionCamera(VisionConstants.CAMERA_FRONT_CONFIG, visionSim);
         cameraBack = new VisionCamera(VisionConstants.CAMERA_BACK_CONFIG, visionSim);
+
+        RobotModeTriggers.disabled().onFalse(Commands.runOnce(() -> {
+            double yaw = drivetrain.getState().Pose.getRotation().getDegrees();
+            drivetrain.getPigeon2().setYaw(yaw);
+            useCameraAngle = false;
+            System.out.println("[Vision] Stopped camera angle");
+            System.out.println("[Vision] Pigeon yaw set to " + yaw);
+        }));
     }
 
     @Override
     public void periodic() {
-        useCameraAngle = RobotState.isDisabled();
         updateDrivetrainVision(cameraFront);
         updateDrivetrainVision(cameraBack);
     }
@@ -33,7 +41,6 @@ public class Vision extends SubsystemBase {
                     var estStdDevs = camera.getEstimationStdDevs();
 
                     if (!useCameraAngle) {
-                        System.out.println("not using camera angle");
                         estStdDevs.set(2, 0, Double.POSITIVE_INFINITY);
                     }
 
