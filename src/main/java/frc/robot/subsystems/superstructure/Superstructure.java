@@ -25,7 +25,7 @@ import frc.robot.subsystems.endeffector.EndEffectorWrist;
 import frc.robot.subsystems.intake.IntakeRollers;
 import frc.robot.subsystems.intake.IntakeWrist;
 
-public class Superstructure extends SubsystemBase{
+public class Superstructure extends SubsystemBase {
     private GPMode gpMode = GPMode.Coral;
 
     private final Elevator m_elevator;
@@ -37,9 +37,7 @@ public class Superstructure extends SubsystemBase{
     private final ElasticSender m_elastic;
     private long lastTime = 0;
 
-    //private LED m_leds = new LED();
-
-    
+    // private LED m_leds = new LED();
 
     public Superstructure(Elevator elevator, EndEffectorWrist eeWrist, EndEffectorRollers eeRollers,
             IntakeWrist intakeWrist, IntakeRollers intakeRollers, Channel channel, boolean debug) {
@@ -63,29 +61,33 @@ public class Superstructure extends SubsystemBase{
         m_elastic.addButton("Stow", stow());
         m_elastic.put("gp mode", gpMode.toString(), false);
 
-
     }
 
     @Override
     public void periodic() {
-        /*if (getGPMode() == GPMode.Coral) {
-            coralModeLED.applyTo(m_leftLED);
-            coralModeLED.applyTo(m_rightLED);
-        }
-        else {
-            algaeModeLED.applyTo(m_leftLED);
-            algaeModeLED.applyTo(m_rightLED);
-        }
-
-        if (m_channel.coralInEndEffectorSupplier.getAsBoolean()) {
-            hasCoralLED.applyTo(m_topLED);
-        }
-        else {
-            noCoralLED.applyTo(m_topLED);
-        }*/
-        /*LEDPattern pattern = LEDPattern.gradient(GradientType.kDiscontinuous, Color.kBlue, Color.kRed);
-        pattern.applyTo(m_ledBuffer);
-        m_led.setData(m_ledBuffer);*/
+        /*
+         * if (getGPMode() == GPMode.Coral) {
+         * coralModeLED.applyTo(m_leftLED);
+         * coralModeLED.applyTo(m_rightLED);
+         * }
+         * else {
+         * algaeModeLED.applyTo(m_leftLED);
+         * algaeModeLED.applyTo(m_rightLED);
+         * }
+         * 
+         * if (m_channel.coralInEndEffectorSupplier.getAsBoolean()) {
+         * hasCoralLED.applyTo(m_topLED);
+         * }
+         * else {
+         * noCoralLED.applyTo(m_topLED);
+         * }
+         */
+        /*
+         * LEDPattern pattern = LEDPattern.gradient(GradientType.kDiscontinuous,
+         * Color.kBlue, Color.kRed);
+         * pattern.applyTo(m_ledBuffer);
+         * m_led.setData(m_ledBuffer);
+         */
     }
 
     public Command switchMode() {
@@ -111,6 +113,11 @@ public class Superstructure extends SubsystemBase{
             return GPMode.Coral;
         return gpMode;
     }
+
+    public Command dealgae() {
+        return m_eeRollers.run(EndEffectorConstants.Rollers.DEALGAE_VOLTS);
+    }
+
     public Command intakeCoral() {
         return Commands.sequence(
                 m_elevator.moveTo(ElevatorConstants.INTAKE_HEIGHT),
@@ -158,7 +165,7 @@ public class Superstructure extends SubsystemBase{
         return new SelectCommand<>(
                 Map.ofEntries(
                         Map.entry(GPMode.Coral, intakeCoral()),
-                        Map.entry(GPMode.Algae, new PrintCommand("still in algae")/*intakeCoralWhileInAlgae()*/)),
+                        Map.entry(GPMode.Algae, new PrintCommand("still in algae")/* intakeCoralWhileInAlgae() */)),
                 this::getGPMode);
     }
 
@@ -219,15 +226,15 @@ public class Superstructure extends SubsystemBase{
                     break;
                 case L2_PRE_ANGLE:
                 case L3_PRE_ANGLE:
-                    //m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_L2_L3_CORAL_VOLTS);
+                    // m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_L2_L3_CORAL_VOLTS);
                     m_eeWrist.moveToNextPosition();
                     break;
                 case L4_PRE_ANGLE:
-                    //m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_L4_CORAL_VOLTS);
+                    // m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_L4_CORAL_VOLTS);
                     m_eeWrist.moveToNextPosition();
                     break;
                 default:
-                    //m_eeRollers.runFunc(0);
+                    // m_eeRollers.runFunc(0);
                     break;
             }
         });
