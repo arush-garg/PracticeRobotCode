@@ -10,6 +10,7 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
@@ -90,6 +91,11 @@ public class RobotContainer {
     private final Superstructure m_superstructure = new Superstructure(m_elevator, m_eeWrist, m_eeRollers,
             m_intakeWrist,
             m_intakeRollers, m_channel, true);
+
+    // suppliers
+    private Supplier<GPMode> gpModeSupplier = () -> m_superstructure.getGPMode();
+    private BooleanSupplier algaeModeSupplier = () -> m_superstructure.getGPMode() == GPMode.Algae;
+    private BooleanSupplier coralModeSupplier = () -> m_superstructure.getGPMode() == GPMode.Coral;
 
     public RobotContainer() {
         NamedCommands.registerCommand("ScoreL4", m_superstructure.score());
@@ -231,11 +237,14 @@ public class RobotContainer {
         m_leftJoystick.button(2).onTrue(m_superstructure.stow());
         m_operatorController.povUp().onTrue(m_superstructure.stow());
 
-        m_leftJoystick.button(3).and(() -> m_superstructure.getGPMode() == GPMode.Coral)
+        m_leftJoystick.button(3).and(coralModeSupplier)
                 .onTrue(Commands.sequence(
                         new DriveToPosePID(drivetrain, autoAlignPositionSupplier),
                         Commands.waitTime(Milliseconds.of(500)),
                         m_superstructure.score()));
+
+        m_leftJoystick.button(3).and(algaeModeSupplier)
+                .onTrue(new DriveToPosePID(drivetrain, autoAlignPositionSupplier));
 
         m_leftJoystick.button(4).onTrue(
                 drivetrain.applyRequest(() -> {
@@ -268,41 +277,65 @@ public class RobotContainer {
     }
 
     public void configureAutoAlignBindings() {
-        m_buttonBoard.button(6).onTrue(Commands.runOnce(() -> {
+        m_buttonBoard.button(6).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
             autoAlignPosition = AutoAlignPosition.K;
         }));
-        m_buttonBoard.button(7).onTrue(Commands.runOnce(() -> {
+        m_buttonBoard.button(7).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
             autoAlignPosition = AutoAlignPosition.J;
         }));
-        m_buttonBoard.button(8).onTrue(Commands.runOnce(() -> {
+        m_buttonBoard.button(8).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
             autoAlignPosition = AutoAlignPosition.I;
         }));
-        m_buttonBoard.button(9).onTrue(Commands.runOnce(() -> {
+        m_buttonBoard.button(9).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
             autoAlignPosition = AutoAlignPosition.H;
         }));
-        m_buttonBoard.button(10).onTrue(Commands.runOnce(() -> {
+        m_buttonBoard.button(10).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
             autoAlignPosition = AutoAlignPosition.G;
         }));
-        m_buttonBoard.button(11).onTrue(Commands.runOnce(() -> {
+        m_buttonBoard.button(11).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
             autoAlignPosition = AutoAlignPosition.F;
         }));
-        m_buttonBoard.button(12).onTrue(Commands.runOnce(() -> {
+        m_buttonBoard.button(12).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
             autoAlignPosition = AutoAlignPosition.E;
         }));
-        m_buttonBoard.button(13).onTrue(Commands.runOnce(() -> {
+        m_buttonBoard.button(13).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
             autoAlignPosition = AutoAlignPosition.D;
         }));
-        m_buttonBoard.button(14).onTrue(Commands.runOnce(() -> {
+        m_buttonBoard.button(14).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
             autoAlignPosition = AutoAlignPosition.C;
         }));
-        m_buttonBoard.button(15).onTrue(Commands.runOnce(() -> {
+        m_buttonBoard.button(15).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
             autoAlignPosition = AutoAlignPosition.B;
         }));
-        m_buttonBoard.button(16).onTrue(Commands.runOnce(() -> {
+        m_buttonBoard.button(16).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
             autoAlignPosition = AutoAlignPosition.A;
         }));
-        m_buttonBoard.button(17).onTrue(Commands.runOnce(() -> {
+        m_buttonBoard.button(17).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
             autoAlignPosition = AutoAlignPosition.L;
+        }));
+
+        m_buttonBoard.button(6).or(m_buttonBoard.button(17)).and(algaeModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.ALGAE_KL;
+        }));
+
+        m_buttonBoard.button(7).or(m_buttonBoard.button(8)).and(algaeModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.ALGAE_IJ;
+        }));
+
+        m_buttonBoard.button(9).or(m_buttonBoard.button(10)).and(algaeModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.ALGAE_GH;
+        }));
+
+        m_buttonBoard.button(11).or(m_buttonBoard.button(12)).and(algaeModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.ALGAE_EF;
+        }));
+
+        m_buttonBoard.button(13).or(m_buttonBoard.button(14)).and(algaeModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.ALGAE_CD;
+        }));
+
+        m_buttonBoard.button(15).or(m_buttonBoard.button(16)).and(algaeModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.ALGAE_AB;
         }));
     }
 }

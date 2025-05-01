@@ -12,5 +12,11 @@ public enum AutoAlignPosition {
     I,
     J,
     K,
-    L
+    L,
+    ALGAE_AB,
+    ALGAE_CD,
+    ALGAE_EF,
+    ALGAE_GH,
+    ALGAE_IJ,
+    ALGAE_KL,
 }
