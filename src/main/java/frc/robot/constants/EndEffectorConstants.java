@@ -41,6 +41,7 @@ public final class EndEffectorConstants {
         public final static double RETAIN_ALGAE = 2.0;
         public final static double RETAIN_CORAL = 1.0;
         public final static double EJECT_VOLTS = -5;
+        public final static double DEALGAE_VOLTS = -5;
 
         public final static double STALL_CURRENT = 30;
 
