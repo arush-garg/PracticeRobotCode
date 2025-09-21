@@ -21,7 +21,6 @@ import frc.robot.ElasticSender.ElasticSender;
 import frc.robot.constants.*;
 import frc.robot.subsystems.Drive.EagleSwerveDrivetrain;
 import frc.robot.utils.*;
-import frc.robot.vision.Vision;
 
 import static edu.wpi.first.units.Units.Volts;
 
@@ -48,16 +47,14 @@ public class EndEffectorWrist extends SubsystemBase {
 	TalonFXConfiguration cfg;
 
 	private EagleSwerveDrivetrain m_drive;
-	private Vision m_vision;
 
 	private Supplier<Pose3d> m_elevatorPoseSupplier;
 
-	public EndEffectorWrist(boolean debug, EagleSwerveDrivetrain drive, Vision vision,
+	public EndEffectorWrist(boolean debug, EagleSwerveDrivetrain drive,
 			Supplier<Pose3d> elevatorPoseSupplier) {
 		this.m_elevatorPoseSupplier = elevatorPoseSupplier;
 		this.debug = debug;
 		this.m_drive = drive;
-		this.m_vision = vision;
 		m_elastic = new ElasticSender("EE: Wrist", debug);
 		m_elastic.addButton("Zero", zero());
 		m_elastic.addButton("Kill", kill());
@@ -101,8 +98,9 @@ public class EndEffectorWrist extends SubsystemBase {
 	public Command moveTo(EndEffectorWristPosition position) {
 		return Commands.runOnce(() -> {
 			Pose2d currentPose = m_drive.getState().Pose;
-			EndEffectorWristSide side = EndEffectorSideUtils.facingReef(currentPose) ? EndEffectorWristSide.FRONT
-					: EndEffectorWristSide.BACK;
+			// EndEffectorWristSide side = EndEffectorSideUtils.facingReef(currentPose) ? EndEffectorWristSide.FRONT
+			// 		: EndEffectorWristSide.BACK;
+			EndEffectorWristSide side = EndEffectorWristSide.FRONT;
 			moveTo(position, side).schedule();
 		});
 	}

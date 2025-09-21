@@ -16,9 +16,6 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -34,7 +31,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.commands.DriveToPosePID;
+// import frc.robot.commands.DriveToPosePID;
 import frc.robot.constants.AutoAlignPosition;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.ReefPositions;
@@ -50,7 +47,7 @@ import frc.robot.subsystems.intake.IntakeRollers;
 import frc.robot.subsystems.intake.IntakeWrist;
 import frc.robot.subsystems.superstructure.GPMode;
 import frc.robot.subsystems.superstructure.Superstructure;
-import frc.robot.vision.Vision;
+import frc.robot.subsystems.vision.Vision;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
@@ -75,11 +72,13 @@ public class RobotContainer {
     private Supplier<Pose2d> autoAlignPositionSupplier = () -> {
         Pose2d reefPosition = ReefPositions.getReefPosition(DriverStation.getAlliance().orElse(Alliance.Blue),
                 autoAlignPosition);
-        if (!EndEffectorSideUtils.facingReef(drivetrain.getState().Pose)) {
-            System.out.println("[Auto Align] Flipping reef position, not facing reef");
-            reefPosition = new Pose2d(reefPosition.getTranslation(),
-                    reefPosition.getRotation().rotateBy(new Rotation2d(Math.PI)));
-        }
+    // reefPosition = new Pose2d(reefPosition.getTranslation(),
+    //                 reefPosition.getRotation().rotateBy(new Rotation2d(Math.PI)));
+        // if (!EndEffectorSideUtils.facingReef(drivetrain.getState().Pose)) {
+        //     System.out.println("[Auto Align] Flipping reef position, not facing reef");
+        //     reefPosition = new Pose2d(reefPosition.getTranslation(),
+        //             reefPosition.getRotation().rotateBy(new Rotation2d(Math.PI)));
+        // }
         return reefPosition;
     };
 
@@ -90,10 +89,10 @@ public class RobotContainer {
     private final CommandXboxController m_buttonBoard = new CommandXboxController(3);
 
     // auto
-    private final SendableChooser<Command> autoChooser;
+    // private final SendableChooser<Command> autoChooser;
 
     private final Elevator m_elevator = new Elevator(true);
-    private final EndEffectorWrist m_eeWrist = new EndEffectorWrist(true, drivetrain, vision, m_elevator::getPose);
+    private final EndEffectorWrist m_eeWrist = new EndEffectorWrist(true, drivetrain, m_elevator::getPose);
     private final EndEffectorRollers m_eeRollers = new EndEffectorRollers();
     private final IntakeWrist m_intakeWrist = new IntakeWrist(true);
     private final IntakeRollers m_intakeRollers = new IntakeRollers();
@@ -107,7 +106,7 @@ public class RobotContainer {
     private BooleanSupplier algaeModeSupplier = () -> m_superstructure.getGPMode() == GPMode.Algae;
     private BooleanSupplier coralModeSupplier = () -> m_superstructure.getGPMode() == GPMode.Coral;
 
-    public RobotContainer() {
+    public RobotContainer() {/*
         NamedCommands.registerCommand("ScoreL4", m_superstructure.score());
         NamedCommands.registerCommand("ElevateL4", m_superstructure.moveL4());
         NamedCommands.registerCommand("IntakeCoral", m_superstructure.intake());
@@ -116,8 +115,7 @@ public class RobotContainer {
             NamedCommands.registerCommand("AutoAlign" + pos.toString(), Commands.sequence(
                     Commands.runOnce(() -> {
                         autoAlignPosition = pos;
-                    }),
-                    new DriveToPosePID(drivetrain, autoAlignPositionSupplier)));
+                    })new DriveToPosePID(drivetrain, autoAlignPositionSupplier)));
         }
         // NamedCommands.registerCommand("ScoreL4", new PrintCommand("Score L4"));
         // NamedCommands.registerCommand("ElevateL4", new PrintCommand("Elevate L4"));
@@ -133,7 +131,7 @@ public class RobotContainer {
 
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
         SmartDashboard.putData("Auto Chooser", autoChooser);
-
+*/
         configureAutoAlignBindings();
         configureBindings();
 
@@ -248,13 +246,14 @@ public class RobotContainer {
         m_operatorController.povUp().onTrue(m_superstructure.stow());
 
         m_leftJoystick.button(3).and(coralModeSupplier)
-                .onTrue(Commands.sequence(
-                        new DriveToPosePID(drivetrain, autoAlignPositionSupplier),
-                        Commands.waitTime(Milliseconds.of(500)),
-                        m_superstructure.score()));
+        .whileTrue(drivetrain.alignPID(autoAlignPositionSupplier));
+                // .onTrue(Commands.sequence(
+                //         drivetrain.alignPID(autoAlignPositionSupplier),
+                //         Commands.waitTime(Milliseconds.of(500))
+                //         /*m_superstructure.score()*/));
 
-        m_leftJoystick.button(3).and(algaeModeSupplier)
-                .onTrue(new DriveToPosePID(drivetrain, autoAlignPositionSupplier));
+        // m_leftJoystick.button(3).and(algaeModeSupplier)
+        //         .onTrue(new DriveToPosePID(drivetrain, autoAlignPositionSupplier));
 
         m_leftJoystick.button(4).onTrue(
                 drivetrain.applyRequest(() -> {
@@ -269,7 +268,8 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return autoChooser.getSelected();
+        // return autoChooser.getSelected();
+        return null;
     }
 
     public void resetMechs() {
