@@ -29,7 +29,7 @@ public class VisionConstants {
             Units.inchesToMeters(-11.185),
             Units.inchesToMeters(8.250),
             new Rotation3d(
-                    Units.degreesToRadians(0), Units.degreesToRadians(-10), Units.degreesToRadians(5)));
+                    Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(0)));
 
     public static final double Z_TOLERANCE = 2.00;
     public static final double XY_TOLERANCE = 2.00;
