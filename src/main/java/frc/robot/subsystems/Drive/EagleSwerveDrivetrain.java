@@ -21,6 +21,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
@@ -68,6 +71,10 @@ public class EagleSwerveDrivetrain extends TunerSwerveDrivetrain implements Subs
     private static double alignKP = 3.0;
     private static double alignKI = 0.0;
     private static double alignKD = 0.1;
+
+    private final NetworkTable autoAlignTable = NetworkTableInstance.getDefault().getTable("AutoAlign");
+    private final StructPublisher<Pose2d> targetPose = autoAlignTable.getStructTopic("TargetPose", Pose2d.struct)
+            .publish();
     
     /* PID controllers for auto align */
     private final PIDController alignXController = new PIDController(alignKP, alignKI, alignKD);
@@ -340,7 +347,7 @@ public class EagleSwerveDrivetrain extends TunerSwerveDrivetrain implements Subs
     public Command alignPID(Supplier<Pose2d> targetSupplier) {
         return this.run(() -> {
             Pose2d pose = this.getState().Pose;
-
+            targetPose.set(targetSupplier.get());
             Pose2d target = targetSupplier.get();
 
             double veloX = alignXController.calculate(pose.getX(), target.getX());

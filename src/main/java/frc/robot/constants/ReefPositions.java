@@ -11,7 +11,8 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class ReefPositions {
-    public static final Distance REEF_CENTER_TO_BRANCH = Inches.of(6.633);
+    // public static final Distance REEF_CENTER_TO_BRANCH = Inches.of(6.633);
+    public static final Distance REEF_CENTER_TO_BRANCH = Meters.of(4.01 - 3.54); // FOUND EMPERICALLY, ONLY WORKS FOR LEFT
     public static final Distance BEHIND_REEF_CENTER = Inches.of(18);
 
     public static Pose2d getReefAlignPose(int tagId, boolean invertOffset) {
