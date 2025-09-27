@@ -26,7 +26,8 @@ public class VisionConstants {
     public static final String FRONT_CAMERA_NAME = "CAMERA_FRONT";
     public static final Transform3d FRONT_CAMERA_POSITION = new Transform3d(
             Units.inchesToMeters(9.524),
-            Units.inchesToMeters(-11.185),
+            // Units.inchesToMeters(-11.185),
+            Units.inchesToMeters(0),
             Units.inchesToMeters(8.250),
             new Rotation3d(
                     Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(0)));

@@ -174,11 +174,16 @@ public class Superstructure extends SubsystemBase {
                 Map.ofEntries(
                         Map.entry(GPMode.Coral, Commands.parallel(
                                 m_elevator.moveTo(ElevatorConstants.L1_CORAL_HEIGHT),
-                                m_eeWrist.moveTo(EndEffectorWristPosition.L1_SCORE_ANGLE))),
+                                m_eeWrist.moveTo(EndEffectorWristPosition.L1_SCORE_ANGLE),
+                                m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION),
+                                m_intakeRollers.stop()
+                                )),
                         Map.entry(GPMode.Algae, Commands.parallel(
                                 m_elevator.moveTo(ElevatorConstants.PROCESSOR_ALGAE_HEIGHT),
                                 m_intakeWrist.moveTo(IntakeConstants.Wrist.INTAKE_POSITION),
-                                m_eeWrist.moveTo(EndEffectorWristPosition.SCORE_PROCESSOR_ANGLE)))),
+                                m_eeWrist.moveTo(EndEffectorWristPosition.SCORE_PROCESSOR_ANGLE),
+                                m_intakeRollers.stop()
+                                ))),
                 this::getGPMode);
     }
 
@@ -187,10 +192,16 @@ public class Superstructure extends SubsystemBase {
                 Map.ofEntries(
                         Map.entry(GPMode.Coral, Commands.parallel(
                                 m_elevator.moveTo(ElevatorConstants.L2_CORAL_HEIGHT),
-                                m_eeWrist.moveTo(EndEffectorWristPosition.L2_PRE_ANGLE))),
+                                m_eeWrist.moveTo(EndEffectorWristPosition.L2_PRE_ANGLE),
+                                m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION),
+                                m_intakeRollers.stop()
+                                )),
                         Map.entry(GPMode.Algae, Commands.parallel(
                                 m_elevator.moveTo(ElevatorConstants.L2_ALGAE_HEIGHT),
-                                intakeAlgae()))),
+                                intakeAlgae(),
+                                m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION),
+                                m_intakeRollers.stop()
+                                ))),
                 this::getGPMode);
     }
 
@@ -199,10 +210,16 @@ public class Superstructure extends SubsystemBase {
                 Map.ofEntries(
                         Map.entry(GPMode.Coral, Commands.parallel(
                                 m_elevator.moveTo(ElevatorConstants.L3_CORAL_HEIGHT),
-                                m_eeWrist.moveTo(EndEffectorWristPosition.L3_PRE_ANGLE))),
+                                m_eeWrist.moveTo(EndEffectorWristPosition.L3_PRE_ANGLE),
+                                m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION),
+                                m_intakeRollers.stop()
+                                )),
                         Map.entry(GPMode.Algae, Commands.parallel(
                                 m_elevator.moveTo(ElevatorConstants.L3_ALGAE_HEIGHT),
-                                intakeAlgae()))),
+                                intakeAlgae(),
+                                m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION),
+                                m_intakeRollers.stop()
+                                ))),
                 this::getGPMode);
     }
 
@@ -211,10 +228,16 @@ public class Superstructure extends SubsystemBase {
                 Map.ofEntries(
                         Map.entry(GPMode.Coral, Commands.parallel(
                                 m_elevator.moveTo(ElevatorConstants.L4_CORAL_HEIGHT),
-                                m_eeWrist.moveTo(EndEffectorWristPosition.L4_PRE_ANGLE))),
+                                m_eeWrist.moveTo(EndEffectorWristPosition.L4_PRE_ANGLE),
+                                m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION),
+                                m_intakeRollers.stop()
+                                )),
                         Map.entry(GPMode.Algae, Commands.parallel(
                                 m_elevator.moveTo(ElevatorConstants.BARGE_ALGAE_HEIGHT),
-                                m_eeWrist.moveTo(EndEffectorWristPosition.SCORE_BARGE_PRE_ANGLE)))),
+                                m_eeWrist.moveTo(EndEffectorWristPosition.SCORE_BARGE_PRE_ANGLE),
+                                m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION),
+                                m_intakeRollers.stop()
+                                ))),
                 this::getGPMode);
     }
 

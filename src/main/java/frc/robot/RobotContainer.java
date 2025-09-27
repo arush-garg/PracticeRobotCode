@@ -5,11 +5,9 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.Milliseconds;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-import java.util.Map;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
@@ -18,17 +16,13 @@ import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController.Axis;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 // import frc.robot.commands.DriveToPosePID;
@@ -41,7 +35,6 @@ import frc.robot.subsystems.Drive.EagleSwerveTelemetry;
 import frc.robot.subsystems.channel.Channel;
 import frc.robot.subsystems.elevator.Elevator;
 import frc.robot.subsystems.endeffector.EndEffectorRollers;
-import frc.robot.subsystems.endeffector.EndEffectorSideUtils;
 import frc.robot.subsystems.endeffector.EndEffectorWrist;
 import frc.robot.subsystems.intake.IntakeRollers;
 import frc.robot.subsystems.intake.IntakeWrist;
@@ -66,7 +59,7 @@ public class RobotContainer {
     private final EagleSwerveTelemetry logger = new EagleSwerveTelemetry(MaxSpeed);
     public final EagleSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public final Vision vision = new Vision(drivetrain);
-
+    
     private boolean slowModeOn = false;
     private AutoAlignPosition autoAlignPosition = AutoAlignPosition.A;
     private Supplier<Pose2d> autoAlignPositionSupplier = () -> {
@@ -234,7 +227,7 @@ public class RobotContainer {
                 0.0))));
 
         // scoring commands
-        m_rightJoystick.trigger().onTrue(m_superstructure.intake());
+        m_rightJoystick.trigger().onTrue(m_superstructure.intake()).debounce(0.25);
         m_leftJoystick.trigger().onTrue(m_superstructure.score());
         m_buttonBoard.button(1).onTrue(m_superstructure.moveL1());
         m_buttonBoard.button(2).onTrue(m_superstructure.moveL2());
@@ -246,7 +239,10 @@ public class RobotContainer {
         m_operatorController.povUp().onTrue(m_superstructure.stow());
 
         m_leftJoystick.button(3).and(coralModeSupplier)
-        .whileTrue(drivetrain.alignPID(autoAlignPositionSupplier));
+        .whileTrue(Commands.sequence(
+            drivetrain.alignPID(autoAlignPositionSupplier),
+            m_superstructure.score()
+        ));
                 // .onTrue(Commands.sequence(
                 //         drivetrain.alignPID(autoAlignPositionSupplier),
                 //         Commands.waitTime(Milliseconds.of(500))

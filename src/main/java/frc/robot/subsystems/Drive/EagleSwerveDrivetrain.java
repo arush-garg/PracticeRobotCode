@@ -12,6 +12,10 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest.ForwardPerspectiveValue;
 
+import badgerlog.Dashboard;
+import badgerlog.annotations.Entry;
+import badgerlog.annotations.EntryType;
+import badgerlog.annotations.Key;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -26,9 +30,11 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
@@ -67,14 +73,14 @@ public class EagleSwerveDrivetrain extends TunerSwerveDrivetrain implements Subs
             .withDriveRequestType(DriveRequestType.Velocity)
             .withHeadingPID(4, 0, 0);
     
-    // FOR TUNING PURPOSES ONLY: DELETE AFTER USE
     private static double alignKP = 3.0;
     private static double alignKI = 0.0;
-    private static double alignKD = 0.1;
+    private static double alignKD = 0.08;
 
     private final NetworkTable autoAlignTable = NetworkTableInstance.getDefault().getTable("AutoAlign");
     private final StructPublisher<Pose2d> targetPose = autoAlignTable.getStructTopic("TargetPose", Pose2d.struct)
             .publish();
+    
     
     /* PID controllers for auto align */
     private final PIDController alignXController = new PIDController(alignKP, alignKI, alignKD);
@@ -340,6 +346,7 @@ public class EagleSwerveDrivetrain extends TunerSwerveDrivetrain implements Subs
             Pose2d visionRobotPoseMeters,
             double timestampSeconds,
             Matrix<N3, N1> visionMeasurementStdDevs) {
+    
         super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds),
                 visionMeasurementStdDevs);
     }
@@ -347,13 +354,13 @@ public class EagleSwerveDrivetrain extends TunerSwerveDrivetrain implements Subs
     public Command alignPID(Supplier<Pose2d> targetSupplier) {
         return this.run(() -> {
             Pose2d pose = this.getState().Pose;
-            targetPose.set(targetSupplier.get());
             Pose2d target = targetSupplier.get();
+            targetPose.set(target);
 
             double veloX = alignXController.calculate(pose.getX(), target.getX());
             double veloY = alignYController.calculate(pose.getY(), target.getY());
             Rotation2d headingReference = target.getRotation();
-
+            
             this.setControl(m_velocityRequest
                     .withVelocityX(veloX)
                     .withVelocityY(veloY)

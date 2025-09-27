@@ -5,6 +5,8 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 
 import au.grapplerobotics.CanBridge;
+import badgerlog.Dashboard;
+import badgerlog.DashboardConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -16,6 +18,8 @@ import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.constants.ReefPositions;
+
 
 public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
@@ -25,7 +29,9 @@ public class Robot extends LoggedRobot {
   StructArrayPublisher<Pose3d> mechPosePublisher = NetworkTableInstance.getDefault()
       .getStructArrayTopic("MechanismPosesZeroed", Pose3d.struct).publish();
 
+ 
   public Robot() {
+    Dashboard.configure(DashboardConfig.defaultConfig);
     CanBridge.runTCP();
     Logger.recordMetadata("ProjectName", "Theseus");
     Logger.addDataReceiver(new NT4Publisher());
@@ -43,6 +49,7 @@ public class Robot extends LoggedRobot {
         new Pose3d(new Translation3d(0, 0, 0), new Rotation3d(0, 0, 0)),
         new Pose3d(new Translation3d(0, 0, 0), new Rotation3d(0, 0, 0))
     });
+    Dashboard.update();
   }
 
   @Override

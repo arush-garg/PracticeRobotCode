@@ -7,22 +7,34 @@ import java.util.Map;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class ReefPositions {
-    // public static final Distance REEF_CENTER_TO_BRANCH = Inches.of(6.633);
-    public static final Distance REEF_CENTER_TO_BRANCH = Meters.of(4.01 - 3.54); // FOUND EMPERICALLY, ONLY WORKS FOR LEFT
-    public static final Distance BEHIND_REEF_CENTER = Inches.of(18);
+    public static final Distance REEF_CENTER_TO_BRANCH = Inches.of(6.633);
+    // public static final Distance REEF_CENTER_TO_BRANCH = Meters.of(4.01 - 3.54); // FOUND EMPERICALLY, ONLY WORKS FOR LEFT
+    public static final Distance BEHIND_REEF_CENTER = Inches.of(16);
 
+    private static final NetworkTable autoAlignTable = NetworkTableInstance.getDefault().getTable("Reef Debugging");
+    private static final StructPublisher<Pose2d> tagPosePublisher = autoAlignTable.getStructTopic("Tag Pose", Pose2d.struct).publish();
+    private static final StructPublisher<Pose2d> alignOffsetPublisher = autoAlignTable.getStructTopic("No rotation Pose", Pose2d.struct).publish();
+    private static final StructPublisher<Pose2d> alignPosePublisher = autoAlignTable.getStructTopic("Align Pose", Pose2d.struct).publish();
+    
     public static Pose2d getReefAlignPose(int tagId, boolean invertOffset) {
         Pose2d tagPose = VisionConstants.FIELD_TAG_LAYOUT.getTagPose(tagId).get().toPose2d();
+        tagPosePublisher.set(tagPose);
         Translation2d alignOffsetRel = new Translation2d(
                 -BEHIND_REEF_CENTER.in(Meters),
                 ((invertOffset ? -1 : 1) * REEF_CENTER_TO_BRANCH.in(Meters)));
+
         Translation2d alignOffset = alignOffsetRel.rotateBy(tagPose.getRotation().minus(new Rotation2d(Math.PI)));
+
         Translation2d alignTrans = tagPose.getTranslation().plus(alignOffset);
         Pose2d alignPose = new Pose2d(alignTrans, tagPose.getRotation().plus(new Rotation2d(Math.PI)));
+        alignPosePublisher.set(alignPose);
         return alignPose;
     }
 

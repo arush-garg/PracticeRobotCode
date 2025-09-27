@@ -49,6 +49,9 @@ public class IntakeWrist extends SubsystemBase {
         motorConfigs.Inverted = InvertedValue.Clockwise_Positive;
         motorConfigs.NeutralMode = NeutralModeValue.Brake;
 
+        cfg.Voltage.PeakForwardVoltage = IntakeConstants.Wrist.MAX_VOLTS;
+        cfg.Voltage.PeakReverseVoltage = -IntakeConstants.Wrist.MAX_VOLTS;
+        
         FeedbackConfigs fdb = cfg.Feedback;
         fdb.SensorToMechanismRatio = IntakeConstants.Wrist.GEAR_RATIO;
         fdb.FeedbackRotorOffset = IntakeConstants.Wrist.OFFSET;
