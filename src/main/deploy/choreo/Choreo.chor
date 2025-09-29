@@ -1,0 +1,115 @@
+{
+ "name":"Choreo",
+ "version":1,
+ "type":"Swerve",
+ "variables":{
+  "expressions":{
+   "MaxIntakeVel":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"1 m / s",
+     "val":1.0
+    }
+   }
+  },
+  "poses":{
+   "StationEnd":{
+    "x":{
+     "exp":"0.7383859157562256 m",
+     "val":0.7383859157562256
+    },
+    "y":{
+     "exp":"6.574583530426025 m",
+     "val":6.574583530426025
+    },
+    "heading":{
+     "exp":"-60 deg",
+     "val":-1.0471975511965976
+    }
+   },
+   "StationStart":{
+    "x":{
+     "exp":"1.907374620437622 m",
+     "val":1.907374620437622
+    },
+    "y":{
+     "exp":"7.315671920776367 m",
+     "val":7.315671920776367
+    },
+    "heading":{
+     "exp":"-60 deg",
+     "val":-1.0471975511965976
+    }
+   }
+  }
+ },
+ "config":{
+  "frontLeft":{
+   "x":{
+    "exp":"11.615 in",
+    "val":0.295021
+   },
+   "y":{
+    "exp":"11.615 in",
+    "val":0.295021
+   }
+  },
+  "backLeft":{
+   "x":{
+    "exp":"-11.615 in",
+    "val":-0.295021
+   },
+   "y":{
+    "exp":"11.615 in",
+    "val":0.295021
+   }
+  },
+  "mass":{
+   "exp":"135 lbs",
+   "val":61.23496995
+  },
+  "inertia":{
+   "exp":"6 kg m ^ 2",
+   "val":6.0
+  },
+  "gearing":{
+   "exp":"6.75",
+   "val":6.75
+  },
+  "radius":{
+   "exp":"2 in",
+   "val":0.0508
+  },
+  "vmax":{
+   "exp":"5000 RPM",
+   "val":523.5987755982989
+  },
+  "tmax":{
+   "exp":"0.7 N * m",
+   "val":0.7
+  },
+  "cof":{
+   "exp":"1.426",
+   "val":1.426
+  },
+  "bumper":{
+   "front":{
+    "exp":"17.75 in",
+    "val":0.45085
+   },
+   "side":{
+    "exp":"17.75 in",
+    "val":0.45085
+   },
+   "back":{
+    "exp":"17.75 in",
+    "val":0.45085
+   }
+  },
+  "differentialTrackWidth":{
+   "exp":"22 in",
+   "val":0.5588
+  }
+ },
+ "generationFeatures":[]
+}

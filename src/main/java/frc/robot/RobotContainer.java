@@ -8,98 +8,340 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.pathplanner.lib.auto.AutoBuilder;
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-
-import frc.robot.commands.DriveToPoseCommand;
-import frc.robot.commands.DriveUntilStall;
-import frc.robot.commands.DriveToPoseCommand.TargetPosition;
+// import frc.robot.commands.DriveToPosePID;
+import frc.robot.constants.AutoAlignPosition;
 import frc.robot.constants.DriveConstants;
+import frc.robot.constants.ReefPositions;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Drive.EagleSwerveDrivetrain;
 import frc.robot.subsystems.Drive.EagleSwerveTelemetry;
-import frc.robot.vision.Vision;
+import frc.robot.subsystems.channel.Channel;
+import frc.robot.subsystems.elevator.Elevator;
+import frc.robot.subsystems.endeffector.EndEffectorRollers;
+import frc.robot.subsystems.endeffector.EndEffectorWrist;
+import frc.robot.subsystems.intake.IntakeRollers;
+import frc.robot.subsystems.intake.IntakeWrist;
+import frc.robot.subsystems.superstructure.GPMode;
+import frc.robot.subsystems.superstructure.Superstructure;
+import frc.robot.subsystems.vision.Vision;
 
 public class RobotContainer {
-  private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-  private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max
+    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
 
-  // swerve
-  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+    // swerve
+    private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+            .withDeadband(MaxSpeed * DriveConstants.DRIVE_DEADBAND_MULT)
+            .withRotationalDeadband(MaxAngularRate * DriveConstants.DRIVE_DEADBAND_MULT)
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
+            .withSteerRequestType(SteerRequestType.MotionMagicExpo);
 
-  private final EagleSwerveTelemetry logger = new EagleSwerveTelemetry(MaxSpeed);
-  public final EagleSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-  public final Vision vision = new Vision(drivetrain);
+    private final SwerveRequest.ApplyRobotSpeeds strafeDrive = new SwerveRequest.ApplyRobotSpeeds()
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-  private boolean slowModeOn = false;
+    private final EagleSwerveTelemetry logger = new EagleSwerveTelemetry(MaxSpeed);
+    public final EagleSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    public final Vision vision = new Vision(drivetrain);
+    
+    private boolean slowModeOn = false;
+    private AutoAlignPosition autoAlignPosition = AutoAlignPosition.A;
+    private Supplier<Pose2d> autoAlignPositionSupplier = () -> {
+        Pose2d reefPosition = ReefPositions.getReefPosition(DriverStation.getAlliance().orElse(Alliance.Blue),
+                autoAlignPosition);
+    // reefPosition = new Pose2d(reefPosition.getTranslation(),
+    //                 reefPosition.getRotation().rotateBy(new Rotation2d(Math.PI)));
+        // if (!EndEffectorSideUtils.facingReef(drivetrain.getState().Pose)) {
+        //     System.out.println("[Auto Align] Flipping reef position, not facing reef");
+        //     reefPosition = new Pose2d(reefPosition.getTranslation(),
+        //             reefPosition.getRotation().rotateBy(new Rotation2d(Math.PI)));
+        // }
+        return reefPosition;
+    };
 
-  // controllers
-  private final CommandJoystick m_leftJoystick = new CommandJoystick(0);
-  private final CommandJoystick m_rightJoystick = new CommandJoystick(1);
-  private final CommandXboxController m_operatorController = new CommandXboxController(2);
-  private final CommandXboxController m_buttonBoard = new CommandXboxController(3);
+    // controllers
+    private final CommandJoystick m_leftJoystick = new CommandJoystick(0);
+    private final CommandJoystick m_rightJoystick = new CommandJoystick(1);
+    private final CommandXboxController m_operatorController = new CommandXboxController(2);
+    private final CommandXboxController m_buttonBoard = new CommandXboxController(3);
 
-  // auto
-  private final SendableChooser<Command> autoChooser;
+    // auto
+    // private final SendableChooser<Command> autoChooser;
 
-  public RobotContainer() {
-    autoChooser = AutoBuilder.buildAutoChooser("Tests");
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+    private final Elevator m_elevator = new Elevator(true);
+    private final EndEffectorWrist m_eeWrist = new EndEffectorWrist(true, drivetrain, m_elevator::getPose);
+    private final EndEffectorRollers m_eeRollers = new EndEffectorRollers();
+    private final IntakeWrist m_intakeWrist = new IntakeWrist(true);
+    private final IntakeRollers m_intakeRollers = new IntakeRollers();
+    private final Channel m_channel = new Channel(true);
+    private final Superstructure m_superstructure = new Superstructure(m_elevator, m_eeWrist, m_eeRollers,
+            m_intakeWrist,
+            m_intakeRollers, m_channel, true);
 
-    configureBindings();
-  }
+    // suppliers
+    private Supplier<GPMode> gpModeSupplier = () -> m_superstructure.getGPMode();
+    private BooleanSupplier algaeModeSupplier = () -> m_superstructure.getGPMode() == GPMode.Algae;
+    private BooleanSupplier coralModeSupplier = () -> m_superstructure.getGPMode() == GPMode.Coral;
 
-  private void configureBindings() {
-    drivetrain.setDefaultCommand(
-        drivetrain.applyRequest(() -> drive
-            .withVelocityX(-m_leftJoystick.getY() * MaxSpeed * (slowModeOn ? DriveConstants.SLOW_MODE_MULT : 1))
-            .withVelocityY(-m_leftJoystick.getX() * MaxSpeed * (slowModeOn ? DriveConstants.SLOW_MODE_MULT : 1))
-            .withRotationalRate(
-                -m_rightJoystick.getX() * MaxAngularRate * (slowModeOn ? DriveConstants.SLOW_MODE_MULT : 1))));
+    public RobotContainer() {/*
+        NamedCommands.registerCommand("ScoreL4", m_superstructure.score());
+        NamedCommands.registerCommand("ElevateL4", m_superstructure.moveL4());
+        NamedCommands.registerCommand("IntakeCoral", m_superstructure.intake());
+        NamedCommands.registerCommand("Stow", m_superstructure.stow());
+        for (AutoAlignPosition pos : AutoAlignPosition.values()) {
+            NamedCommands.registerCommand("AutoAlign" + pos.toString(), Commands.sequence(
+                    Commands.runOnce(() -> {
+                        autoAlignPosition = pos;
+                    })new DriveToPosePID(drivetrain, autoAlignPositionSupplier)));
+        }
+        // NamedCommands.registerCommand("ScoreL4", new PrintCommand("Score L4"));
+        // NamedCommands.registerCommand("ElevateL4", new PrintCommand("Elevate L4"));
+        // NamedCommands.registerCommand("IntakeCoral", new
+        // PrintCommand("IntakeCoral"));
+        // NamedCommands.registerCommand("Stow", new PrintCommand("Stow"));
 
-    m_rightJoystick.button(2)
-        .onTrue(Commands.runOnce(() -> slowModeOn = true))
-        .onFalse(Commands.runOnce(() -> slowModeOn = false));
+        // choreo commands
+        NamedCommands.registerCommand("Score", m_superstructure.score());
+        NamedCommands.registerCommand("ElevateL4", m_superstructure.moveL4());
+        NamedCommands.registerCommand("IntakeDown", m_superstructure.intake());
+        NamedCommands.registerCommand("Stow", m_superstructure.stow());
 
-    // sysid routines for tuning
+        autoChooser = AutoBuilder.buildAutoChooser("Tests");
+        SmartDashboard.putData("Auto Chooser", autoChooser);
+*/
+        configureAutoAlignBindings();
+        configureBindings();
 
-    m_operatorController.button(7).and(m_operatorController.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-    m_operatorController.button(7).and(m_operatorController.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-    m_operatorController.button(8).and(m_operatorController.y())
-        .whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-    m_operatorController.button(8).and(m_operatorController.x())
-        .whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+    }
 
-    // reset yaw
-    m_operatorController.button(8).onTrue(drivetrain.runOnce(() -> {
-      System.out.println("Zeroing");
-      drivetrain.seedFieldCentric();
-      drivetrain.resetTranslation(new Translation2d(0, 0));
-    }));
+    private void configureBindings() {
+        drivetrain.setDefaultCommand(
+                drivetrain.applyRequest(() -> {
+                    var driveMult = slowModeOn ? DriveConstants.SLOW_MODE_MULT : 1;
+                    return drive
+                            .withDeadband(MaxSpeed * DriveConstants.DRIVE_DEADBAND_MULT * driveMult)
+                            .withRotationalDeadband(MaxAngularRate * DriveConstants.DRIVE_DEADBAND_MULT * driveMult)
+                            .withVelocityX(-m_leftJoystick.getY() * MaxSpeed * driveMult)
+                            .withVelocityY(-m_leftJoystick.getX() * MaxSpeed * driveMult)
+                            .withRotationalRate(-m_rightJoystick.getX() * MaxAngularRate * driveMult);
+                }));
 
-    m_buttonBoard.button(11).whileTrue(new DriveToPoseCommand(drivetrain, vision, TargetPosition.RIGHT));
-    m_buttonBoard.button(12).whileTrue(new DriveToPoseCommand(drivetrain, vision, TargetPosition.LEFT));
-    m_buttonBoard.button(13).whileTrue(new DriveToPoseCommand(drivetrain, vision, TargetPosition.ALGAE));
+        m_rightJoystick.button(2)
+                .onTrue(Commands.runOnce(() -> slowModeOn = true))
+                .onFalse(Commands.runOnce(() -> slowModeOn = false));
 
-    // testing drive until stall
-    m_buttonBoard.button(14).whileTrue(new DriveUntilStall(drivetrain));
+        // reset yaw
+        m_operatorController.button(8).onTrue(drivetrain.runOnce(() -> {
+            System.out.println("Zeroing drive");
+            drivetrain.seedFieldCentric();
+            drivetrain.resetTranslation(new Translation2d(0, 0));
+        }).ignoringDisable(true));
 
-    drivetrain.registerTelemetry(logger::telemeterize);
-  }
+        drivetrain.registerTelemetry(logger::telemeterize);
 
-  public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
-  }
+        // manual commands
+        m_operatorController.x()
+                .and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.01))
+                .whileTrue(Commands.run(() -> {
+                    m_elevator.setManualVoltage(m_operatorController.getLeftY()).schedule();
+                })).onFalse(Commands.runOnce(() -> {
+                    m_elevator.setManualVoltage(0).schedule();
+                }));
+        m_operatorController.a()
+                .and(m_operatorController.axisMagnitudeGreaterThan(Axis.kRightX.value, 0.01))
+                .whileTrue(Commands.run(() -> {
+                    m_channel.setManualVoltage(m_operatorController.getRightX()).schedule();
+                })).onFalse(Commands.runOnce(() -> {
+                    m_channel.setManualVoltage(0).schedule();
+                }));
+        m_operatorController.b()
+                .and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.01))
+                .whileTrue(Commands.run(() -> {
+                    m_intakeWrist.setManualVoltage(m_operatorController.getLeftY()).schedule();
+                })).onFalse(Commands.runOnce(() -> {
+                    m_intakeWrist.setManualVoltage(0).schedule();
+                }));
+        m_operatorController.b()
+                .and(m_operatorController.axisMagnitudeGreaterThan(Axis.kRightX.value, 0.01))
+                .whileTrue(Commands.run(() -> {
+                    m_intakeRollers.setManualVoltage(m_operatorController.getRightX()).schedule();
+                })).onFalse(Commands.runOnce(() -> {
+                    m_intakeRollers.setManualVoltage(0).schedule();
+                }));
+        m_operatorController.y().and(m_operatorController.axisMagnitudeGreaterThan(Axis.kLeftY.value, 0.01))
+                .whileTrue(Commands.run(() -> {
+                    m_eeWrist.setManualVoltage(m_operatorController.getLeftY()).schedule();
+                })).onFalse(Commands.runOnce(() -> {
+                    m_eeWrist.setManualVoltage(0).schedule();
+                }));
+        m_operatorController.y().and(m_operatorController.axisMagnitudeGreaterThan(Axis.kRightX.value, 0.01))
+                .whileTrue(Commands.run(() -> {
+                    m_eeRollers.setManualVoltage(m_operatorController.getRightX()).schedule();
+                })).onFalse(Commands.runOnce(() -> {
+                    m_eeRollers.setManualVoltage(0).schedule();
+                }));
+
+        m_operatorController.b()
+                .and(m_operatorController.leftBumper())
+                .onTrue(m_superstructure.ejectIntake());
+
+        m_operatorController.y()
+                .and(m_operatorController.leftBumper())
+                .onTrue(m_superstructure.ejectEE());
+
+        // zero commands
+        m_operatorController.button(7).and(m_operatorController.x())
+                .onTrue(m_elevator.zero().ignoringDisable(true));
+        m_operatorController.button(7).and(m_operatorController.y())
+                .onTrue(m_eeWrist.zero().ignoringDisable(true));
+        m_operatorController.button(7).and(m_operatorController.b())
+                .onTrue(m_intakeWrist.zero().ignoringDisable(true));
+
+        // gpMode switching
+        m_buttonBoard.button(5).onTrue(m_superstructure.switchMode().ignoringDisable(true));
+
+        m_leftJoystick.povLeft().whileTrue(drivetrain.applyRequest(() -> strafeDrive.withSpeeds(new ChassisSpeeds(
+                0.0,
+                0.2,
+                0.0))));
+
+        m_leftJoystick.povRight().whileTrue(drivetrain.applyRequest(() -> strafeDrive.withSpeeds(new ChassisSpeeds(
+                0.0,
+                -0.2,
+                0.0))));
+
+        // scoring commands
+        m_rightJoystick.trigger().onTrue(m_superstructure.intake()).debounce(0.25);
+        m_leftJoystick.trigger().onTrue(m_superstructure.score());
+        m_buttonBoard.button(1).onTrue(m_superstructure.moveL1());
+        m_buttonBoard.button(2).onTrue(m_superstructure.moveL2());
+        m_buttonBoard.button(3).onTrue(m_superstructure.moveL3());
+        m_buttonBoard.button(4).onTrue(m_superstructure.moveL4());
+
+        // stow commands
+        m_leftJoystick.button(2).onTrue(m_superstructure.stow());
+        m_operatorController.povUp().onTrue(m_superstructure.stow());
+
+        m_leftJoystick.button(3).and(coralModeSupplier)
+        .whileTrue(Commands.sequence(
+            drivetrain.alignPID(autoAlignPositionSupplier),
+            m_superstructure.score()
+        ));
+                // .onTrue(Commands.sequence(
+                //         drivetrain.alignPID(autoAlignPositionSupplier),
+                //         Commands.waitTime(Milliseconds.of(500))
+                //         /*m_superstructure.score()*/));
+
+        // m_leftJoystick.button(3).and(algaeModeSupplier)
+        //         .onTrue(new DriveToPosePID(drivetrain, autoAlignPositionSupplier));
+
+        m_leftJoystick.button(4).onTrue(
+                drivetrain.applyRequest(() -> {
+                    var driveMult = slowModeOn ? DriveConstants.SLOW_MODE_MULT : 1;
+                    return drive
+                            .withDeadband(MaxSpeed * DriveConstants.DRIVE_DEADBAND_MULT * driveMult)
+                            .withRotationalDeadband(MaxAngularRate * DriveConstants.DRIVE_DEADBAND_MULT * driveMult)
+                            .withVelocityX(-m_leftJoystick.getY() * MaxSpeed * driveMult)
+                            .withVelocityY(-m_leftJoystick.getX() * MaxSpeed * driveMult)
+                            .withRotationalRate(-m_rightJoystick.getX() * MaxAngularRate * driveMult);
+                }));
+    }
+
+    public Command getAutonomousCommand() {
+        // return autoChooser.getSelected();
+        return null;
+    }
+
+    public void resetMechs() {
+        System.out.println("Reseting mechs");
+        m_intakeRollers.stop();
+        m_intakeWrist.kill();
+        m_channel.stop();
+        m_elevator.kill();
+        m_eeWrist.kill();
+        m_eeRollers.stop();
+    }
+
+    public void zeroAll() {
+
+    }
+
+    public void configureAutoAlignBindings() {
+        m_buttonBoard.button(6).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.K;
+        }));
+        m_buttonBoard.button(7).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.J;
+        }));
+        m_buttonBoard.button(8).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.I;
+        }));
+        m_buttonBoard.button(9).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.H;
+        }));
+        m_buttonBoard.button(10).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.G;
+        }));
+        m_buttonBoard.button(11).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.F;
+        }));
+        m_buttonBoard.button(12).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.E;
+        }));
+        m_buttonBoard.button(13).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.D;
+        }));
+        m_buttonBoard.button(14).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.C;
+        }));
+        m_buttonBoard.button(15).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.B;
+        }));
+        m_buttonBoard.button(16).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.A;
+        }));
+        m_buttonBoard.button(17).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.L;
+        }));
+
+        m_buttonBoard.button(6).or(m_buttonBoard.button(17)).and(algaeModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.ALGAE_KL;
+        }));
+
+        m_buttonBoard.button(7).or(m_buttonBoard.button(8)).and(algaeModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.ALGAE_IJ;
+        }));
+
+        m_buttonBoard.button(9).or(m_buttonBoard.button(10)).and(algaeModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.ALGAE_GH;
+        }));
+
+        m_buttonBoard.button(11).or(m_buttonBoard.button(12)).and(algaeModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.ALGAE_EF;
+        }));
+
+        m_buttonBoard.button(13).or(m_buttonBoard.button(14)).and(algaeModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.ALGAE_CD;
+        }));
+
+        m_buttonBoard.button(15).or(m_buttonBoard.button(16)).and(algaeModeSupplier).onTrue(Commands.runOnce(() -> {
+            autoAlignPosition = AutoAlignPosition.ALGAE_AB;
+        }));
+    }
 }
