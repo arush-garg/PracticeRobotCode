@@ -216,15 +216,15 @@ public class RobotContainer {
         // gpMode switching
         m_buttonBoard.button(5).onTrue(m_superstructure.switchMode().ignoringDisable(true));
 
-        m_leftJoystick.povLeft().whileTrue(drivetrain.applyRequest(() -> strafeDrive.withSpeeds(new ChassisSpeeds(
-                0.0,
-                0.2,
-                0.0))));
+        // m_leftJoystick.povLeft().whileTrue(drivetrain.applyRequest(() -> strafeDrive.withSpeeds(new ChassisSpeeds(
+        //         0.0,
+        //         0.2,
+        //         0.0))));
 
-        m_leftJoystick.povRight().whileTrue(drivetrain.applyRequest(() -> strafeDrive.withSpeeds(new ChassisSpeeds(
-                0.0,
-                -0.2,
-                0.0))));
+        // m_leftJoystick.povRight().whileTrue(drivetrain.applyRequest(() -> strafeDrive.withSpeeds(new ChassisSpeeds(
+        //         0.0,
+        //         -0.2,
+        //         0.0))));
 
         // scoring commands
         m_rightJoystick.trigger().onTrue(m_superstructure.intake()).debounce(0.25);

@@ -236,10 +236,12 @@ public class Superstructure extends SubsystemBase {
                 case L2_PRE_ANGLE:
                 case L3_PRE_ANGLE:
                     // m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_L2_L3_CORAL_VOLTS);
+                    m_eeRollers.fullStop();
                     m_eeWrist.moveToNextPosition();
                     break;
                 case L4_PRE_ANGLE:
                     // m_eeRollers.runFunc(EndEffectorConstants.Rollers.OUTTAKE_L4_CORAL_VOLTS);
+                    m_eeRollers.fullStop();
                     m_eeWrist.moveToNextPosition();
                     break;
                 default:

@@ -44,4 +44,10 @@ public class EndEffectorRollers extends GenericRollerSubsystem {
             m_motor.setVoltage(EndEffectorConstants.Rollers.RETAIN_CORAL);
         });
     }
+
+    public Command fullStop() {
+        return runOnce(()-> {
+            m_motor.setVoltage(0);
+        });
+    }
 }

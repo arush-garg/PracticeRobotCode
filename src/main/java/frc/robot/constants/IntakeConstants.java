@@ -23,7 +23,7 @@ public final class IntakeConstants {
 
         public final static double OFFSET = -0.38;
 
-        public final static double INTAKE_POSITION = 2.05;
+        public final static double INTAKE_POSITION = 2.10;
         public final static double STOW_POSITION = 0.0;
         public final static double EJECT_POSITION = 1;
     }
