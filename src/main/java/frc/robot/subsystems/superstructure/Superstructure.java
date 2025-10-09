@@ -300,4 +300,15 @@ public class Superstructure extends SubsystemBase {
                 m_channel.stop());
 
     }
+
+    // ---- MANUAL CONTROLS ----
+    public Command outtakeCoral() {
+        return m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L4_CORAL_VOLTS);
+    }
+
+    public Command stopOuttakingCoral() {
+        return m_eeRollers.stop();
+    }
+
+    // ---- END of MANUAL CONTROLS ----
 }

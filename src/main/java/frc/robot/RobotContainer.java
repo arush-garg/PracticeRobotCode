@@ -14,6 +14,8 @@ import java.util.function.Supplier;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -21,11 +23,13 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController.Axis;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.*;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-// import frc.robot.commands.DriveToPosePID;
+import frc.robot.commands.*;
+import frc.robot.constants.AutoAlignConstants;
 import frc.robot.constants.AutoAlignPosition;
 import frc.robot.constants.DriveConstants;
 import frc.robot.constants.ReefPositions;
@@ -82,7 +86,7 @@ public class RobotContainer {
     private final CommandXboxController m_buttonBoard = new CommandXboxController(3);
 
     // auto
-    // private final SendableChooser<Command> autoChooser;
+    private final SendableChooser<Command> autoChooser;
 
     private final Elevator m_elevator = new Elevator(true);
     private final EndEffectorWrist m_eeWrist = new EndEffectorWrist(true, drivetrain, m_elevator::getPose);
@@ -99,17 +103,16 @@ public class RobotContainer {
     private BooleanSupplier algaeModeSupplier = () -> m_superstructure.getGPMode() == GPMode.Algae;
     private BooleanSupplier coralModeSupplier = () -> m_superstructure.getGPMode() == GPMode.Coral;
 
-    public RobotContainer() {/*
+    public RobotContainer() {
         NamedCommands.registerCommand("ScoreL4", m_superstructure.score());
         NamedCommands.registerCommand("ElevateL4", m_superstructure.moveL4());
         NamedCommands.registerCommand("IntakeCoral", m_superstructure.intake());
         NamedCommands.registerCommand("Stow", m_superstructure.stow());
-        for (AutoAlignPosition pos : AutoAlignPosition.values()) {
-            NamedCommands.registerCommand("AutoAlign" + pos.toString(), Commands.sequence(
-                    Commands.runOnce(() -> {
-                        autoAlignPosition = pos;
-                    })new DriveToPosePID(drivetrain, autoAlignPositionSupplier)));
-        }
+        for (AutoAlignPosition pos : AutoAlignConstants.REEF_POSITIONS.keySet()) {
+            NamedCommands.registerCommand("AutoAlign" + pos.toString(),
+            drivetrain.alignPID(()->ReefPositions.getReefPosition(DriverStation.getAlliance().orElse(Alliance.Blue), pos)));
+        } 
+
         // NamedCommands.registerCommand("ScoreL4", new PrintCommand("Score L4"));
         // NamedCommands.registerCommand("ElevateL4", new PrintCommand("Elevate L4"));
         // NamedCommands.registerCommand("IntakeCoral", new
@@ -124,7 +127,7 @@ public class RobotContainer {
 
         autoChooser = AutoBuilder.buildAutoChooser("Tests");
         SmartDashboard.putData("Auto Chooser", autoChooser);
-*/
+
         configureAutoAlignBindings();
         configureBindings();
 
@@ -216,15 +219,10 @@ public class RobotContainer {
         // gpMode switching
         m_buttonBoard.button(5).onTrue(m_superstructure.switchMode().ignoringDisable(true));
 
-        // m_leftJoystick.povLeft().whileTrue(drivetrain.applyRequest(() -> strafeDrive.withSpeeds(new ChassisSpeeds(
-        //         0.0,
-        //         0.2,
-        //         0.0))));
-
-        // m_leftJoystick.povRight().whileTrue(drivetrain.applyRequest(() -> strafeDrive.withSpeeds(new ChassisSpeeds(
-        //         0.0,
-        //         -0.2,
-        //         0.0))));
+        m_leftJoystick.povLeft().whileTrue(m_superstructure.outtakeCoral()).onFalse(m_superstructure.stopOuttakingCoral());
+        m_leftJoystick.povRight().whileTrue(m_superstructure.outtakeCoral()).onFalse(m_superstructure.stopOuttakingCoral());
+        m_leftJoystick.povUp().whileTrue(m_superstructure.outtakeCoral()).onFalse(m_superstructure.stopOuttakingCoral());
+        m_leftJoystick.povDown().whileTrue(m_superstructure.outtakeCoral()).onFalse(m_superstructure.stopOuttakingCoral());
 
         // scoring commands
         m_rightJoystick.trigger().onTrue(m_superstructure.intake()).debounce(0.25);
@@ -264,8 +262,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        // return autoChooser.getSelected();
-        return null;
+        return autoChooser.getSelected();
     }
 
     public void resetMechs() {
@@ -278,9 +275,21 @@ public class RobotContainer {
         m_eeRollers.stop();
     }
 
-    public void zeroAll() {
+    // public Command driveUntilPoseAndStall(Supplier<Pose2d> pose) {
+    //     return Commands.sequence(
+    //             new PrintCommand("pose: " + pose.toString()),
+    //             new DriveToPosePID(drivetrain, pose.get()),
+    //             new DriveUntilStall(drivetrain));
+    // }
 
+    public Command driveUntilPoseAndStall(Pose2d pose) {
+        return Commands.sequence(
+                new PrintCommand("pose: " + pose.toString()),
+                new DriveToPosePID(drivetrain, pose)
+                // new DriveUntilStall(drivetrain)
+        );
     }
+
 
     public void configureAutoAlignBindings() {
         m_buttonBoard.button(6).and(coralModeSupplier).onTrue(Commands.runOnce(() -> {
