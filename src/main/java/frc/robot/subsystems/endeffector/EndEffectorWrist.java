@@ -151,7 +151,8 @@ public class EndEffectorWrist extends SubsystemBase {
 				break;
 			case SCORE_PROCESSOR_ANGLE:
 			case SCORE_BARGE_ANGLE:
-			case INTAKE_ALGAE_ANGLE:
+			case INTAKE_ALGAE_ANGLE_L2:
+			case INTAKE_ALGAE_ANGLE_L3:
 				nextPosition = EndEffectorWristPosition.STOW_ANGLE;
 				break;
 			case L2_SCORE_ANGLE:

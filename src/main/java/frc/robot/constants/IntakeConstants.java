@@ -26,6 +26,9 @@ public final class IntakeConstants {
         public final static double INTAKE_POSITION = 2.10;
         public final static double STOW_POSITION = 0.0;
         public final static double EJECT_POSITION = 1;
+
+        public final static double STATOR_CURRENT_LIMIT = 45;
+        public final static double SUPPLY_CURRENT_LIMIT = 45;
     }
 
     public static class Rollers {

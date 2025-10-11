@@ -3,6 +3,7 @@ package frc.robot.subsystems.channel;
 import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -30,11 +31,21 @@ public class Channel extends SubsystemBase {
         // m_sender.addButton("Run", run(ChannelConstants.CHANNEL_VOLTS));
         m_sender.put("in channel", coralInEndEffector, false);
 
+
+        TalonFXConfiguration cfg = new TalonFXConfiguration();
+
         MotorOutputConfigs motorConfigs = new MotorOutputConfigs();
         motorConfigs.Inverted = InvertedValue.Clockwise_Positive;
         motorConfigs.NeutralMode = NeutralModeValue.Coast;
 
-        m_motor.getConfigurator().apply(motorConfigs);
+        cfg.Voltage.PeakForwardVoltage = ChannelConstants.CHANNEL_VOLTS;
+        cfg.Voltage.PeakReverseVoltage = -ChannelConstants.CHANNEL_VOLTS;
+        cfg.CurrentLimits.StatorCurrentLimit = ChannelConstants.STATOR_CURRENT_LIMIT;
+        cfg.CurrentLimits.StatorCurrentLimitEnable = true;
+        cfg.CurrentLimits.SupplyCurrentLimit = ChannelConstants.SUPPLY_CURRENT_LIMIT;
+        cfg.CurrentLimits.SupplyCurrentLimitEnable = true;
+
+        m_motor.getConfigurator().apply(cfg);
 
         distanceSensor = new LaserCan(ChannelConstants.DISTANCE_SENSOR_ID);
     }

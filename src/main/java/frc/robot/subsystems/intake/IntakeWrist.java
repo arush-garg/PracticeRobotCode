@@ -51,6 +51,10 @@ public class IntakeWrist extends SubsystemBase {
 
         cfg.Voltage.PeakForwardVoltage = IntakeConstants.Wrist.MAX_VOLTS;
         cfg.Voltage.PeakReverseVoltage = -IntakeConstants.Wrist.MAX_VOLTS;
+        cfg.CurrentLimits.StatorCurrentLimit = IntakeConstants.Wrist.STATOR_CURRENT_LIMIT;
+        cfg.CurrentLimits.StatorCurrentLimitEnable = true;
+        cfg.CurrentLimits.SupplyCurrentLimit = IntakeConstants.Wrist.SUPPLY_CURRENT_LIMIT;
+        cfg.CurrentLimits.SupplyCurrentLimitEnable = true;
         
         FeedbackConfigs fdb = cfg.Feedback;
         fdb.SensorToMechanismRatio = IntakeConstants.Wrist.GEAR_RATIO;
@@ -72,7 +76,6 @@ public class IntakeWrist extends SubsystemBase {
         slot0.kD = IntakeConstants.Wrist.kD;
 
         m_motor.getConfigurator().apply(cfg);
-        m_motor.getConfigurator().apply(motorConfigs);
     }
 
     public Command moveTo(double position) {

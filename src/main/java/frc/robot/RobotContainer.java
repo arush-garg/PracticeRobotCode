@@ -32,6 +32,7 @@ import frc.robot.commands.*;
 import frc.robot.constants.AutoAlignConstants;
 import frc.robot.constants.AutoAlignPosition;
 import frc.robot.constants.DriveConstants;
+import frc.robot.constants.EndEffectorConstants;
 import frc.robot.constants.ReefPositions;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Drive.EagleSwerveDrivetrain;
@@ -219,10 +220,23 @@ public class RobotContainer {
         // gpMode switching
         m_buttonBoard.button(5).onTrue(m_superstructure.switchMode().ignoringDisable(true));
 
-        m_leftJoystick.povLeft().whileTrue(m_superstructure.outtakeCoral()).onFalse(m_superstructure.stopOuttakingCoral());
-        m_leftJoystick.povRight().whileTrue(m_superstructure.outtakeCoral()).onFalse(m_superstructure.stopOuttakingCoral());
-        m_leftJoystick.povUp().whileTrue(m_superstructure.outtakeCoral()).onFalse(m_superstructure.stopOuttakingCoral());
-        m_leftJoystick.povDown().whileTrue(m_superstructure.outtakeCoral()).onFalse(m_superstructure.stopOuttakingCoral());
+
+        // Outtake to Score if stuck
+        m_leftJoystick.povLeft()
+            .whileTrue(m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L4_CORAL_VOLTS))
+            .onFalse(m_eeRollers.fullStop());
+
+        m_leftJoystick.povRight()
+            .whileTrue(m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L4_CORAL_VOLTS))
+            .onFalse(m_eeRollers.fullStop());
+        
+        m_leftJoystick.povUp()
+            .whileTrue(m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L4_CORAL_VOLTS))
+            .onFalse(m_eeRollers.fullStop());
+        
+        m_leftJoystick.povDown()
+            .whileTrue(m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L4_CORAL_VOLTS))
+            .onFalse(m_eeRollers.fullStop());
 
         // scoring commands
         m_rightJoystick.trigger().onTrue(m_superstructure.intake()).debounce(0.25);

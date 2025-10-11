@@ -7,4 +7,6 @@ public class ChannelConstants {
     public static final double MANUAL_RATIO = 2.0;
     public static final double DISTANCE_SENSOR_THRESH = 40;
     public static final double EJECT_VOLTS = -4.0;
+    public final static double STATOR_CURRENT_LIMIT = 45;
+    public final static double SUPPLY_CURRENT_LIMIT = 45;
 }

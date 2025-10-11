@@ -1,6 +1,7 @@
 package frc.robot.subsystems.superstructure;
 
 import java.util.Map;
+import java.util.function.IntSupplier;
 
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.ElasticSender.ElasticSender;
@@ -119,9 +120,9 @@ public class Superstructure extends SubsystemBase {
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION));
     }
 
-    public Command intakeAlgae() {
+    public Command intakeAlgae(IntSupplier level) {
         return Commands.sequence(
-                m_eeWrist.moveTo(EndEffectorWristPosition.INTAKE_ALGAE_ANGLE),
+                m_eeWrist.moveTo(level.getAsInt() == 2 ? EndEffectorWristPosition.INTAKE_ALGAE_ANGLE_L2 : EndEffectorWristPosition.INTAKE_ALGAE_ANGLE_L3),
                 m_eeRollers.run(EndEffectorConstants.Rollers.INTAKE_ALGAE_VOLTS),
                 Commands.waitUntil(() -> m_eeRollers.isStalled()),
                 m_eeRollers.stop(),
@@ -184,7 +185,7 @@ public class Superstructure extends SubsystemBase {
                                 )),
                         Map.entry(GPMode.Algae, Commands.parallel(
                                 m_elevator.moveTo(ElevatorConstants.L2_ALGAE_HEIGHT),
-                                intakeAlgae(),
+                                intakeAlgae(() -> 2),
                                 m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION),
                                 m_intakeRollers.stop()
                                 ))),
@@ -202,7 +203,7 @@ public class Superstructure extends SubsystemBase {
                                 )),
                         Map.entry(GPMode.Algae, Commands.parallel(
                                 m_elevator.moveTo(ElevatorConstants.L3_ALGAE_HEIGHT),
-                                intakeAlgae(),
+                                intakeAlgae(() -> 3),
                                 m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION),
                                 m_intakeRollers.stop()
                                 ))),
@@ -300,15 +301,4 @@ public class Superstructure extends SubsystemBase {
                 m_channel.stop());
 
     }
-
-    // ---- MANUAL CONTROLS ----
-    public Command outtakeCoral() {
-        return m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L4_CORAL_VOLTS);
-    }
-
-    public Command stopOuttakingCoral() {
-        return m_eeRollers.stop();
-    }
-
-    // ---- END of MANUAL CONTROLS ----
 }
