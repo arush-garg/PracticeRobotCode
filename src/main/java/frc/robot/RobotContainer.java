@@ -255,6 +255,9 @@ public class RobotContainer {
             drivetrain.alignPID(autoAlignPositionSupplier),
             m_superstructure.score()
         ));
+
+        m_leftJoystick.button(3).and(algaeModeSupplier)
+        .whileTrue(new ShootBarge(drivetrain, m_superstructure));
                 // .onTrue(Commands.sequence(
                 //         drivetrain.alignPID(autoAlignPositionSupplier),
                 //         Commands.waitTime(Milliseconds.of(500))

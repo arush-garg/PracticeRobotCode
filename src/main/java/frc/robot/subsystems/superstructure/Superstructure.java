@@ -291,7 +291,6 @@ public class Superstructure extends SubsystemBase {
     }
 
     public Command stow() {
-
         return Commands.parallel(
                 m_elevator.moveTo(ElevatorConstants.STOWED_HEIGHT),
                 m_eeWrist.moveTo(EndEffectorWristPosition.STOW_ANGLE),
