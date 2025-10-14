@@ -70,13 +70,6 @@ public class RobotContainer {
     private Supplier<Pose2d> autoAlignPositionSupplier = () -> {
         Pose2d reefPosition = ReefPositions.getReefPosition(DriverStation.getAlliance().orElse(Alliance.Blue),
                 autoAlignPosition);
-    // reefPosition = new Pose2d(reefPosition.getTranslation(),
-    //                 reefPosition.getRotation().rotateBy(new Rotation2d(Math.PI)));
-        // if (!EndEffectorSideUtils.facingReef(drivetrain.getState().Pose)) {
-        //     System.out.println("[Auto Align] Flipping reef position, not facing reef");
-        //     reefPosition = new Pose2d(reefPosition.getTranslation(),
-        //             reefPosition.getRotation().rotateBy(new Rotation2d(Math.PI)));
-        // }
         return reefPosition;
     };
 
@@ -145,11 +138,9 @@ public class RobotContainer {
                             .withVelocityY(-m_leftJoystick.getX() * MaxSpeed * driveMult)
                             .withRotationalRate(-m_rightJoystick.getX() * MaxAngularRate * driveMult);
                 }));
-
-        m_rightJoystick.button(2)
-                .onTrue(Commands.runOnce(() -> slowModeOn = true))
-                .onFalse(Commands.runOnce(() -> slowModeOn = false));
-
+        
+        // TODO: Add a button to toggle slow mode (use right joystick button 2)
+        
         // reset yaw
         m_operatorController.button(8).onTrue(drivetrain.runOnce(() -> {
             System.out.println("Zeroing drive");
@@ -218,25 +209,11 @@ public class RobotContainer {
                 .onTrue(m_intakeWrist.zero().ignoringDisable(true));
 
         // gpMode switching
+        // TODO: Debounce this button
         m_buttonBoard.button(5).onTrue(m_superstructure.switchMode().ignoringDisable(true));
 
 
-        // Outtake to Score if stuck
-        m_leftJoystick.povLeft()
-            .whileTrue(m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L4_CORAL_VOLTS))
-            .onFalse(m_eeRollers.fullStop());
-
-        m_leftJoystick.povRight()
-            .whileTrue(m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L4_CORAL_VOLTS))
-            .onFalse(m_eeRollers.fullStop());
-        
-        m_leftJoystick.povUp()
-            .whileTrue(m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L4_CORAL_VOLTS))
-            .onFalse(m_eeRollers.fullStop());
-        
-        m_leftJoystick.povDown()
-            .whileTrue(m_eeRollers.run(EndEffectorConstants.Rollers.OUTTAKE_L4_CORAL_VOLTS))
-            .onFalse(m_eeRollers.fullStop());
+        // TODO: Add manual outtake for L4 on LEFT JOYSTICK POV
 
         // scoring commands
         m_rightJoystick.trigger().onTrue(m_superstructure.intake()).debounce(0.25);
@@ -251,21 +228,14 @@ public class RobotContainer {
         m_operatorController.povUp().onTrue(m_superstructure.stow());
 
         m_leftJoystick.button(3).and(coralModeSupplier)
-        .whileTrue(Commands.sequence(
-            drivetrain.alignPID(autoAlignPositionSupplier),
-            m_superstructure.score()
-        ));
+            .whileTrue(Commands.sequence(
+                drivetrain.alignPID(autoAlignPositionSupplier)
+                // TODO: Score automatically after aligning
+            ));
 
         m_leftJoystick.button(3).and(algaeModeSupplier)
-        .whileTrue(new ShootBarge(drivetrain, m_superstructure));
-                // .onTrue(Commands.sequence(
-                //         drivetrain.alignPID(autoAlignPositionSupplier),
-                //         Commands.waitTime(Milliseconds.of(500))
-                //         /*m_superstructure.score()*/));
-
-        // m_leftJoystick.button(3).and(algaeModeSupplier)
-        //         .onTrue(new DriveToPosePID(drivetrain, autoAlignPositionSupplier));
-
+            .whileTrue(new ShootBarge(drivetrain, m_superstructure));
+               
         m_leftJoystick.button(4).onTrue(
                 drivetrain.applyRequest(() -> {
                     var driveMult = slowModeOn ? DriveConstants.SLOW_MODE_MULT : 1;

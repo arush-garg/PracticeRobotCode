@@ -42,10 +42,8 @@ public class ShootBarge extends Command {
     
     @Override
     public boolean isFinished() {
-        boolean isAtBarge = Math.abs(drivetrain.getState().Pose.getX() - ShootBargeConstants.BARGE_X_POS) < ShootBargeConstants.SHOOT_DISTANCE;
-        boolean isAtSpeed = Math.abs(drivetrain.getState().Speeds.vxMetersPerSecond) >= ShootBargeConstants.TARGET_SHOOT_SPEED;
-
-        return isAtBarge && isAtSpeed;
+        // TODO: Define conditions for finishing the command (at target position and speed)
+        return true;
     }
 
     @Override

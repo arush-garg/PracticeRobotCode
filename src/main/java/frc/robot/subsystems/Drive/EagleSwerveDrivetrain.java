@@ -79,10 +79,7 @@ public class EagleSwerveDrivetrain extends TunerSwerveDrivetrain implements Subs
     private static double alignKI = 0.0;
     private static double alignKD = 0.08;
 
-    private final NetworkTable autoAlignTable = NetworkTableInstance.getDefault().getTable("AutoAlign");
-    private final StructPublisher<Pose2d> targetPose = autoAlignTable.getStructTopic("TargetPose", Pose2d.struct)
-            .publish();
-    
+    // TODO: Put the targetPose in NetworkTables for debugging and visualization
     
     /* PID controllers for auto align */
     private final PIDController alignXController = new PIDController(alignKP, alignKI, alignKD);
@@ -389,7 +386,6 @@ public class EagleSwerveDrivetrain extends TunerSwerveDrivetrain implements Subs
         return this.run(() -> {
             Pose2d pose = this.getState().Pose;
             Pose2d target = targetSupplier.get();
-            targetPose.set(target);
 
             double veloX = alignXController.calculate(pose.getX(), target.getX());
             double veloY = alignYController.calculate(pose.getY(), target.getY());

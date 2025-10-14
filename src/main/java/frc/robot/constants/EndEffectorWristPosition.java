@@ -17,8 +17,7 @@ public enum EndEffectorWristPosition {
     SCORE_BARGE_ANGLE(3),
     SCORE_BARGE_PRE_ANGLE(3),
     SCORE_PROCESSOR_ANGLE(0.8),
-    INTAKE_ALGAE_ANGLE_L3(1.7),
-    INTAKE_ALGAE_ANGLE_L2(1.6),
+    INTAKE_ALGAE_ANGLE(1.7),
     // stow
     STOW_ANGLE(0.0);
 

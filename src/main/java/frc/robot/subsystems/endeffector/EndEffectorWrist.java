@@ -10,25 +10,17 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
 import frc.robot.ElasticSender.ElasticSender;
 import frc.robot.constants.*;
 import frc.robot.subsystems.Drive.EagleSwerveDrivetrain;
-import frc.robot.utils.*;
-
 import static edu.wpi.first.units.Units.Volts;
-
 import java.util.function.Supplier;
-
-import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.AutoLogOutput;
-
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.*;
@@ -97,9 +89,6 @@ public class EndEffectorWrist extends SubsystemBase {
 
 	public Command moveTo(EndEffectorWristPosition position) {
 		return Commands.runOnce(() -> {
-			Pose2d currentPose = m_drive.getState().Pose;
-			// EndEffectorWristSide side = EndEffectorSideUtils.facingReef(currentPose) ? EndEffectorWristSide.FRONT
-			// 		: EndEffectorWristSide.BACK;
 			EndEffectorWristSide side = EndEffectorWristSide.FRONT;
 			moveTo(position, side).schedule();
 		});
@@ -151,8 +140,7 @@ public class EndEffectorWrist extends SubsystemBase {
 				break;
 			case SCORE_PROCESSOR_ANGLE:
 			case SCORE_BARGE_ANGLE:
-			case INTAKE_ALGAE_ANGLE_L2:
-			case INTAKE_ALGAE_ANGLE_L3:
+			case INTAKE_ALGAE_ANGLE:
 				nextPosition = EndEffectorWristPosition.STOW_ANGLE;
 				break;
 			case L2_SCORE_ANGLE:

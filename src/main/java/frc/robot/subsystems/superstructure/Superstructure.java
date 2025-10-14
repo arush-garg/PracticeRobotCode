@@ -23,7 +23,6 @@ public class Superstructure extends SubsystemBase {
     private final IntakeRollers m_intakeRollers;
     private final Channel m_channel;
     private final ElasticSender m_elastic;
-    private long lastTime = 0;
 
 
     public Superstructure(Elevator elevator, EndEffectorWrist eeWrist, EndEffectorRollers eeRollers,
@@ -79,10 +78,6 @@ public class Superstructure extends SubsystemBase {
 
     public Command switchMode() {
         return Commands.runOnce(() -> {
-            if (lastTime > System.currentTimeMillis() - 100) {
-                return;
-            }
-            lastTime = System.currentTimeMillis();
             if (gpMode == GPMode.Coral) {
                 gpMode = GPMode.Algae;
                 System.out.println("switching mode to algae");
@@ -114,45 +109,27 @@ public class Superstructure extends SubsystemBase {
                 m_channel.run(ChannelConstants.CHANNEL_VOLTS),
                 m_eeRollers.run(EndEffectorConstants.Rollers.INTAKE_CORAL_VOLTS),
                 Commands.waitUntil(m_channel.coralInEndEffectorSupplier),
-                Commands.waitSeconds(0.7),
+                // TODO: Wait for 0.7 seconds since this sometimes triggers to early
                 Commands.parallel(m_intakeRollers.stop(), m_channel.stop(),
                         m_eeRollers.run(EndEffectorConstants.Rollers.RETAIN_CORAL)),
                 m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION));
     }
 
+    // TODO: Add different INTAKE_ALGAE_ANGLES for L2 and L3
     public Command intakeAlgae(IntSupplier level) {
         return Commands.sequence(
-                m_eeWrist.moveTo(level.getAsInt() == 2 ? EndEffectorWristPosition.INTAKE_ALGAE_ANGLE_L2 : EndEffectorWristPosition.INTAKE_ALGAE_ANGLE_L3),
+                m_eeWrist.moveTo(EndEffectorWristPosition.INTAKE_ALGAE_ANGLE),
                 m_eeRollers.run(EndEffectorConstants.Rollers.INTAKE_ALGAE_VOLTS),
                 Commands.waitUntil(() -> m_eeRollers.isStalled()),
                 m_eeRollers.stop(),
                 m_eeRollers.run(EndEffectorConstants.Rollers.RETAIN_ALGAE));
-
-        // m_intakeWrist.moveTo(IntakeConstants.Wrist.INTAKE_POSITION),
-        // m_intakeRollers.run(IntakeConstants.Rollers.INTAKE_CORAL_VOLTS),
-        // m_channel.run(ChannelConstants.CHANNEL_VOLTS),
-        // m_eeRollers.run(EndEffectorConstants.Rollers.INTAKE_CORAL_VOLTS),
-        // Commands.waitUntil(m_channel.coralInEndEffectorSupplier),
-        // Commands.parallel(m_intakeRollers.stop(), m_channel.stop()),
-        // m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION));
-    }
-
-    public Command intakeCoralWhileInAlgae() {
-        return Commands.sequence(
-                m_intakeWrist.moveTo(IntakeConstants.Wrist.INTAKE_POSITION),
-                m_intakeRollers.run(IntakeConstants.Rollers.INTAKE_CORAL_VOLTS),
-                m_channel.run(ChannelConstants.CHANNEL_VOLTS),
-                m_eeRollers.run(EndEffectorConstants.Rollers.INTAKE_CORAL_VOLTS),
-                Commands.waitUntil(m_channel.coralInEndEffectorSupplier),
-                Commands.parallel(m_intakeRollers.stop(), m_channel.stop()),
-                m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION));
     }
 
     public Command intake() {
         return new SelectCommand<>(
                 Map.ofEntries(
                         Map.entry(GPMode.Coral, intakeCoral()),
-                        Map.entry(GPMode.Algae, new PrintCommand("still in algae")/* intakeCoralWhileInAlgae() */)),
+                        Map.entry(GPMode.Algae, new PrintCommand("still in algae"))),
                 this::getGPMode);
     }
 
