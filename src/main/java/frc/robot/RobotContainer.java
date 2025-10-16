@@ -251,21 +251,17 @@ public class RobotContainer {
         m_operatorController.povUp().onTrue(m_superstructure.stow());
 
         m_leftJoystick.button(3).and(coralModeSupplier)
-        .whileTrue(Commands.sequence(
-            drivetrain.alignPID(autoAlignPositionSupplier),
-            m_superstructure.score()
-        ));
+            .whileTrue(Commands.sequence(
+                drivetrain.alignPID(autoAlignPositionSupplier),
+                m_superstructure.score()
+            ));
 
         m_leftJoystick.button(3).and(algaeModeSupplier)
-        .whileTrue(new ShootBarge(drivetrain, m_superstructure));
-                // .onTrue(Commands.sequence(
-                //         drivetrain.alignPID(autoAlignPositionSupplier),
-                //         Commands.waitTime(Milliseconds.of(500))
-                //         /*m_superstructure.score()*/));
-
-        // m_leftJoystick.button(3).and(algaeModeSupplier)
-        //         .onTrue(new DriveToPosePID(drivetrain, autoAlignPositionSupplier));
-
+            .whileTrue(Commands.sequence(
+                new ShootBarge(drivetrain, m_superstructure),
+                m_superstructure.score()
+            ));
+                
         m_leftJoystick.button(4).onTrue(
                 drivetrain.applyRequest(() -> {
                     var driveMult = slowModeOn ? DriveConstants.SLOW_MODE_MULT : 1;
