@@ -111,7 +111,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("Stow", m_superstructure.stow());
         for (AutoAlignPosition pos : AutoAlignConstants.REEF_POSITIONS.keySet()) {
             NamedCommands.registerCommand("AutoAlign" + pos.toString(),
-            drivetrain.alignPID(()->ReefPositions.getReefPosition(DriverStation.getAlliance().orElse(Alliance.Blue), pos)));
+            // TODO: Use the drivetrain's alignPID command to register the appropriate command
+                Commands.none());
         } 
 
         // NamedCommands.registerCommand("ScoreL4", new PrintCommand("Score L4"));

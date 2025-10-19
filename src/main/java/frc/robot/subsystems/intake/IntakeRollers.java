@@ -1,7 +1,6 @@
 package frc.robot.subsystems.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.constants.EndEffectorConstants;
 import frc.robot.constants.IntakeConstants;
 import frc.robot.utils.GenericRollerSubsystem;
 

@@ -9,24 +9,14 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
 import frc.robot.ElasticSender.ElasticSender;
 import frc.robot.constants.*;
 import frc.robot.subsystems.Drive.EagleSwerveDrivetrain;
-import frc.robot.utils.*;
-
-import static edu.wpi.first.units.Units.Volts;
-
 import java.util.function.Supplier;
 
-import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.AutoLogOutput;
 
 import com.ctre.phoenix6.configs.*;
@@ -37,7 +27,7 @@ import com.ctre.phoenix6.signals.*;
 public class EndEffectorWrist extends SubsystemBase {
 
 	private final TalonFX m_motor = new TalonFX(EndEffectorConstants.Wrist.MOTOR_ID, "rio");
-	private final CANcoder m_encoder = new CANcoder(EndEffectorConstants.Wrist.ENCODER_ID, "rio");
+	// TODO: Add a remote CANCoder for positioning the wrist
 
 	private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0);
 	private boolean debug;
@@ -69,8 +59,7 @@ public class EndEffectorWrist extends SubsystemBase {
 		motorConfigs.NeutralMode = NeutralModeValue.Brake;
 
 		FeedbackConfigs fdb = cfg.Feedback;
-		fdb.SensorToMechanismRatio = EndEffectorConstants.Wrist.SENSOR_TO_MECHANISM_RATIO;
-		fdb.RotorToSensorRatio = EndEffectorConstants.Wrist.ROTOR_TO_SENSOR_RATIO;
+		// TODO: Add the CANCoder as a remote sensor and set the appropriate gear ratio
 		fdb.FeedbackRotorOffset = EndEffectorConstants.Wrist.OFFSET;
 
 		MotionMagicConfigs mm = cfg.MotionMagic;
@@ -171,7 +160,7 @@ public class EndEffectorWrist extends SubsystemBase {
 		return runOnce(
 				() -> {
 					System.out.println("Zeroing End Effector");
-					m_encoder.setPosition(EndEffectorConstants.Wrist.OFFSET);
+					// TODO: Set the encoder position to the offset
 				});
 	}
 
@@ -199,17 +188,6 @@ public class EndEffectorWrist extends SubsystemBase {
 		m_elastic.periodic();
 	}
 
-	private final SingleJointedArmSim m_armSim = new SingleJointedArmSim(
-			DCMotor.getKrakenX60(1),
-			58.56, // motor (shaft to) 9t (connected to) 84t (shaft to) 18t (connected to) 64t
-					// (shaft to) 34t (connected to) 60t
-			SingleJointedArmSim.estimateMOI(0.578228, 3.17),
-			0.578228,
-			Double.MIN_VALUE,
-			Double.MAX_VALUE,
-			true,
-			0);
-
 	@AutoLogOutput
 	public Pose3d getPose() {
 		return m_elevatorPoseSupplier.get()
@@ -217,16 +195,4 @@ public class EndEffectorWrist extends SubsystemBase {
 						new Rotation3d(0, -m_motor.getPosition().getValueAsDouble(), 0)));
 	}
 
-	@Override
-	public void simulationPeriodic() {
-		var talonFXSim = m_motor.getSimState();
-		var canCoderSim = m_encoder.getSimState();
-		talonFXSim.setSupplyVoltage(RobotController.getBatteryVoltage());
-		var motorVoltage = talonFXSim.getMotorVoltageMeasure();
-		m_armSim.setInputVoltage(motorVoltage.in(Volts));
-		m_armSim.update(0.02);
-		// System.out.println(m_armSim.getAngleRads());
-		canCoderSim.setRawPosition(m_armSim.getAngleRads() * EndEffectorConstants.Wrist.SENSOR_TO_MECHANISM_RATIO);
-		canCoderSim.setVelocity(m_armSim.getVelocityRadPerSec() * EndEffectorConstants.Wrist.SENSOR_TO_MECHANISM_RATIO);
-	}
 }

@@ -406,9 +406,7 @@ public class EagleSwerveDrivetrain extends TunerSwerveDrivetrain implements Subs
                     Transform2d error = pose.minus(target);
                     return error.getTranslation().getNorm() < 0.1 && 
                            Math.abs(error.getRotation().getDegrees()) < 5.0;
-                })
-                .finallyDo(() -> {
-                    this.setControl(new SwerveRequest.Idle());
                 });
+                // TODO: Add a final command to make the drivetrain stop moving once the command ends
     }
 }

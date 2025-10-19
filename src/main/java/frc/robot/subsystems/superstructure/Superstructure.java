@@ -52,29 +52,7 @@ public class Superstructure extends SubsystemBase {
 
     @Override
     public void periodic() {
-        /*
-         * if (getGPMode() == GPMode.Coral) {
-         * coralModeLED.applyTo(m_leftLED);
-         * coralModeLED.applyTo(m_rightLED);
-         * }
-         * else {
-         * algaeModeLED.applyTo(m_leftLED);
-         * algaeModeLED.applyTo(m_rightLED);
-         * }
-         * 
-         * if (m_channel.coralInEndEffectorSupplier.getAsBoolean()) {
-         * hasCoralLED.applyTo(m_topLED);
-         * }
-         * else {
-         * noCoralLED.applyTo(m_topLED);
-         * }
-         */
-        /*
-         * LEDPattern pattern = LEDPattern.gradient(GradientType.kDiscontinuous,
-         * Color.kBlue, Color.kRed);
-         * pattern.applyTo(m_ledBuffer);
-         * m_led.setData(m_ledBuffer);
-         */
+       
     }
 
     public Command switchMode() {
@@ -127,14 +105,6 @@ public class Superstructure extends SubsystemBase {
                 Commands.waitUntil(() -> m_eeRollers.isStalled()),
                 m_eeRollers.stop(),
                 m_eeRollers.run(EndEffectorConstants.Rollers.RETAIN_ALGAE));
-
-        // m_intakeWrist.moveTo(IntakeConstants.Wrist.INTAKE_POSITION),
-        // m_intakeRollers.run(IntakeConstants.Rollers.INTAKE_CORAL_VOLTS),
-        // m_channel.run(ChannelConstants.CHANNEL_VOLTS),
-        // m_eeRollers.run(EndEffectorConstants.Rollers.INTAKE_CORAL_VOLTS),
-        // Commands.waitUntil(m_channel.coralInEndEffectorSupplier),
-        // Commands.parallel(m_intakeRollers.stop(), m_channel.stop()),
-        // m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION));
     }
 
     public Command intakeCoralWhileInAlgae() {
@@ -283,21 +253,12 @@ public class Superstructure extends SubsystemBase {
     }
 
     public Command score() {
-        return new SelectCommand<>(
-                Map.ofEntries(
-                        Map.entry(GPMode.Coral, scoreCoral()),
-                        Map.entry(GPMode.Algae, scoreAlgae())),
-                this::getGPMode);
+        // TODO: Return the correct command based on GP mode
+        return Commands.none();
     }
 
     public Command stow() {
-        return Commands.parallel(
-                m_elevator.moveTo(ElevatorConstants.STOWED_HEIGHT),
-                m_eeWrist.moveTo(EndEffectorWristPosition.STOW_ANGLE),
-                m_intakeWrist.moveTo(IntakeConstants.Wrist.STOW_POSITION),
-                m_intakeRollers.stop(),
-                m_eeRollers.stop(),
-                m_channel.stop());
-
+        // TODO: Move elevator and both wrists to the right position and stop all rollers 
+        return Commands.none();
     }
 }
