@@ -27,7 +27,7 @@ import com.ctre.phoenix6.signals.*;
 public class EndEffectorWrist extends SubsystemBase {
 
 	private final TalonFX m_motor = new TalonFX(EndEffectorConstants.Wrist.MOTOR_ID, "rio");
-	// TODO: Add a remote CANCoder for positioning the wrist
+	// TODO: Add a remote CANcoder for positioning the wrist
 
 	private final MotionMagicVoltage m_mmReq = new MotionMagicVoltage(0);
 	private boolean debug;
@@ -50,16 +50,13 @@ public class EndEffectorWrist extends SubsystemBase {
 		m_elastic.addButton("Kill", kill());
 
 		cfg = new TalonFXConfiguration();
-		cfg.Feedback.FeedbackRemoteSensorID = EndEffectorConstants.Wrist.ENCODER_ID;
-		cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
-		// cfg.ClosedLoopGeneral.ContinuousWrap = true;
-
+		
 		MotorOutputConfigs motorConfigs = new MotorOutputConfigs();
 		motorConfigs.Inverted = InvertedValue.Clockwise_Positive;
 		motorConfigs.NeutralMode = NeutralModeValue.Brake;
 
 		FeedbackConfigs fdb = cfg.Feedback;
-		// TODO: Add the CANCoder as a remote sensor and set the appropriate gear ratio
+		// TODO: Add the CANcoder as a remote sensor and set the appropriate gear ratio
 		fdb.FeedbackRotorOffset = EndEffectorConstants.Wrist.OFFSET;
 
 		MotionMagicConfigs mm = cfg.MotionMagic;

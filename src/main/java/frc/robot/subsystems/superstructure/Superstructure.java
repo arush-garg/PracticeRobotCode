@@ -253,7 +253,7 @@ public class Superstructure extends SubsystemBase {
     }
 
     public Command score() {
-        // TODO: Return the correct command based on GP mode
+        // TODO: Return the correct command based on which game piece you are holding (hint look above for the two scoring commands)
         return Commands.none();
     }
 
