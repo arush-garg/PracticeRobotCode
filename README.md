@@ -4,5 +4,7 @@ Welcome to this coding exercise. This exercise is intended to improve your under
 
 ## Getting Started
 1. Clone this repository to your computer.
-2. Branch off the `main` branch to create your own working branch.
+2. Branch off the `practice-1` branch to create your own working branch.
 3. Find all the comments in the code that say `// TODO`. These comments indicate where you need to add code.
+<br></br>
+When you are done, compare your code to the `main` branch to see the completed code. Note that there are multiple ways to solve each problem, so your solution may differ.
