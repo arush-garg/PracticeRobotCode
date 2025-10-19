@@ -8,6 +8,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest.ForwardPerspectiveValue;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
@@ -16,11 +17,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.ShootBargeConstants;
 import frc.robot.subsystems.Drive.EagleSwerveDrivetrain;
 import frc.robot.subsystems.superstructure.Superstructure;
+import badgerlog.annotations.Entry;
+import badgerlog.annotations.EntryType;
 
 public class ShootBarge extends Command {
     private final EagleSwerveDrivetrain drivetrain;
     private final Superstructure superstructure;
     private boolean debug = false;
+
+    @Entry(EntryType.SUBSCRIBER)
+    private double targSpeed = ShootBargeConstants.TARGET_SHOOT_SPEED;
+    @Entry(EntryType.SUBSCRIBER)
+    private double shootDist = ShootBargeConstants.SHOOT_DISTANCE;
 
     private final SwerveRequest.FieldCentricFacingAngle driveRequest = new SwerveRequest.FieldCentricFacingAngle()
             .withForwardPerspective(ForwardPerspectiveValue.BlueAlliance)
@@ -49,13 +57,13 @@ public class ShootBarge extends Command {
         double xPosition;
 
         if(DriverStation.getAlliance().orElse(DriverStation.Alliance.Blue) == DriverStation.Alliance.Blue) {
-            veloX = ShootBargeConstants.TARGET_SHOOT_SPEED;
+            veloX = targSpeed;
             headingReference = new Rotation2d();
-            xPosition = ShootBargeConstants.BARGE_X_POS - ShootBargeConstants.SHOOT_DISTANCE;
+            xPosition = ShootBargeConstants.BARGE_X_POS - shootDist;
         } else {
-            veloX = -ShootBargeConstants.TARGET_SHOOT_SPEED;
+            veloX = -targSpeed;
             headingReference = new Rotation2d(Math.PI);
-            xPosition = ShootBargeConstants.BARGE_X_POS + ShootBargeConstants.SHOOT_DISTANCE;
+            xPosition = ShootBargeConstants.BARGE_X_POS + shootDist;
         }
 
         targetPose.set(new Pose2d(xPosition, drivetrain.getState().Pose.getY(), headingReference));
@@ -78,8 +86,8 @@ public class ShootBarge extends Command {
             return true;
         }
 
-        boolean isAtBarge = Math.abs(drivetrain.getState().Pose.getX() - ShootBargeConstants.BARGE_X_POS) <= ShootBargeConstants.SHOOT_DISTANCE;
-        boolean isAtSpeed = Math.abs(drivetrain.getState().Speeds.vxMetersPerSecond) >= ShootBargeConstants.TARGET_SHOOT_SPEED;
+        boolean isAtBarge = Math.abs(drivetrain.getState().Pose.getX() - ShootBargeConstants.BARGE_X_POS) <= shootDist;
+        boolean isAtSpeed = Math.abs(drivetrain.getState().Speeds.vxMetersPerSecond) >= targSpeed;
 
         return isAtBarge && isAtSpeed;
     }
